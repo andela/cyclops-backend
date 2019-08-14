@@ -1,4 +1,5 @@
 eslint:
-  version: 6.1.0
+  version: 5.16.0
   enabled: true
+  sourceType: module
   config_file: .eslintrc
