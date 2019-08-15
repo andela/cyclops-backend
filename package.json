@@ -1,34 +1,21 @@
 {
-  "name": "express-authorshaven",
+  "name": "barefoot-nomad",
   "version": "1.0.0",
-  "description": "A Social platform for the creative at heart",
+  "description": "Making company travel and accomodation easy and convenient.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node src/app.js",
+    "start": "nodemon --exec babel-node src/index.js",
     "build": "babel src/app.js --out-dir build"
   },
-  "author": "Andela Simulations Programme",
+  "author": "Andela Stackup Programme",
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
-    "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
-    "ejs": "^2.6.1",
-    "errorhandler": "^1.5.0",
     "express": "^4.17.1",
-    "express-jwt": "^5.3.1",
-    "express-session": "^1.15.6",
-    "jsonwebtoken": "^8.3.0",
-    "method-override": "^2.3.10",
-    "methods": "^1.1.2",
-    "mongoose": "^5.2.2",
-    "mongoose-unique-validator": "^2.0.1",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "request": "^2.87.0",
-    "underscore": "^1.9.1"
+    "jsonwebtoken": "^8.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
