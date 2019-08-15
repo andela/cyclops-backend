@@ -1,11 +1,7 @@
 {
+
   "development": {
-    "username": "postgres",
-    "password": "cyclops",
-    "database": "cyclops-backend",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": "Sequelize.Op"
+    "use_env_variable": "DATABASE_URL"
   },
   "test": {
     "username": "root",
@@ -16,11 +12,6 @@
     "operatorsAliases": "Sequelize.Op"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "operatorsAliases": "Sequelize.Op"
+    "use_env_variable": "DATABASE_URL"
   }
 }
