@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint",
     "start": "nodemon --exec babel-node src/index.js",
-    "build": "babel src/index.js --out-dir build"
+    "build": "babel src/index.js --out-dir build",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "author": "Andela Stackup Programme",
   "license": "MIT",
@@ -29,6 +30,7 @@
     "@babel/register": "^7.5.5",
     "babel-eslint": "^10.0.2",
     "eslint": "^5.16.0",
+    "coveralls": "^3.0.6",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-react": "^7.14.3",
