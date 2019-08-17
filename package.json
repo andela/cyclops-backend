@@ -7,8 +7,7 @@
     "lint": "eslint",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node src/index.js",
-    "build": "babel src/index.js --out-dir build",
-    "db:connect": "babel-node ./src/database/config"
+    "build": "babel src/index.js --out-dir build"
   },
   "author": "Andela Stackup Programme",
   "license": "MIT",
@@ -26,6 +25,7 @@
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "^10.0.2",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
