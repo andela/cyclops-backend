@@ -2,17 +2,17 @@ import { config } from 'dotenv';
 
 config();
 
-export default {
+module.exports = {
   development: {
-    use_env_variable: process.env.DATABASE_URL_DEV,
+    use_env_variable: 'DATABASE_URL_DEV',
     dialect: 'postgres'
   },
   test: {
-    use_env_variable: process.env.DATABASE_URL_TEST,
+    use_env_variable: 'DATABASE_URL_TEST',
     dialect: 'postgres'
   },
   production: {
-    use_env_variable: process.env.DATABASE_URL_PROD,
+    use_env_variable: 'DATABASE_URL_PROD',
     dialect: 'postgres'
   }
 };
