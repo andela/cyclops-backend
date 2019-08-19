@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
+import enVariables from '../config/config';
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = (path.join(__dirname, '/../../config/database.json'))[env];
+const config = enVariables[env];
 const db = {};
 
 let sequelize;
@@ -16,6 +17,7 @@ if (config.use_env_variable) {
 
 fs
   .readdirSync(__dirname)
+  // eslint-disable-next-line arrow-parens
   .filter(file => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
   .forEach((file) => {
     const model = sequelize.import(path.join(__dirname, file));
