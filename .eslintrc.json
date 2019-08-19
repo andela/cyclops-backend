@@ -12,12 +12,12 @@
     },
     "parser": "babel-eslint",
     "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
         "ecmaVersion": 6,
         "sourceType": "module",
-        "allowImportExportEverywhere": true
+        "ecmaFeatures": {
+          "modules": true,
+          "jsx": true
+      }
     },
     "plugins": [
         "react", "import"
