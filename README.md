@@ -36,3 +36,9 @@ Require and configure `dotenv` package
     })
 
 ---
+
+#### Database migration
+
+- To connect to database, modify database.json file in /src/config and include your DB parameters or add DATABASE_URL env.
+
+- Run the command 'node_modules/.bin/sequelize db:migrate' to migrate the dummy user table.
