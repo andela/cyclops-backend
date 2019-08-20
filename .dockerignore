@@ -1,0 +1,10 @@
+node_modules
+README.md
+.bablerc
+.env.example
+.eslintrc.json
+.gitignore
+.hound.yml
+.sequelizerc
+.travis.yml
+PULL_REQUEST_TEMPLATE.md
