@@ -4,20 +4,26 @@
   "description": "Making company travel and accomodation easy and convenient.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint",
+    "lint": "eslint \"./src/**/*.js\"",
+    "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --no-timeout './tests/*.js' --exit",
     "start": "nodemon --exec babel-node src/index.js",
     "build": "babel src/index.js --out-dir build",
-    "coveralls": "cat ./coverage/lcov.info | coveralls"
+    "coverage": "nyc report --reporter=lcov --reporter=text-lcov | coveralls"
   },
   "author": "Andela Stackup Programme",
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.4",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.3.0",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
     "pg": "^7.12.1",
     "sequelize": "^5.15.0",
     "sequelize-cli": "^5.5.0"
