@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 describe('App', () => {
   it('Should display a Welcome to the Cyclops Barefoot Nomad backend API', (done) => {
     chai.request(app)
-      .get('/')
+      .get('/api/v1')
       .end((err, res) => {
         expect(res.status).eql(200);
         expect(res.body).to.be.an('object');
@@ -20,7 +20,7 @@ describe('App', () => {
 
   it('Should display a This route is unavailable on this serve', (done) => {
     chai.request(app)
-      .get('/hjhjh')
+      .get('/api/v1/hjhjh')
       .end((err, res) => {
         expect(res.status).eql(404);
         expect(res.body).to.be.an('object');
