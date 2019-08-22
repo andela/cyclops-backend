@@ -6,8 +6,11 @@
   "scripts": {
     "lint": "eslint \"./src/**/*.js\"",
     "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --no-timeout './tests/*.js' --exit",
-    "start": "nodemon --exec babel-node src/index.js",
-    "build": "babel src/index.js --out-dir build",
+    "start-dev": "nodemon --exec babel-node src/index.js",
+    "start": "npm run db:migrate && npm run db:seed:all && node build/index.js",
+    "build": "babel src --out-dir build",
+    "db:migrate": "./node_modules/.bin/sequelize db:migrate",
+    "db:seed:all": "./node_modules/.bin/sequelize db:seed:all",
     "coverage": "nyc report --reporter=lcov --reporter=text-lcov | coveralls"
   },
   "author": "Andela Stackup Programme",
@@ -27,7 +30,8 @@
     "pg": "^7.12.1",
     "sequelize": "^5.15.1",
     "sequelize-cli": "^5.5.0",
-    "swagger-ui-express": "^4.0.7"
+    "swagger-ui-express": "^4.0.7",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
