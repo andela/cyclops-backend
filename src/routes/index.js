@@ -15,4 +15,12 @@ export default (app) => {
     status: 'error',
     error: 'This route is unavailable on this server'
   }));
+
+  app.use((error, req, res) => {
+    res.status(error.status || 500);
+    res.send({
+      status: 'error',
+      error: error.message
+    });
+  });
 };
