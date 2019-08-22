@@ -4,8 +4,8 @@
   "description": "Making company travel and accomodation easy and convenient.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint \"./src/**/*.js\"",
-    "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --no-timeout './tests/*.js' --exit",
+    "lint": "eslint --fix \"./src/**/*.js\"",
+    "test": "cross-env NODE_ENV=development nyc mocha --no-timeout ./tests/*.test.js --exit",
     "start-dev": "nodemon --exec babel-node src/index.js",
     "start": "npm run db:migrate && npm run db:seed:all && node build/index.js",
     "build": "babel src --out-dir build",
@@ -16,7 +16,16 @@
   "author": "Andela Stackup Programme",
   "license": "MIT",
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/plugin-transform-regenerator": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
+    "babel-runtime": "^6.26.0",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
@@ -30,15 +39,11 @@
     "pg": "^7.12.1",
     "sequelize": "^5.15.1",
     "sequelize-cli": "^5.5.0",
+    "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.0.7",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/node": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
     "babel-eslint": "^10.0.2",
     "coveralls": "^3.0.6",
     "eslint": "^5.16.0",
@@ -46,5 +51,15 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-react": "^7.14.3",
     "nodemon": "^1.19.1"
+  },
+  "nyc": {
+    "require": [
+      "@babel/register"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "sourceMap": false,
+    "instrument": false
   }
 }

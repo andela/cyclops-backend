@@ -23,6 +23,7 @@
         "react", "import"
     ],
     "rules": {
+        "camelcase": 0,
         "one-var": 0,
         "one-var-declaration-per-line": 0,
         "new-cap": 0,

@@ -1,18 +1,36 @@
 /**
- * UserController.
+ * @fileoverview Contains the User controller class
+ *
+ * @author Wokoro Douye Samuel
+ *
+ * @requires repositories/userRepository.js
  */
-class UserController {
+
+import UserRepostitory from '../repositories/userRepository';
+
+/**
+ * The User controller class
+ * @class
+ */
+export default class UserController {
   /**
- * @param {object} req The request object
- * @param {object} res The response object
- * @returns {object} returns the response object
- */
-  static signup(req, res) {
-    res.status(200).send({
-      status: 'success',
-      message: 'User registration endpoint'
-    });
+   * Function to create user
+   * @param {Object} req - HTTP request object
+   * @param {Object} res - HTTP response object
+   * @param {Function} next - Function to trigger next middleware
+   * @return {Object} Object resoponse with current user created status
+   */
+  static async signup({ body }, res, next) {
+    try {
+      await UserRepostitory.create(body);
+      res
+        .status(200)
+        .send({
+          status: 'success',
+          message: 'Account successfully created'
+        });
+    } catch (error) {
+      next(error);
+    }
   }
 }
-
-export default UserController;
