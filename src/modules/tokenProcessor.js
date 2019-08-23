@@ -1,6 +1,6 @@
+/* eslint-disable linebreak-style */
 import { config } from 'dotenv';
 import jwt from 'jsonwebtoken';
-import '@babel/polyfill';
 
 config();
 
@@ -28,4 +28,4 @@ export default {
     });
     return verifiedToken;
   }
-}
+};
