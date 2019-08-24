@@ -14,5 +14,6 @@ userRouter.get('/oauth/google',
 
 userRouter.get('/oauth/facebook',
   passport.authenticate('facebook', { session: false }), AuthController.social);
+userRouter.post('/auth/signin', userAuth.signin, AuthController.signin);
 
 export default userRouter;

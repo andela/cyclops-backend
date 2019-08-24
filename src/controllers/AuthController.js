@@ -1,11 +1,16 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable valid-jsdoc */
 import UserRepository from '../repositories/UserRepository';
-import { sendSuccessResponse } from '../utils/sendResponse';
+import { sendSuccessResponse, sendErrorResponse } from '../utils/sendResponse';
+import { createToken } from '../modules/tokenProcessor';
+import { unhash } from '../utils/index';
+
+const unhashPassword = unhash;
 
 /**
  * @description User controller
  */
-export default class AuthController {
+class AuthController {
   /**
    * @param {Object} req - HTTP request object
    *
@@ -15,7 +20,7 @@ export default class AuthController {
    *
    * @return {Object} Object resoponse with current user created status
    */
-  static async signup({ body }, res, next) {
+  async signup({ body }, res, next) {
     try {
       const newUser = await UserRepository.create(body);
       sendSuccessResponse(res, 201, newUser);
@@ -33,7 +38,7 @@ export default class AuthController {
    *
    * @returns {obj} returns an response object
    */
-  static async social({ user }, res, next) {
+  async social({ user }, res, next) {
     try {
       const newUser = await UserRepository.social(user);
       sendSuccessResponse(res, 200, newUser);
@@ -41,4 +46,29 @@ export default class AuthController {
       next(error);
     }
   }
+
+  /**
+   * @description Uses login with email and password
+   * @param {req} req the request object
+   * @param {res} res the response object
+   * @param {object} body this is the body of the request
+   * @returns {obj} returns an response object
+   */
+  async signin({ body }, res) {
+    const foundUser = await UserRepository.find(body);
+    const { password } = body;
+    if (!foundUser) return sendErrorResponse(res, 404, 'User not found');
+    const confirmPassword = unhashPassword(password, foundUser.dataValues.password);
+    if (!confirmPassword) return sendErrorResponse(res, 400, 'Incorrect Password');
+    if (!foundUser.dataValues.is_verified) return sendErrorResponse(res, 401, 'Verify Your Account');
+    const userInformation = {
+      token: createToken({ uuid: foundUser.uuid, role: foundUser.role, email: foundUser.email }),
+      uuid: foundUser.uuid,
+      email: foundUser.email,
+      name: foundUser.name
+    };
+    return sendSuccessResponse(res, 200, userInformation);
+  }
 }
+
+export default new AuthController();
