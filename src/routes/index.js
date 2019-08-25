@@ -7,7 +7,7 @@ export default (app) => {
     status: 'success',
     data: 'Welcome to the Cyclops Barefoot Nomad backend API'
   }));
-  app.use('/api/v1', user);
+  app.use('/api/v1/auth', user);
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 

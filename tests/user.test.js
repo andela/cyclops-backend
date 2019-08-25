@@ -2,59 +2,64 @@ import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../src/index';
+import model from '../src/models';
+
+const { User } = model;
 
 chai.use(chaiHttp);
 
 describe('User', () => {
+  after(() => {
+    // runs after all tests in this block
+    return User.destroy({ where: {}, force: true });
+  });
+
   it('Should return success for signup', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
         email: '  giftabobo@gmail.com  ',
-        first_name: ' Bles ',
-        last_name: 'Abobo',
+        name: ' Bles Abobo',
         password: 'Blessing9',
       })
       .end((err, res) => {
-        expect(res.status).eql(200);
+        expect(res.status).eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('success');
         done();
       });
   });
 
-  it('Should display an error message of first name should contain only alphabets', (done) => {
+  it('Should display an error message of name field is required', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
         email: '',
-        first_name: '',
-        last_name: '',
+        name: '',
         password: '',
       })
       .end((err, res) => {
         expect(res.status).to.be.eql(422);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.be.have.all.keys('first_name', 'last_name', 'email', 'password');
+        expect(res.body.error).to.be.have.all.keys('name', 'email', 'password');
         done();
       });
   });
 
-  it('Should display an error message of first name should contain only alphabets', (done) => {
+  it('Should display an error message of name should contain only alphabets', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
         email: 'giftabobo@gmail.com',
-        first_name: 'bles33',
-        last_name: 'Abobo',
+        name: 'bles33',
         password: 'Blessing9',
       })
       .end((err, res) => {
         expect(res.status).to.be.eql(422);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.have.property('first_name');
+        expect(res.body.error).to.have.property('name');
         done();
       });
   });
@@ -64,15 +69,14 @@ describe('User', () => {
       .post('/api/v1/auth/signup')
       .send({
         email: 'giftabobo@gmail.com',
-        first_name: 'Gift',
-        last_name: 'Abobo3',
+        name: 'Gift7',
         password: 'Blessing9',
       })
       .end((err, res) => {
         expect(res.status).to.be.eql(422);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.have.property('last_name');
+        expect(res.body.error).to.have.property('name');
         done();
       });
   });
@@ -82,8 +86,7 @@ describe('User', () => {
       .post('/api/v1/auth/signup')
       .send({
         email: 'giftabobo@gmail.com',
-        first_name: 'Gift',
-        last_name: 'Abobo',
+        name: 'Abobo',
         password: 'Bless',
       })
       .end((err, res) => {
@@ -100,8 +103,7 @@ describe('User', () => {
       .post('/api/v1/auth/signup')
       .send({
         email: 'giftabobo@gmail.com',
-        first_name: 'Gift',
-        last_name: 'Abobo',
+        name: 'Gift',
         password: 'Blessing',
       })
       .end((err, res) => {
@@ -118,8 +120,7 @@ describe('User', () => {
       .post('/api/v1/auth/signup')
       .send({
         email: 'giftabobo@gmail',
-        first_name: 'Gift',
-        last_name: 'Abobo',
+        name: 'Gift',
         password: 'Blessing9',
       })
       .end((err, res) => {

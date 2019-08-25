@@ -94,4 +94,11 @@ typings/
 .dynamodb/
 
 # End of https://www.gitignore.io/api/node
-package-lock.json
+
+#package-lock.json
+
+# IDE
+.idea/
+
+# Test report
+tests/report/
