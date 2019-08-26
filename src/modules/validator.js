@@ -28,7 +28,7 @@ export const magicTrimmer = (payload) => {
    */
 export const inValidName = (name, value) => {
   if (!value) return `${name} is required`;
-  if (!/^[a-zA-Z]+$/.test(value)) return `${name} is not valid`;
+  if (!/^[A-Z][a-z]+\s([A-Z][a-z]+\s)?[A-Z][a-z]+$/.test(value)) return `${name} is not valid`;
   return null;
 };
 /**
