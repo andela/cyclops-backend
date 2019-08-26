@@ -1,17 +1,18 @@
 {
   "name": "barefoot-nomad",
   "version": "1.0.0",
-  "description": "Making company travel and accomodation easy and convenient.",
+  "description": "Making company travel and accommodation easy and convenient.",
   "main": "index.js",
   "scripts": {
     "lint": "eslint \"./src/**/*.js\"",
     "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --no-timeout './tests/*.js' --exit",
-    "start-dev": "nodemon --exec babel-node src/index.js",
+    "test:report": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-summary mocha --require @babel/register --timeout 5000 './tests/*.js' --exit",
+    "dev": "nodemon --exec babel-node src/index.js",
     "start": "npm run db:migrate && npm run db:seed:all && node build/index.js",
     "build": "babel src --out-dir build",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
     "db:seed:all": "./node_modules/.bin/sequelize db:seed:all",
-    "coverage": "nyc report --reporter=lcov --reporter=text-lcov | coveralls"
+    "coverage": "cross-env NODE_ENV=test nyc report --reporter=lcov --reporter=text-lcov | coveralls"
   },
   "author": "Andela Stackup Programme",
   "license": "MIT",
@@ -19,15 +20,14 @@
     "@babel/polyfill": "^7.4.4",
     "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
     "cors": "^2.8.4",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.3.0",
-    "mocha": "^6.2.0",
-    "nyc": "^14.1.1",
+    "faker": "^4.1.0",
+    "passport": "^0.4.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "pg": "^7.12.1",
     "sequelize": "^5.15.1",
     "sequelize-cli": "^5.5.0",
@@ -41,6 +41,8 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
     "babel-eslint": "^10.0.2",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "coveralls": "^3.0.6",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^14.0.0",
@@ -48,6 +50,20 @@
     "eslint-plugin-react": "^7.14.3",
     "nodemon": "^1.19.1",
     "sinon": "^7.4.1",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1"
+  },
+  "nyc": {
+    "exclude": [
+      "src/configuration/index.js",
+      "src/services/socialOAuth.js",
+      "src/models/index.js",
+      "src/controllers/SocialLoginController.js",
+      "tests",
+      "node_modules"
+    ],
+    "cache": false,
+    "report-dir": "tests/report"
   }
 }
