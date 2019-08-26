@@ -27,7 +27,7 @@ export default class UserController {
         .status(200)
         .send({
           status: 'success',
-          message: 'Account successfully created'
+          message: 'Account created successfully'
         });
     } catch (error) {
       next(error);

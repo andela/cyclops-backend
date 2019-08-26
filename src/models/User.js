@@ -1,23 +1,9 @@
-<<<<<<< HEAD
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
-=======
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
->>>>>>> ft(user): Create user signup feature
     id: {
       allowNull: false,
       primaryKey: true,
       type: DataTypes.UUID,
-<<<<<<< HEAD
-      defaultValue: DataTypes.UUIDV4,
-    },
-    first_name: DataTypes.STRING,
-    last_name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
-  }, {});
-=======
       defaultValue: DataTypes.UUIDV4
     },
     name: {
@@ -95,7 +81,6 @@ export default (sequelize, DataTypes) => {
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   });
->>>>>>> ft(user): Create user signup feature
   User.associate = () => {
     // associations can be defined here
   };
