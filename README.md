@@ -37,6 +37,14 @@ Make company global travel and accommodation easy and convenient for the strong 
 
 ### Contributors
 
+##### LF
+
+- Paul Bomett
+
+##### PO
+
+- [Abejide Femi](https://github.com/abejide001)
+
 ##### TTL
 
 - [Chima Chukwuemeka](https://github.com/chukwuemekachm)
