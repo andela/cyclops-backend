@@ -1,5 +1,6 @@
+/* eslint-disable valid-jsdoc */
 import SocialOAuthRepository from '../repositories/SocialOAuthRepository';
-import { sendSuccessResponse, sendErrorResponse } from '../utils/sendResponse';
+import { sendSuccessResponse } from '../utils/sendResponse';
 
 /**
  * @description handles passport.js callback for Facebook and Google login.
