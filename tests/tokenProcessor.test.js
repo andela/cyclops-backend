@@ -2,6 +2,7 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+
 import { createToken, verifyToken } from '../src/modules/tokenProcessor';
 
 chai.use(chaiHttp);
@@ -20,6 +21,7 @@ describe('Process token', () => {
   describe('Test Verify Token', () => {
     it('Should return an object', (done) => {
       expect(verifiedToken).to.be.an('object');
+      expect(verifiedToken).to.have.property('email').eql('somemail@mail.com');
       done();
     });
   });
