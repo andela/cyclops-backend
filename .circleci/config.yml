@@ -1,10 +1,13 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/cyclops-backend
     docker:
       - image: circleci/node:10.16.0
-
-        working_directory: ~/repo
+        environment:
+          NODE_ENV: test
+          DATABASE_URL_TEST: postgresql://postgres@localhost/circle_test
+      - image: circleci/postgres:10
 
     steps:
       - checkout
@@ -15,7 +18,7 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-
+      - run: npm db:migrate
       - save_cache:
           paths:
             - node_modules
