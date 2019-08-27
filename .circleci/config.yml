@@ -18,7 +18,7 @@ jobs:
             - v1-dependencies-
 
       - run: npm install
-      - run: npm db:migrate
+      - run: npm run db:migrate
       - save_cache:
           paths:
             - node_modules
