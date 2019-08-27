@@ -57,6 +57,7 @@
       "src/services/socialOAuth.js",
       "src/models/index.js",
       "src/controllers/SocialLoginController.js",
+      "src/repositories/SocialOAuthRepository.js",
       "tests",
       "node_modules"
     ],

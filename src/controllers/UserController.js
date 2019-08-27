@@ -19,11 +19,6 @@ class UserController {
    */
   static async signup(req, res) {
     try {
-      const user = await User.findOne({ where: { email: req.body.email } });
-      if (user) {
-        return sendErrorResponse(res, 409, 'User with that email already exist');
-      }
-
       const {
         name,
         email,
