@@ -21,7 +21,8 @@ export default {
       defaultValue: 'employee'
     },
     is_verified: {
-      type: Sequelize.BOOLEAN
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     },
     facebook_id: {
       type: Sequelize.STRING
