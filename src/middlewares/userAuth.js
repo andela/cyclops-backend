@@ -1,7 +1,7 @@
 import {
   validate, inValidName, inValidEmail, inValidPassword, magicTrimmer,
 } from '../modules/validator';
-import sendErrorResponse from '../utils/sendResponse';
+import { sendErrorResponse } from '../utils/sendResponse';
 
 /**
  * @description userAuth is clas that handles user data validation
@@ -20,12 +20,11 @@ export default class userAuth {
   static signup(req, res, next) {
     const userData = magicTrimmer(req.body);
     const {
-      first_name: firstName, last_name: lastName, email, password,
+      name, email, password,
     } = userData;
 
     const schema = {
-      first_name: inValidName('first name', firstName),
-      last_name: inValidName('last name', lastName),
+      name: inValidName('full name', name),
       email: inValidEmail(email),
       password: inValidPassword(password)
     };
