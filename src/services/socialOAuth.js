@@ -9,20 +9,23 @@ const GoogleStrategy = GooglePassport.Strategy;
 const FacebookStrategy = FacebookPassport.Strategy;
 
 const userProfile = (profile) => {
+  const {
+    id, provider, photos, emails, displayName
+  } = profile;
   let imageUrl = '';
   let email = '';
-  if (profile.emails && profile.emails.length) {
-    email = profile.emails[0].value;
+  if (emails && emails.length) {
+    email = emails[0].value;
   }
-  if (profile.photos && profile.photos.length) {
-    imageUrl = profile.photos[0].value;
+  if (photos && photos.length) {
+    imageUrl = photos[0].value;
   }
   return {
-    social_id: profile.id,
-    name: profile.displayName,
+    social_id: id,
+    name: displayName,
     image: imageUrl,
     email,
-    provider: profile.provider
+    provider
   };
 };
 
