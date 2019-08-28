@@ -60,8 +60,7 @@
       "src/configuration/index.js",
       "src/services/socialOAuth.js",
       "src/models/index.js",
-      "src/controllers/SocialLoginController.js",
-      "src/repositories/SocialOAuthRepository.js",
+      "src/repositories/UserRepository.js",
       "tests",
       "node_modules"
     ],
