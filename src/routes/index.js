@@ -16,11 +16,12 @@ export default (app) => {
     error: 'This route is unavailable on this server'
   }));
 
-  // app.use((error, req, res, next) => {
-  //   res.status(error.status || 500);
-  //   res.send({
-  //     status: 'error',
-  //     error: error.message
-  //   });
-  // });
+  // eslint-disable-next-line no-unused-vars
+  app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.send({
+      status: 'error',
+      error: error.message
+    });
+  });
 };
