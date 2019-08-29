@@ -20,7 +20,7 @@
       },
       {
         "name": "Authentication",
-        "description": "Registers and login users"
+        "description": "User authentication"
     }
   ],
   "schemes": [
@@ -204,7 +204,63 @@
           },
           "security": []
         }
-      }
+      },
+      "/api/v1/auth/forgotPassword": {
+        "post": {
+           "tags": [
+              "Authentication"
+           ],
+           "summary": "Sends a reset link to the user",
+           "produces": [
+              "application/json"
+           ],
+           "parameters": [
+                {
+                    "name": "email",
+                    "in": "path",
+                    "description": "for password reset link",
+                    "required": true,
+                    "type": "string"
+                }
+           ],
+           "responses": {
+                "400": {
+                "description": "Invalid email supplied"
+                },
+                "404": {
+                "description": "User not found"
+                }
+            }
+        }
+     },
+     "/api/v1/auth/resetPassword/:uuid/:token": {
+       "put": {
+          "tags": [
+             "Authentication"
+          ],
+          "summary": "Send new password",
+          "produces": [
+             "application/json"
+          ],
+          "parameters": [
+             {
+                "name": "password",
+                "in": "path",
+                "description": "that need to be updated",
+                "required": true,
+                "type": "string"
+             }
+          ],
+          "responses": {
+             "400": {
+                "description": "Invalid password supplied"
+             },
+             "500": {
+                "description": "Server Error"
+             }
+          }
+       }
+    }
   },
   "securityDefinitions": {
       "api_key": {

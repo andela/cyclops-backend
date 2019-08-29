@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { Router } from 'express';
 import passport from 'passport';
 // eslint-disable-next-line no-unused-vars
@@ -15,5 +16,8 @@ userRouter.get('/oauth/google',
 userRouter.get('/oauth/facebook',
   passport.authenticate('facebook', { session: false }), AuthController.social);
 userRouter.post('/auth/signin', userAuth.signin, AuthController.signin);
+
+userRouter.post('/auth/forgotPassword', AuthController.sendResetLink);
+userRouter.put('/auth/resetPassword/:uuid/:token', AuthController.resetPassword);
 
 export default userRouter;

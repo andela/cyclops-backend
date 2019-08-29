@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /**
  *
  * @description magicTrimmer removes leadng and trailing spaces from a string
@@ -57,7 +58,7 @@ export const inValidPassword = password => {
   if (!password) return 'password is required';
   if (password.length < 8) return 'password should be at least eight characters';
   if (!/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/^[a-zA-Z0-9]+$/.test(password)) {
-    return 'password should contain at least one Uppercase letter, one lowercase letter, and at least one digit';
+    return 'password should contain at least one Uppercase letter, one lowercase letter, and at least one digit with now space';
   }
   return null;
 };

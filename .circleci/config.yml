@@ -20,6 +20,7 @@ jobs:
 
       - run: npm install
       - run: npm run db:migrate
+      - run: npm run db:seed:all
       - save_cache:
           paths:
             - node_modules

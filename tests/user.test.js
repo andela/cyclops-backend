@@ -2,6 +2,7 @@ import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import uuid from 'uuid';
+
 import app from '../src/index';
 import model from '../src/models';
 
@@ -184,8 +185,9 @@ describe('User', () => {
           password: 'Jei12345',
         })
         .end((err, res) => {
-          expect(res.status).to.be.eql(401);
+          expect(res.status).to.be.eql(400);
           expect(res.body.status).to.eql('error');
+          expect(res.body).to.have.property('error');
           done();
         });
     });
