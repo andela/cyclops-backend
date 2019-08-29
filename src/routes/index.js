@@ -11,12 +11,13 @@ export default (app) => {
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
-  app.get('/*', (req, res) => res.status(404).send({
+  app.all('/*', (req, res) => res.status(404).send({
     status: 'error',
     error: 'This route is unavailable on this server'
   }));
 
-  app.use((error, req, res) => {
+  // eslint-disable-next-line no-unused-vars
+  app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.send({
       status: 'error',
