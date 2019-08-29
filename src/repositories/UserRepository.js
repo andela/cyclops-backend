@@ -8,6 +8,7 @@
  * @requires models/User.js
  */
 
+import { hashPassword } from '../utils';
 import Model from '../models';
 import { createToken } from '../modules/tokenProcessor';
 import { sendErrorResponse } from '../utils/sendResponse';
@@ -61,9 +62,9 @@ class UserRepository {
       name,
       email,
       designation,
-      password
+      password: hashPassword(password)
     });
-    return userInfo(dataValues);
+    return dataValues;
   }
 
   /**

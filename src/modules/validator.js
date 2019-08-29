@@ -4,7 +4,7 @@
  *
  */
 
-export const magicTrimmer = (payload) => {
+export const magicTrimmer = payload => {
   const data = {};
   if (payload) {
     Object.keys(payload).forEach((key) => {
@@ -38,7 +38,7 @@ export const inValidName = (name, value) => {
    *
    * @returns {string} string is type of data thr function returns
    */
-export const inValidEmail = (email) => {
+export const inValidEmail = email => {
   if (!email) return 'email is required';
   email = email.toLowerCase();
   if (!/^[A-Za-z0-9.-_]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(email)) return 'email is not valid';
@@ -53,7 +53,7 @@ export const inValidEmail = (email) => {
    *
    * @returns {string} string is the type of data the function returns
    */
-export const inValidPassword = (password) => {
+export const inValidPassword = password => {
   if (!password) return 'password is required';
   if (password.length < 8) return 'password should be at least eight characters';
   if (!/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/^[a-zA-Z0-9]+$/.test(password)) {
@@ -62,7 +62,7 @@ export const inValidPassword = (password) => {
   return null;
 };
 
-export const validate = (obj) => {
+export const validate = obj => {
   const result = {};
   Object.keys(obj).forEach((key) => {
     if (obj[key]) {

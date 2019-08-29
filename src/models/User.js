@@ -9,8 +9,8 @@ export default (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     name: DataTypes.STRING,
     role: {
-      type: DataTypes.ENUM('super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'employee', 'supplier'),
-      defaultValue: 'employee'
+      type: DataTypes.ENUM('employee', 'super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'supplier'),
+      defaultValue: 'manager'
     },
     is_verified: {
       type: DataTypes.BOOLEAN,

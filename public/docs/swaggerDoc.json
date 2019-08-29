@@ -24,8 +24,8 @@
     }
   ],
   "schemes": [
-      "https",
-      "http"
+    "http",
+      "https"
   ],
   "paths": {
       "/api/v1/": {
@@ -111,6 +111,99 @@
                   }
               }
           }
+      },
+      "/api/v1/auth/signup": {
+        "post": {
+          "summary": "user signup",
+          "tags": [
+            "Authentication"
+          ],
+          "operationId": "SignupPost",
+          "deprecated": false,
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/x-www-form-urlencoded"
+          ],
+          "parameters":[
+              {
+                  "name": "name",
+                  "in": "formData",
+                  "required": true,
+                  "type": "string"
+              },
+              {
+                "name": "email",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "name": "email",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "name": "password",
+                "in": "formData",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "name": "gender",
+                "in": "formData",
+                "enum": ["male", "female"],
+                "type": "string"
+            },
+            {
+                "name": "date_of_birth",
+                "in": "formData",
+                "type": "string"
+            },
+            {
+                "name": "designation",
+                "in": "formData",
+                "type": "string"
+            },
+            {
+                "name": "residential_address",
+                "in": "formData",
+                "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+                "schema":{
+                    "title": "Success",
+                    "example": {
+                      "status": "success",
+                      "message": "Account successfully created"
+                    }
+                },
+              "description": "",
+              "headers": {}
+            },
+            "422": {
+                "schema":{
+                    "title": "Success",
+                    "example": {
+                        "status": "error",
+                        "error": {
+                          "first_name": "first name is required",
+                          "last_name": "last name is required",
+                          "email": "email is not valid",
+                          "password": "password should contain at least one Uppercase letter, one lowercase letter, and at least one digit"
+                        }
+                      }
+                },
+              "description": "",
+              "headers": {}
+            }
+          },
+          "security": []
+        }
       }
   },
   "securityDefinitions": {

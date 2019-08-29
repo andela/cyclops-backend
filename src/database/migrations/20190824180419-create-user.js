@@ -17,8 +17,8 @@ export default {
     },
     role: {
       type: Sequelize.ENUM,
-      values: ['super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'employee', 'supplier'],
-      defaultValue: 'employee'
+      values: ['employee', 'super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'supplier'],
+      defaultValue: 'manager'
     },
     is_verified: {
       type: Sequelize.BOOLEAN,

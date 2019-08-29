@@ -18,12 +18,13 @@ class AuthController {
    *
    * @param {Function} next - Function to trigger next middleware
    *
-   * @return {Object} Object resoponse with current user created status
+   * @return {Object} Return sucess message and account creation status
    */
   async signup({ body }, res, next) {
     try {
-      const newUser = await UserRepository.create(body);
-      sendSuccessResponse(res, 201, newUser);
+      await UserRepository.create(body);
+      const message = 'User account created successfully';
+      sendSuccessResponse(res, 200, message);
     } catch (error) {
       next(error);
     }
