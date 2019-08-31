@@ -71,24 +71,6 @@ class UserRepository {
       throw new Error(e);
     }
   }
-
-  /**
-   * @description Find user by its attributes.
-   *
-   * @param {String} column - Name of column to search.
-   *
-   * @param {Object} value - The value to search for in column.
-   *
-   * @return {Object} returns user details
-   */
-  async findByAttr(column, value) {
-    const result = await this.model.findOne({
-      where: {
-        [column]: value
-      }
-    });
-    return result;
-  }
 }
 
 export default new UserRepository(User);
