@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../src/index';
+import app from '../src';
 import model from '../src/models';
 
 const { User } = model;
@@ -39,7 +39,7 @@ describe('User', () => {
         expect(res.status).to.be.eql(422);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.be.have.all.keys('name', 'email', 'password');
+        expect(res.body.error).to.have.all.keys('name', 'email', 'password');
         done();
       });
   });
