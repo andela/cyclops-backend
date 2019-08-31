@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import { Router } from 'express';
 import passport from 'passport';
 // eslint-disable-next-line no-unused-vars
