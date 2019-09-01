@@ -1,21 +1,27 @@
-/* eslint-disable require-jsdoc */
+import { sendErrorResponse } from '../utils/sendResponse';
 import { verifyToken } from '../modules/tokenProcessor';
 import { isBlackListed } from '../utils/index';
-import { sendErrorResponse } from '../utils/sendResponse';
 import UserRepository from '../repositories/UserRepository';
 
+
 export default async (req, res, next) => {
+  const rawToken = req.headers.authorization
+    || req.headers['x-access-token']
+    || req.body.token;
+
   const err = 'Please provide a token';
+
+  if (!rawToken) return sendErrorResponse(res, 401, err);
+
+  const isblocked = await isBlackListed(rawToken);
+  if (isblocked) {
+    return sendErrorResponse(res, 403, 'Unauthorized');
+  }
   try {
-    if (!req.headers.authorization) throw err;
-    const Newtoken = req.headers.authorization;
-    const isblocked = await isBlackListed(Newtoken);
-    if (isblocked) {
-      return sendErrorResponse(res, 403, 'Unauthorized');
-    }
-    const token = Newtoken.split(' ')[1] || req.headers.authorization;
+    const token = rawToken.split(' ')[1];
     const { email } = verifyToken(token);
     const user = await UserRepository.getOne({ email });
+
     if (!user) return sendErrorResponse(res, 403, 'Unauthorized');
     req.userData = user;
     next();

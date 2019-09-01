@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --fix \"./src/**/*.js\"",
-    "test": "cross-env NODE_ENV=test npm run db:migrate:all && cross-env NODE_ENV=test nyc mocha --require @babel/register --no-timeout './tests/*.js' --exit",
-    "test:report": "cross-env NODE_ENV=test npm run db:migrate:all && cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-summary mocha --require @babel/register --timeout 5000 './tests/*.js' --exit",
+    "pretest": "cross-env NODE_ENV=test npm run db:migrate:all",
+    "test": "cross-env NODE_ENV=test nyc mocha --no-timeout './tests/index.js' --exit",
+    "test:report": "cross-env NODE_ENV=test npm run db:migrate:all && cross-env NODE_ENV=test nyc mocha --timeout 5000 './tests/*.js' --exit",
     "dev": "nodemon --exec babel-node src/index.js",
     "start": "npm run build && node build/index.js",
     "build": "babel src --out-dir build",
@@ -62,14 +63,18 @@
   },
   "nyc": {
     "exclude": [
-      "src/configuration/index.js",
+      "src/config/index.js",
       "src/services/socialOAuth.js",
       "src/models/index.js",
       "src/routes/index.js",
       "src/repositories/UserRepository.js",
+      "tests",
+      "public",
       "node_modules"
     ],
+    "reporter": ["lcov", "text"],
     "cache": false,
+    "require": ["@babel/register"],
     "report-dir": "tests/report"
   }
 }
