@@ -11,7 +11,7 @@ export const magicTrimmer = payload => {
       const value = payload[key];
       Object.assign(data, { [key]: value.trim() });
     });
-    payload = data;
+    Object.assign(payload, data);
   }
   return payload;
 };

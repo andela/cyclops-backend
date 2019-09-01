@@ -29,7 +29,7 @@ describe('User', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
-        email: 'wokorosamuel@yahoo.com',
+        email: 'wokoro@yahoo.com',
         name: 'Douye Samuel',
         password: 'Djkladjkaldfj129',
       })

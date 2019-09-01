@@ -115,6 +115,24 @@ class UserRepository {
       return sendErrorResponse(res, 500, 'Internal Server Error');
     }
   }
+
+  /**
+   * @description Find user by its attributes.
+   *
+   * @param {String} column - Name of column to search.
+   *
+   * @param {Object} value - The value to search for in column.
+   *
+   * @return {Object} returns user details
+   */
+  async findByAttr(column, value) {
+    const result = await this.model.findOne({
+      where: {
+        [column]: value
+      }
+    });
+    return result;
+  }
 }
 
 export default new UserRepository();
