@@ -1,32 +1,45 @@
 /* eslint-disable class-methods-use-this */
-/* eslint-disable valid-jsdoc */
+/* eslint-disable camelcase */
 import UserRepository from '../repositories/UserRepository';
 import { createToken } from '../modules/tokenProcessor';
-import { unhash } from '../utils/index';
 import { sendErrorResponse, successResponse, sendSuccessResponse } from '../utils/sendResponse';
 import { inValidEmail, inValidPassword } from '../modules/validator';
 import sendEmail from '../services/emails';
+import { hashPassword, unhashPassword } from '../utils';
 
-const unhashPassword = unhash;
+// Returns selected information for logged in user.
+const userInfo = (user) => {
+  const {
+    email, name, role, uuid, is_verified
+  } = user;
+  return {
+    token: is_verified ? createToken({
+      name,
+      uuid,
+      email,
+      role
+    }) : ''
+  };
+};
 
 /**
  * @description User controller
  */
 class AuthController {
   /**
-   * @param {Object} req - HTTP request object
+   * @param {object} req - HTTP request object
    *
-   * @param {Object} res - HTTP response object
+   * @param {object} res - HTTP response object
    *
-   * @param {Function} next - Function to trigger next middleware
+   * @param {function} next - Function to trigger next middleware
    *
    * @return {Object} Return sucess message and account creation status
    */
   async signup({ body }, res, next) {
     try {
+      body.password = hashPassword(body.password);
       await UserRepository.create(body);
-      const message = 'User account created successfully';
-      sendSuccessResponse(res, 201, message);
+      return sendSuccessResponse(res, 201, 'User account created successfully');
     } catch (error) {
       next(error);
     }
@@ -35,18 +48,39 @@ class AuthController {
   /**
    * @description handles login from Google and Facebook
    *
-   * @param {req} req object
+   * @param {object} user accepts user details object
    *
-   * @param {res} res object
-   * 
-   * @param {next} next 
+   * @param {res} res object* 
    *
-   * @returns {obj} returns an response object
+   * @param {function} next returns error if process fails
+   *
+   * @returns {object} returns a new or existing user's details
    */
   async social({ user }, res, next) {
     try {
-      const newUser = await UserRepository.social(user);
-      sendSuccessResponse(res, 200, newUser);
+      const {
+        social_id,
+        name,
+        image,
+        email,
+        provider
+      } = user;
+
+      const checkUser = provider === 'facebook'
+        ? await UserRepository.getOne({ facebook_id: social_id })
+        : await UserRepository.getOne({ google_id: social_id });
+      if (checkUser) return sendSuccessResponse(res, 201, userInfo(checkUser));
+
+      const newUser = await UserRepository.create({
+        name,
+        email,
+        is_verified: true,
+        image_url: image,
+        facebook_id: (provider === 'facebook' ? social_id : ''),
+        google_id: (provider === 'google' ? social_id : ''),
+        role: 'employee'
+      });
+      return sendSuccessResponse(res, 201, userInfo(newUser));
     } catch (error) {
       next(error);
     }
@@ -54,25 +88,27 @@ class AuthController {
 
   /**
    * @description Uses login with email and password
-   * @param {req} req the request object
+   *
+   * @param {object} body the request object
+   *
    * @param {res} res the response object
-   * @param {object} body this is the body of the request
-   * @returns {obj} returns an response object
+   *
+   * @param {function} next this is the body of the request
+   *
+   * @returns {res} returns an response object
    */
-  async signin({ body }, res) {
-    const foundUser = await UserRepository.find(body);
-    const { password } = body;
-    if (!foundUser) return sendErrorResponse(res, 404, 'User not found');
-    const confirmPassword = unhashPassword(password, foundUser.dataValues.password);
-    if (!confirmPassword) return sendErrorResponse(res, 400, 'Incorrect Password');
-    if (!foundUser.dataValues.is_verified) return sendErrorResponse(res, 401, 'Verify Your Account');
-    const userInformation = {
-      token: createToken({ uuid: foundUser.uuid, role: foundUser.role, email: foundUser.email }),
-      uuid: foundUser.uuid,
-      email: foundUser.email,
-      name: foundUser.name
-    };
-    return sendSuccessResponse(res, 200, userInformation);
+  async signin({ body }, res, next) {
+    try {
+      const { email, password } = body;
+      const foundUser = await UserRepository.getOne({ email });
+      if (!foundUser) return sendErrorResponse(res, 404, 'User not found');
+      const confirmPassword = unhashPassword(password, foundUser.dataValues.password);
+      if (!confirmPassword) return sendErrorResponse(res, 400, 'Incorrect Password');
+      if (!foundUser.dataValues.is_verified) return sendErrorResponse(res, 401, 'Verify Your Account');
+      return sendSuccessResponse(res, 200, userInfo(foundUser));
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**
@@ -89,7 +125,7 @@ class AuthController {
   async sendResetLink(req, res) {
     const { email } = req.body;
     if (!inValidEmail(email)) {
-      const { uuid } = await UserRepository.findByEmail(email);
+      const { uuid } = await UserRepository.getOne({ email });
       const token = await createToken({ uuid, email });
       const link = `http://${process.env.APP_URL}/api/v1/auth/resetPassword/${uuid}/${token}`;
       await sendEmail(
@@ -116,7 +152,7 @@ class AuthController {
     const { uuid } = req.params;
     if (!inValidPassword(password)) {
       try {
-        await UserRepository.updatePassword(uuid, password);
+        await UserRepository.update(uuid, { password });
         return successResponse(res, 200, 'Password Reset Successfully');
       } catch (error) {
         return sendErrorResponse(res, 500, 'Unable to update password');

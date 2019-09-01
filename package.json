@@ -32,7 +32,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^7.12.1",
-    "sequelize": "^5.15.1",
+    "sequelize": "^5.17.2",
     "sequelize-cli": "^5.5.0",
     "swagger-ui-express": "^4.0.7",
     "uuid": "^3.3.3"
@@ -50,7 +50,7 @@
     "@babel/runtime": "^7.4.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
-    "babel-eslint": "^10.0.2",
+    "babel-eslint": "^10.0.3",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "coveralls": "^3.0.6",
@@ -60,16 +60,16 @@
     "eslint-plugin-react": "^7.14.3",
     "mocha": "^6.2.0",
     "nodemon": "^1.19.1",
+    "nyc": "^14.1.1",
     "sinon": "^7.4.1",
-    "sinon-chai": "^3.3.0",
-    "nyc": "^14.1.1"
+    "sinon-chai": "^3.3.0"
   },
   "nyc": {
     "exclude": [
       "src/configuration/index.js",
       "src/services/socialOAuth.js",
       "src/models/index.js",
-      "src/repositories/UserRepository.js",
+      "tests",
       "node_modules"
     ],
     "require": [
