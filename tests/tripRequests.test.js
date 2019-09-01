@@ -16,14 +16,13 @@ const userdata = {
   password: 'MerryXmascoming19',
   is_verified: true
 };
-const newUser = [userdata,
-  {
-    uuid: '407d0d03-be0d-477c-badd-5df63b04307e',
-    name: 'Makaraba Bles',
-    email: 'blessingmakaraba@gmal.com',
-    is_verified: false,
-    password: 'MerryXmascoming19'
-  }];
+const newUser = [userdata, {
+  uuid: '407d0d03-be0d-477c-badd-5df63b04307e',
+  name: 'Makaraba Bles',
+  email: 'blessingmakaraba@gmal.com',
+  is_verified: false,
+  password: 'MerryXmascoming19'
+}];
 
 chai.use(chaiHttp);
 

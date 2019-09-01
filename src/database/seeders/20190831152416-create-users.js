@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable import/no-extraneous-dependencies */
+=======
+>>>>>>> 51bc8079159eef085014f214ba55982dc84c7db5
 import uuid from 'uuid/v4';
 import faker from 'faker';
 
@@ -6,6 +9,7 @@ export default {
   up: (queryInterface, Sequelize) => {
     const UsersData = [
       {
+<<<<<<< HEAD
         uuid: uuid(),
         name: 'Justin',
         email: 'efejustin3@gmail.com',
@@ -26,11 +30,16 @@ export default {
         updatedAt: Sequelize.literal('NOW()')
       },
       {
+=======
+>>>>>>> 51bc8079159eef085014f214ba55982dc84c7db5
         uuid: 'abef6009-48be-4b38-80d0-b38c1bc39922',
         email: 'greatness@andela.com',
         password: 'Password123',
         name: 'Albert Faith',
+<<<<<<< HEAD
         is_verified: true,
+=======
+>>>>>>> 51bc8079159eef085014f214ba55982dc84c7db5
         office_uuid: 'b38fcf44-b77f-4149-8d66-454d7a5eacda',
         createdAt: Sequelize.literal('NOW()'),
         updatedAt: Sequelize.literal('NOW()')
@@ -40,7 +49,10 @@ export default {
         email: 'mymail.naija.com',
         password: 'Password123',
         name: 'Robert Dick',
+<<<<<<< HEAD
         is_verified: true,
+=======
+>>>>>>> 51bc8079159eef085014f214ba55982dc84c7db5
         office_uuid: 'd5c65b0b-e60a-4dad-ab99-25b752fcb9ae',
         createdAt: Sequelize.literal('NOW()'),
         updatedAt: Sequelize.literal('NOW()')

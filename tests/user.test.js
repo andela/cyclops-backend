@@ -109,7 +109,7 @@ describe('User API', () => {
           done();
         });
     });
-  
+
     it('Should display an error message of password should contain at least one Uppercase letter, one lowercase letter, and at least one digit', (done) => {
       chai.request(app)
         .post('/api/v1/auth/signup')
@@ -126,7 +126,7 @@ describe('User API', () => {
           done();
         });
     });
-  
+
     it('Should display an error message of email should be of the form; example@ymail.com', (done) => {
       chai.request(app)
         .post('/api/v1/auth/signup')
