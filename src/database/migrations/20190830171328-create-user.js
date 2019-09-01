@@ -33,8 +33,15 @@ export default {
     manager_id: {
       type: Sequelize.INTEGER
     },
-    office_id: {
-      type: Sequelize.INTEGER
+    office_uuid: {
+      type: Sequelize.UUID,
+      references: {
+        model: 'OfficeLocations',
+        key: 'uuid',
+        as: 'office',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     gender: {
       type: Sequelize.STRING
