@@ -34,7 +34,7 @@ describe('User', () => {
         password: 'Djkladjkaldfj129',
       })
       .end((err, res) => {
-        expect(res.status).eql(200);
+        expect(res.status).eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('success');
         expect(res.body.data).to.eql('User account created successfully');

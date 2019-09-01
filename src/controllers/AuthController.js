@@ -24,7 +24,7 @@ class AuthController {
     try {
       await UserRepository.create(body);
       const message = 'User account created successfully';
-      sendSuccessResponse(res, 200, message);
+      sendSuccessResponse(res, 201, message);
     } catch (error) {
       next(error);
     }
