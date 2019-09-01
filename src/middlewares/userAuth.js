@@ -33,4 +33,27 @@ export default class userAuth {
     if (error) return sendErrorResponse(res, 422, error);
     return next();
   }
+
+  /**
+   *
+   * @param {req} req object
+   *
+   * @param {res} res object
+   *
+   * @param {next} next forwards request to the next middleware function
+   *
+   * @returns {obj} reurns an response object
+   */
+  static signin(req, res, next) {
+    const userInfo = magicTrimmer(req.body);
+    const { email, password } = userInfo;
+
+    const schema = {
+      email: inValidEmail(email),
+      password: inValidPassword(password),
+    };
+    const error = validate(schema);
+    if (error) return sendErrorResponse(res, 422, error);
+    return next();
+  }
 }
