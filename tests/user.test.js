@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import uuid from 'uuid';
-import app from '../src/index';
+import app from '../src';
 import model from '../src/models';
 
 const { User } = model;
