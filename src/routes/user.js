@@ -5,10 +5,13 @@ import passport from 'passport';
 import socialOAuth from '../services/socialOAuth';
 import AuthController from '../controllers/AuthController';
 import userAuth from '../middlewares/userAuth';
+import passToken from '../middlewares/index';
 
 const userRouter = Router();
 
 userRouter.post('/auth/signup', userAuth.signup, userAuth.userExistCheck, AuthController.signup);
+userRouter.get('/user', passToken, AuthController.show);
+userRouter.put('/user', passToken, AuthController.update);
 
 userRouter.get('/oauth/google',
   passport.authenticate('google', { session: false }), AuthController.social);

@@ -17,7 +17,7 @@ import { createToken } from '../modules/tokenProcessor';
 // Returns selected information for logged in user.
 const userInfo = user => {
   const {
-    email, name, role, uuid, image_url, is_verified
+    email, name, role, uuid, image_url
   } = user;
   return {
     uuid,
@@ -25,7 +25,7 @@ const userInfo = user => {
     image_url,
     email,
     role,
-    token: is_verified ? createToken({ uuid, role, email }) : ''
+    token: createToken({ uuid, role, email })
   };
 };
 
@@ -131,6 +131,30 @@ class UserRepository {
     } catch (err) {
       throw new Error(err);
     }
+  }
+
+  /**
+   * @description Update user information
+   *
+   * @param {String} newValues - Value to update user profile with
+   *
+   * @param {Object} column - Column to find given value
+   *
+   * @param {Object} value - Value to check for in the column
+   *
+   * @return {Object} Returns user details
+   */
+  async update(newValues, column, value) {
+    const result = await this.model.update(
+      newValues,
+      { returning: true, where: { [column]: value } }
+    );
+    const [numberOfEdits] = result;
+    if (numberOfEdits > 0) {
+      const [, [{ dataValues }]] = result;
+      return dataValues;
+    }
+    return '';
   }
 }
 

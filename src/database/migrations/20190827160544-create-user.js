@@ -34,7 +34,7 @@ export default {
       type: Sequelize.STRING
     },
     date_of_birth: {
-      type: Sequelize.DATE
+      type: Sequelize.STRING
     },
     department: {
       type: Sequelize.STRING

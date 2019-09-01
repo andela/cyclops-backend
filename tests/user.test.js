@@ -51,7 +51,7 @@ describe('User', () => {
       .send({
         email: 'giftabobo@gmail.com',
         name: 'bles33',
-        password: 'Blessing9',
+        password: 'Blesn sing9',
       })
       .end((err, res) => {
         expect(res.status).to.be.eql(422);

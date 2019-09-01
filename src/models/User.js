@@ -21,7 +21,7 @@ export default (sequelize, DataTypes) => {
     google_id: DataTypes.STRING,
     gender: DataTypes.STRING,
     image_url: DataTypes.STRING,
-    date_of_birth: DataTypes.DATE,
+    date_of_birth: DataTypes.STRING,
     department: DataTypes.STRING,
     preferred_currency: DataTypes.STRING,
     preferred_language: DataTypes.STRING,

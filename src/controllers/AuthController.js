@@ -38,8 +38,8 @@ class AuthController {
    * @param {req} req object
    *
    * @param {res} res object
-   * 
-   * @param {next} next 
+   *
+   * @param {next} next
    *
    * @returns {obj} returns an response object
    */
@@ -78,13 +78,13 @@ class AuthController {
 
   /**
   * @description Sends reset link to user Email
-  * 
+  *
   * @param {Object} req - Request object
-  * 
+  *
   * @param {Object} res - Response object
-  * 
+  *
   * @returns {Object} object containing user data which will be embedded in link sent to user
-  * 
+  *
   * @memberof UserController
   */
   async sendResetLink(req, res) {
@@ -105,11 +105,11 @@ class AuthController {
 
   /**
    * @description Updates the user's password
-   * 
+   *
    * @param {object} req - request object
-   * 
+   *
    * @param {object} res - response object
-   * 
+   *
    * @returns {object} either error or success
    */
   async resetPassword(req, res) {
@@ -125,6 +125,54 @@ class AuthController {
     }
     return sendErrorResponse(res, 400, inValidPassword(password));
   }
+
+  /**
+   * @description Function to get specific user details
+   *
+   * @param {Object} req - HTTP request object
+   *
+   * @param {Object} res - HTTP response object
+   *
+   * @param {Function} next - Function to trigger next middleware
+   *
+   * @return {Object} Object resoponse with current user information status
+   */
+  async show({ body }, res, next) {
+    const { token: { email } } = body;
+    try {
+      const result = await UserRepository.findByAttr('email', email);
+      if (result) {
+        result.password = undefined;
+        return sendSuccessResponse(res, 200, result);
+      }
+      return sendErrorResponse(res, 400, 'User not found');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @description Function to update user details
+   *
+   * @param {Object} req - HTTP request object
+   *
+   * @param {Object} res - HTTP response object
+   *
+   * @param {Function} next - Function to trigger next middleware
+   *
+   * @return {Object} Object resoponse with current user created status
+   */
+  async update({ body }, res, next) {
+    try {
+      const { token: { email } } = body;
+      const result = await UserRepository.update(body, 'email', email);
+      if (result) { return sendSuccessResponse(res, 200, result); }
+      return sendSuccessResponse(res, 200, 'No edit made');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
+
 
 export default new AuthController();
