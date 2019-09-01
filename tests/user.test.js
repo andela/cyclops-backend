@@ -1,10 +1,24 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import uuid from 'uuid';
 import app from '../src/index';
 import model from '../src/models';
 
 const { User } = model;
+const newUser = [{
+  uuid: uuid(),
+  name: 'Justin',
+  email: 'efejustin3@gmail.com',
+  password: '$2b$06$9PXuJTiU/uSbRTSaag5NW.OsY.iq9rVI/.Q4qGOhmIAnxtsDpk9W2',
+  is_verified: true
+}, {
+  uuid: uuid(),
+  name: 'Makaraba',
+  email: 'blessingmakaraba@gmail.com',
+  is_verified: false,
+  password: '$2b$06$9PXuJTiU/uSbRTSaag5NW.OsY.iq9rVI/.Q4qGOhmIAnxtsDpk9W2'
+}];
 
 chai.use(chaiHttp);
 
@@ -127,5 +141,66 @@ describe('User', () => {
         expect(res.body.error).to.have.property('email');
         done();
       });
+  });
+
+  describe('User', () => {
+    before(async () => {
+      await User.bulkCreate(newUser);
+    });
+    it('Should return success for signin', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'efejustin3@gmail.com',
+          password: 'Jei12345',
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property('data');
+          done();
+        });
+    });
+
+    it('shouild not signin unregistered user', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'nonsoamos@gmail.com',
+          password: 'Bjul4454',
+        })
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body.status).to.eql('error');
+          done();
+        });
+    });
+
+    it('shouild not signin a user whose is not verified', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'blessingmakaraba@gmail.com',
+          password: 'Jei12345',
+        })
+        .end((err, res) => {
+          expect(res.status).to.be.eql(401);
+          expect(res.body.status).to.eql('error');
+          done();
+        });
+    });
+
+    it('shouild not signin a user with incorrect password', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'efejustin3@gmail.com',
+          password: 'Bjul445478',
+        })
+        .end((err, res) => {
+          expect(res.status).to.be.eql(400);
+          expect(res.body.status).to.eql('error');
+          done();
+        });
+    });
   });
 });

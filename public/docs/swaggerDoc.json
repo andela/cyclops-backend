@@ -70,7 +70,7 @@
               "parameters": [
                   {
                       "in": "body",
-                      "name": "signup",
+                      "name": "signin",
                       "schema": {
                           "type": "object",
                           "properties": {
@@ -87,14 +87,27 @@
                   }
               ],
               "responses": {
-                  "200": {
-                      "description": "successful operation",
+                "200": {
+                    "description": "successful operation",
+                    "schema": {
+                        "$ref": "#/definitions/User"
+                    }
+                }, "401": {
+                    "description": "Authorization Error",
+                    "schema": {
+                        "$ref": "#/definitions/User"
+                    }
+                }, "403": {
+                    "description": "Authentication",
+                    "schema": {
+                        "$ref": "#/definitions/User"
+                    }
+                },
+                  "404": {
+                      "description": "Not Found",
                       "schema": {
-                          "$ref": "#/definitions/User"
-                      }
-                  },
-                  "400": {
-                      "description": "User not found"
+                        "$ref": "#/definitions/User"
+                    }
                   }
               }
           }

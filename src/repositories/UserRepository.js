@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 /* eslint-disable camelcase */
 /**
  * @fileoverview Contains the User Auth Repository class, an interface for querying User table
@@ -9,6 +10,7 @@
 
 import Model from '../models';
 import { createToken } from '../modules/tokenProcessor';
+import { sendErrorResponse } from '../utils/sendResponse';
 
 // Returns selected information for logged in user.
 const userInfo = (user) => {
@@ -31,7 +33,7 @@ const { User } = Model;
  *
  * @class
  */
-export default class UserRepository {
+class UserRepository {
   /**
    *@constructor
    */
@@ -48,7 +50,8 @@ export default class UserRepository {
    *
    * @return {Object} returns user details
    */
-  static async create({
+  // eslint-disable-next-line class-methods-use-this
+  async create({
     password,
     email,
     name,
@@ -70,7 +73,8 @@ export default class UserRepository {
    *
    * @return {Object} returns new or existing user details
    */
-  static async social({
+  // eslint-disable-next-line class-methods-use-this
+  async social({
     social_id,
     name,
     image,
@@ -94,4 +98,22 @@ export default class UserRepository {
     });
     return userInfo(dataValues);
   }
+
+  /**
+   *@description This is a function that finds a user in the data base
+   * @param {string} email this is the response that parameter
+   * @param {string}  res This is the email the user provided on sign in
+   * @returns {object} returns the user information on the object
+   * @returns {object} returns error object if there is any
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async find({ email }, res) {
+    try {
+      return await User.findOne({ where: { email } });
+    } catch (error) {
+      return sendErrorResponse(res, 500, 'Internal Server Error');
+    }
+  }
 }
+
+export default new UserRepository();
