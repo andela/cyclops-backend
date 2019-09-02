@@ -10,15 +10,18 @@ export default {
       type: Sequelize.STRING
     },
     password: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      select: false
     },
     name: {
       type: Sequelize.STRING
     },
     role: {
-      type: Sequelize.ENUM,
-      values: ['employee', 'super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'supplier'],
-      defaultValue: 'employee'
+      type: Sequelize.STRING,
+      defaultValue: 'Requester'
+    },
+    role_id: {
+      type: Sequelize.UUID
     },
     is_verified: {
       type: Sequelize.BOOLEAN,
