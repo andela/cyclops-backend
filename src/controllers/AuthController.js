@@ -1,12 +1,12 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable camelcase */
 import UserRepository from '../repositories/UserRepository';
-import { createToken } from '../modules/tokenProcessor';
 import { blackListThisToken } from '../utils';
+import { createToken, verifyToken } from '../modules/tokenProcessor';
 import { sendErrorResponse, successResponse, sendSuccessResponse } from '../utils/sendResponse';
 import { inValidEmail, inValidPassword } from '../modules/validator';
 import sendEmail from '../services/emails';
-import { hashPassword, unhashPassword } from '../utils/hashPassword';
+import { unhashPassword } from '../utils/hashPassword';
 
 // Returns selected information for logged in user.
 const userInfo = (user) => {
@@ -36,13 +36,50 @@ class AuthController {
    *
    * @return {Object} Return success message and account creation status
    */
-  async signup({ body }, res, next) {
+  async signup({ protocol, headers, body }, res, next) {
     try {
-      body.password = hashPassword(body.password);
-      await UserRepository.create(body);
-      sendSuccessResponse(res, 201, { message: 'User account created successfully' });
+      const { email, name } = body;
+      const newUser = await UserRepository.create(body);
+      const message = 'User account created successfully';
+      const token = createToken(
+        {
+          uuid: newUser.uuid,
+          name,
+          email,
+          role: newUser.role
+        }
+      );
+      newUser.token = token;
+      const link = `${protocol}//${headers.host}/api/v1/auth/confirm_email?token=${token}&id=${newUser.uuid}`;
+      await sendEmail(
+        email,
+        'Barefoot Nomad Account Verification',
+        `Please kindly click on the link below to verify your account <br/> ${link}`
+      );
+      return sendSuccessResponse(res, 201, message);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 
+   * @param {object} req
+   * 
+   * @param {object} res
+   * 
+   * @returns {object} returns a response object
+   */
+  async confirmEmail(req, res) {
+    const { token } = req.query;
+    try {
+      const verify = await verifyToken(token);
+      const user = await UserRepository.getOne({ uuid: verify.uuid });
+      if (user.dataValues.is_verified === true) return sendErrorResponse(res, 400, 'Account verified already');
+      await UserRepository.verifyUser(verify.uuid);
+      return successResponse(res, 200, 'Email verified successfully');
     } catch (err) {
-      return next(err);
+      return sendErrorResponse(res, 400, 'Unable to verifiy email');
     }
   }
 
@@ -89,23 +126,35 @@ class AuthController {
 
   /**
    * @description Uses login with email and password
-   *
-   * @param {object} body the request object
-   *
+   * 
+   * @param {req} req the request object
+   * 
    * @param {res} res the response object
-   *
-   * @param {function} next this is the body of the request
-   *
-   * @returns {res} returns an response object
+   * 
+   * @param {object} body this is the body of the request
+   * 
+   * @returns {obj} returns an response object
    */
   async signin({ body }, res) {
-    const { email, password } = body;
+    const { email } = body;
     const foundUser = await UserRepository.getOne({ email });
+    const { password } = body;
     if (!foundUser) return sendErrorResponse(res, 404, 'User not found');
     const confirmPassword = unhashPassword(password, foundUser.dataValues.password);
     if (!confirmPassword) return sendErrorResponse(res, 400, 'Incorrect Password');
     if (!foundUser.dataValues.is_verified) return sendErrorResponse(res, 401, 'Verify Your Account');
-    return sendSuccessResponse(res, 200, userInfo(foundUser));
+    const token = await createToken(
+      {
+        uuid: foundUser.uuid,
+        role: foundUser.role,
+        email: foundUser.email,
+        role_id: foundUser.role_id
+      }
+    );
+    const userInformation = {
+      token,
+    };
+    return sendSuccessResponse(res, 200, userInformation);
   }
 
   /**
@@ -124,7 +173,7 @@ class AuthController {
     if (!inValidEmail(email)) {
       const { uuid } = await UserRepository.getOne({ email });
       const token = await createToken({ uuid, email });
-      const link = `http://${process.env.APP_URL}/api/v1/auth/resetPassword/${uuid}/${token}`;
+      const link = `${req.protocol}//${req.headers.host}/api/v1/auth/reset_password/${uuid}/${token}`;
       try {
         await sendEmail(
           email,

@@ -1,3 +1,6 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable linebreak-style */
+/* eslint-disable no-useless-catch */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable camelcase */
 /**
@@ -10,7 +13,15 @@
 
 import Model from '../models';
 
-const { User, BlackListedToken } = Model;
+const {
+  User,
+  BlackListedToken,
+  Role,
+  Permission,
+  RolePermission,
+  Manager
+} = Model;
+
 /**
  * User repository class
  *
@@ -79,6 +90,19 @@ class UserRepository {
       throw new Error(e);
     }
   }
+  
+  /**
+   * @description this is a method that gets all users in the database
+   * 
+   * @returns {array} returns an array of user objects
+   */
+  async getAll() {
+    try {
+      return await User.findAll();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 
 
   /**
@@ -110,6 +134,132 @@ class UserRepository {
       return await User.update(changes, { returning: true, where: { uuid: userId } });
     } catch (e) {
       throw new Error(e);
+    }
+  }
+
+  /**
+   * @description gets a list of roles from the database
+   * 
+   * @returns {*} an array of role names
+   */
+  async getRoles() {
+    try {
+      const roles = await Role.findAll();
+      if (!roles) return;
+      const roleNames = roles.map(role => role.dataValues.name);
+      return roleNames;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /**
+   * @description gets a list of permissions from the database
+   * 
+   * @param {*} roleId
+   * 
+   * @returns {array} an array of permission names
+   */
+  async getRolePermissions(roleId) {
+    try {
+      const [roles] = await Role.findAll(
+        {
+          where: { uuid: roleId }, 
+          include: [
+            {
+              model: Permission,
+              as: 'permissions',
+              required: true,
+              attributes: ['uuid', 'name'],
+              through: { attributes: [] }
+            }
+          ],
+        }
+      );
+      return roles.dataValues.permissions;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * @description gets a list of permissions from the database
+   * 
+   * @returns {array} an array of permission names
+   */
+  async getPermissions() {
+    try {
+      const permissions = await Permission.findAll();
+      if (!permissions) return;
+      const permissionNames = permissions.map(permission => permission.dataValues.name);
+      return permissionNames;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /**
+   * 
+   * @param {string} email 
+   * 
+   * @param {string} newRole
+   * 
+   * @returns {object} updated user
+   */
+  async setRole(email, newRole) {
+    try {
+      const { uuid } = await Role.findOne({ where: { name: newRole } });
+      const data = await User.update(
+        { role_id: uuid, role: newRole },
+        { where: { email }, returning: true, plain: true }
+      );
+      if (newRole === 'Manager') {
+        await Manager.create(
+          { uuid: data.uuid }
+        );
+      }
+      
+      return data;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
+  /**
+   * 
+   * @param {string} role
+   * 
+   * @param {string} permission
+   * 
+   * @returns {object} updated user
+   */
+  async setPermission(role, permission) {
+    try {
+      const userRole = await Role.findOne({ where: { name: role } });
+      const userPermission = await Permission.findOne({ where: { name: permission } });
+      const newRolePermission = await RolePermission.create(
+        { role_id: userRole.uuid, permission_id: userPermission.uuid }
+      );
+      return newRolePermission;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * @param {*} userId
+   * 
+   * @returns {*} returns a verified user object
+   */
+  async verifyUser(userId) {
+    try {
+      const user = await User.update(
+        { is_verified: true },
+        { where: { uuid: userId }, returning: true }
+      );
+      return user;
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }
