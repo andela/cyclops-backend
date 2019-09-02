@@ -68,6 +68,7 @@
     "exclude": [
       "src/configuration/index.js",
       "src/services/socialOAuth.js",
+      "src/controllers/AuthController.js",
       "src/models/index.js",
       "src/controllers/AuthController.js",
       "tests",
