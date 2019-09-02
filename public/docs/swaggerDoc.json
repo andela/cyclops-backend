@@ -1,208 +1,195 @@
 {
   "swagger": "2.0",
   "info": {
-      "description": "Making company travel and accomodation easy and convenient.",
-      "version": "1.0.0",
-      "title": "Barefoot Nomad",
-      "contact": {
-          "email": "cyclops@andela.com"
-      },
-      "license": {
-          "name": "Apache 2.0",
-          "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-      }
+    "description": "Making company travel and accomodation easy and convenient.",
+    "version": "1.0.0",
+    "title": "Barefoot Nomad",
+    "contact": {
+      "email": "cyclops@andela.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
   },
   "basePath": "/",
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "scheme": "bearer",
+      "description": "You are required to pass the JWT token received upon signup and signin in the headers to access secured endpoint, required input format: \"Bearer \\<token\\>\"",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
   "tags": [
-      {
-          "name": "Landing",
-          "description": "Barefoot Nomad landing"
-      },
-      {
-        "name": "Authentication",
-        "description": "User authentication"
+    {
+      "name": "Landing",
+      "description": "Barefoot Nomad landing"
+    },
+    {
+      "name": "Authentication",
+      "description": "Registers and login users"
     }
   ],
-  "schemes": [
-    "http",
-      "https"
-  ],
+  "schemes": ["http", "https"],
   "paths": {
-      "/api/v1/": {
-          "get": {
-              "tags": [
-                  "Landing"
-              ],
-              "summary": "See landing page",
-              "description": "Returns a map of status codes to quantities",
-              "produces": [
-                  "application/json"
-              ],
-              "responses": {
-                  "200": {
-                      "description": "successful operation",
-                      "schema": {
-                          "$ref": "#/definitions/Landing"
-                      }
-                  },
-                  "400": {
-                      "description": "Invalid"
-                  }
-              },
-              "security": [
-                  {
-                      "api_key": []
-                  }
-              ]
-          }
-      },
-      "/api/v1/auth/signin": {
-          "post": {
-              "tags": [
-                  "Authentication"
-              ],
-              "summary": "Logs user into the system",
-              "description": "",
-              "operationId": "loginUser",
-              "produces": [
-                  "application/json"
-              ],
-              "parameters": [
-                  {
-                      "in": "body",
-                      "name": "signin",
-                      "schema": {
-                          "type": "object",
-                          "properties": {
-                              "email": {
-                                  "type": "string",
-                                  "example": "johndoe@company.com"
-                              },
-                              "password": {
-                                  "type": "string",
-                                  "example": "password"
-                              }
-                          }
-                      }
-                  }
-              ],
-              "responses": {
-                "200": {
-                    "description": "successful operation",
-                    "schema": {
-                        "$ref": "#/definitions/User"
-                    }
-                }, "401": {
-                    "description": "Authorization Error",
-                    "schema": {
-                        "$ref": "#/definitions/User"
-                    }
-                }, "403": {
-                    "description": "Authentication",
-                    "schema": {
-                        "$ref": "#/definitions/User"
-                    }
-                },
-                  "404": {
-                      "description": "Not Found",
-                      "schema": {
-                        "$ref": "#/definitions/User"
-                    }
-                  }
-              }
-          }
-      },
-      "/api/v1/auth/signup": {
-        "post": {
-          "summary": "user signup",
-          "tags": [
-            "Authentication"
-          ],
-          "operationId": "SignupPost",
-          "deprecated": false,
-          "produces": [
-            "application/json"
-          ],
-          "consumes": [
-            "application/x-www-form-urlencoded"
-          ],
-          "parameters":[
-              {
-                  "name": "name",
-                  "in": "formData",
-                  "required": true,
-                  "type": "string"
-              },
-              {
-                "name": "email",
-                "in": "formData",
-                "required": true,
-                "type": "string"
-            },
-            {
-                "name": "email",
-                "in": "formData",
-                "required": true,
-                "type": "string"
-            },
-            {
-                "name": "password",
-                "in": "formData",
-                "required": true,
-                "type": "string"
-            },
-            {
-                "name": "gender",
-                "in": "formData",
-                "enum": ["male", "female"],
-                "type": "string"
-            },
-            {
-                "name": "date_of_birth",
-                "in": "formData",
-                "type": "string"
-            },
-            {
-                "name": "designation",
-                "in": "formData",
-                "type": "string"
-            },
-            {
-                "name": "residential_address",
-                "in": "formData",
-                "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-                "schema":{
-                    "title": "Success",
-                    "example": {
-                      "status": "success",
-                      "message": "Account successfully created"
-                    }
-                },
-              "description": "",
-              "headers": {}
-            },
-            "422": {
-                "schema":{
-                    "title": "Success",
-                    "example": {
-                        "status": "error",
-                        "error": {
-                          "first_name": "first name is required",
-                          "last_name": "last name is required",
-                          "email": "email is not valid",
-                          "password": "password should contain at least one Uppercase letter, one lowercase letter, and at least one digit"
-                        }
-                      }
-                },
-              "description": "",
-              "headers": {}
+    "/": {
+      "get": {
+        "tags": ["Landing"],
+        "summary": "See landing page",
+        "description": "Returns a map of status codes to quantities",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Landing"
             }
           },
-          "security": []
+          "400": {
+            "description": "Invalid"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/signup": {
+      "post": {
+        "summary": "user signup",
+        "tags": ["Authentication"],
+        "operationId": "SignupPost",
+        "deprecated": false,
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "formData",
+            "enum": ["male", "female"],
+            "type": "string"
+          },
+          {
+            "name": "date_of_birth",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "designation",
+            "in": "formData",
+            "type": "string"
+          },
+          {
+            "name": "residential_address",
+            "in": "formData",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "title": "Success",
+              "example": {
+                "status": "success",
+                "message": "Account successfully created"
+              }
+            },
+            "description": "",
+            "headers": {}
+          },
+          "422": {
+            "schema": {
+              "title": "Success",
+              "example": {
+                "status": "error",
+                "error": {
+                  "first_name": "first name is required",
+                  "last_name": "last name is required",
+                  "email": "email is not valid",
+                  "password": "password should contain at least one Uppercase letter, one lowercase letter, and at least one digit"
+                }
+              }
+            },
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/api/v1/auth/signin": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "signin",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "johndoe@company.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Authorization Error",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "403": {
+            "description": "Authentication",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
         }
       },
       "/api/v1/auth/forgotPassword": {
@@ -268,54 +255,128 @@
           "name": "token",
           "in": "header"
       }
+    },
+    "/api/v1/trip_request": {
+      "post": {
+        "tags": ["tripRequest"],
+        "summary": "Allow users to create a return trip",
+        "description": "",
+        "operationId": "CreateAReturnTrip",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "body",
+            "description": "details of trip request to create",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/CreateReturnTripRequest"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "Trip Request Created Successfully",
+            "type": "string",
+            "example": "Your trip request has been created successfully"
+          }
+        }
+      }
+    }
   },
   "definitions": {
-      "Landing": {
-          "type": "object",
-          "properties": {
-              "id": {
-                  "type": "integer",
-                  "format": "int64"
-              },
-              "created_on": {
-                  "type": "string",
-                  "format": "date-time"
-              }
-          },
-          "xml": {
-              "name": "Order"
-          }
+    "Landing": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "created_on": {
+          "type": "string",
+          "format": "date-time"
+        }
       },
-      "User": {
-          "type": "object",
-          "properties": {
-              "id": {
-                  "type": "integer",
-                  "format": "int64"
-              },
-              "first_name": {
-                  "type": "string",
-                  "example": "John"
-              },
-              "last_name": {
-                  "type": "string",
-                  "example": "Doe"
-              },
-              "email": {
-                  "type": "string",
-                  "example": "johndoe@company.com"
-              },
-              "password": {
-                  "type": "string"
-              },
-              "token": {
-                "type": "integer",
-                "format": "int64"
-            }
-          },
-          "xml": {
-              "name": "User"
-          }
+      "xml": {
+        "name": "Order"
       }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "johndoe@company.com"
+        },
+        "password": {
+          "type": "string"
+        },
+        "token": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    },
+    "CreateReturnTripRequest": {
+      "type": "object",
+      "required": [
+        "request_type",
+        "trip_plan",
+        "leaving_from",
+        "return_date",
+        "travel_date",
+        "destination"
+      ],
+      "properties": {
+        "request_type": {
+          "type": "string",
+          "example": "returnTrip"
+        },
+        "trip_plan": {
+          "type": "string",
+          "example": "singleCity"
+        },
+        "leaving_from": {
+          "type": "uuid",
+          "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+        },
+        "return_date": {
+          "type": "date",
+          "example": "08-22-2018"
+        },
+        "travel_date": {
+          "type": "date",
+          "example": "09-22-2019"
+        },
+        "destination": {
+          "type": "uuid",
+          "example": "95ccd25d-2524-4b95-a441-8e2643c4c071"
+        }
+      },
+      "xml": {
+        "name": "CreateTripRequest"
+      }
+    }
   }
 }

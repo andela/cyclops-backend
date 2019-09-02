@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
  * @returns {string} returns encryted password
  */
 
-const hashPassword = password => bcrypt.hashSync(password, 10);
+const hashPassword = (password) => bcrypt.hashSync(password, 10);
 /**
  * Function to decrypt a hash password compares it
  * @param {string} password it accepts password

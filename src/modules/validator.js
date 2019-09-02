@@ -1,7 +1,10 @@
-/* eslint-disable linebreak-style */
+import moment from 'moment';
+
 /**
  *
  * @description magicTrimmer removes leadng and trailing spaces from a string
+ *
+ * @param {payload} payload is the object that contains the data you want to trim
  *
  */
 
@@ -29,9 +32,10 @@ export const magicTrimmer = payload => {
    */
 export const inValidName = (name, value) => {
   if (!value) return `${name} is required`;
-  if (!/^[A-Z][a-z]+\s([A-Z][a-z]+\s)?[A-Z][a-z]+$/.test(value)) return `${name} is not valid`;
-  return null;
+  if (!/^[A-Za-z]+\s([A-Za-z]+\s)?[A-Za-z]+$/.test(value)) return `${name} is not valid`;
+  return false;
 };
+
 /**
    * @description inValidEmail is a function that validates an email
    *
@@ -43,14 +47,14 @@ export const inValidEmail = email => {
   if (!email) return 'email is required';
   email = email.toLowerCase();
   if (!/^[A-Za-z0-9.-_]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(email)) return 'email is not valid';
-  return null;
+  return false;
 };
 
 /**
    *
    * @description inValidPassword is a function that validates a password
    *
-   * @param {password} password is the data you want to validate whether it is alphanumeric
+   * @param {string} password is the data you want to validate whether it is alphanumeric
    *
    * @returns {string} string is the type of data the function returns
    */
@@ -60,7 +64,63 @@ export const inValidPassword = password => {
   if (!/\d/.test(password) || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/^[a-zA-Z0-9]+$/.test(password)) {
     return 'password should contain at least one Uppercase letter, one lowercase letter, and at least one digit with now space';
   }
-  return null;
+  return false;
+};
+
+/**
+   *
+   * @description inValidDate is a function that validates a date
+   *
+   * @param {string} date is the data you want to validate
+   *
+   * @returns {string} string is the type of data the function returns
+   */
+
+export const inValidDate = (date) => {
+  if (!date) return undefined;
+  const decision = moment(date, 'MM/DD/YYYY', true).isValid();
+  if (!decision) return 'date should be of the form MM/DD/YYYY';
+  return false;
+};
+
+// eslint-disable-next-line arrow-parens
+export const getMIlliSeconds = date => (date ? new Date(date).getTime() : new Date().getTime());
+
+export const getDay = (date) => {
+  const dateInMillisec = getMIlliSeconds(date);
+  return Math.floor(dateInMillisec / 86400000);
+};
+
+export const dateComparison = (travelDate, returnDate) => {
+  const travelDateMilliSec = getMIlliSeconds(travelDate);
+  const todayDateMilliSec = getMIlliSeconds();
+  const travelDay = getDay(travelDate);
+  const returnDay = getDay(returnDate);
+  if (travelDateMilliSec <= todayDateMilliSec) return 'Your travel date must be a future date';
+  if (returnDay < travelDay) return 'You cannot enter a return date that is before your travel date';
+  return false;
+};
+
+export const inValidRequestType = (requestType) => {
+  if (!requestType) return undefined;
+  const requestTypes = ['oneWayTrip', 'returnTrip'];
+  if (!requestTypes.includes(requestType)) return 'request type must be either oneWayTrip or returnTrip';
+  return false;
+};
+
+export const inValidTripPlan = (tripPlan) => {
+  if (!tripPlan) return undefined;
+  const tripPlans = ['singleCity', 'multiCity'];
+  if (!tripPlans.includes(tripPlan)) return 'trip plan must be either singleCity or multiCity';
+  return false;
+};
+
+export const inValidLocationId = (locationId) => {
+  if (!locationId) return undefined;
+  if (!/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(locationId)) {
+    return 'Your departure/destination should contain the uuid of the office location';
+  }
+  return false;
 };
 
 export const validate = obj => {
@@ -68,6 +128,9 @@ export const validate = obj => {
   Object.keys(obj).forEach((key) => {
     if (obj[key]) {
       result[key] = obj[key];
+    }
+    if (obj[key] === undefined) {
+      result[key] = `${key} is required`;
     }
   });
   if (Object.keys(result).length) {
