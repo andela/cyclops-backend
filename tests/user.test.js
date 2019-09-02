@@ -25,18 +25,19 @@ chai.use(chaiHttp);
 describe('User', () => {
   after(() => User.destroy({ where: {}, force: true }));
 
-  it('Should return success for signup', (done) => {
+  it('Should return success for signup POST: /auth/signup', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
-        email: '  giftabobo@gmail.com  ',
-        name: ' Bles Abobo',
-        password: 'Blessing9',
+        email: 'wokoro@yahoo.com',
+        name: 'Douye Samuel',
+        password: 'Djkladjkaldfj129',
       })
       .end((err, res) => {
         expect(res.status).eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('success');
+        expect(res.body.data).to.eql('User account created successfully');
         done();
       });
   });

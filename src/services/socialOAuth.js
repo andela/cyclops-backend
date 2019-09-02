@@ -8,7 +8,7 @@ config();
 const GoogleStrategy = GooglePassport.Strategy;
 const FacebookStrategy = FacebookPassport.Strategy;
 
-const userProfile = (profile) => {
+const userProfile = profile => {
   const {
     id, provider, photos, emails, displayName
   } = profile;

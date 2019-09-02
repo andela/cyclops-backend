@@ -7,7 +7,7 @@ import userAuth from '../middlewares/userAuth';
 
 const userRouter = Router();
 
-userRouter.post('/auth/signup', userAuth.signup, AuthController.signup);
+userRouter.post('/auth/signup', userAuth.signup, userAuth.userExistCheck, AuthController.signup);
 
 userRouter.get('/oauth/google',
   passport.authenticate('google', { session: false }), AuthController.social);
