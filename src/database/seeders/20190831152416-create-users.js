@@ -10,7 +10,7 @@ export default {
         name: 'Justin',
         email: 'efejustin3@gmail.com',
         office_uuid: 'b38fcf44-b77f-4149-8d66-454d7a5eacda',
-        password: '$2b$06$9PXuJTiU/uSbRTSaag5NW.OsY.iq9rVI/.Q4qGOhmIAnxtsDpk9W2',
+        password: 'PassPass111',
         is_verified: true,
         createdAt: Sequelize.literal('NOW()'),
         updatedAt: Sequelize.literal('NOW()')
@@ -20,7 +20,7 @@ export default {
         name: 'Makaraba',
         email: 'blessingmakaraba@gmail.com',
         is_verified: false,
-        password: 'bluewaters',
+        password: 'Bluewaters1',
         office_uuid: 'd5c65b0b-e60a-4dad-ab99-25b752fcb9ae',
         createdAt: Sequelize.literal('NOW()'),
         updatedAt: Sequelize.literal('NOW()')
