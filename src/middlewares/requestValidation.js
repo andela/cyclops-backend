@@ -1,5 +1,5 @@
 import {
-  validate, inValidDate, inValidRequestType, inValidTripPlan, inValidLocationId, dateComparison,
+  validate, inValidDate, inValidType, inValidLocationId, dateComparison,
 } from '../modules/validator';
 import { sendErrorResponse } from '../utils/sendResponse';
 
@@ -24,8 +24,8 @@ export default class requestValidator {
     } = req.body;
 
     const schema = {
-      request_type: inValidRequestType(requestType),
-      trip_plan: inValidTripPlan(tripPlan),
+      request_type: inValidType('request type', requestType),
+      trip_plan: inValidType('trip plan', tripPlan),
       leaving_from: inValidLocationId(leavingFrom),
       return_date: inValidDate(returnDate),
       travel_date: inValidDate(travelDate),

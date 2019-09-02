@@ -101,19 +101,20 @@ export const dateComparison = (travelDate, returnDate) => {
   return false;
 };
 
-export const inValidRequestType = (requestType) => {
-  if (!requestType) return undefined;
-  const requestTypes = ['oneWayTrip', 'returnTrip'];
-  if (!requestTypes.includes(requestType)) return 'request type must be either oneWayTrip or returnTrip';
+export const inValidType = (condition, payload) => {
+  if (!payload) return undefined;
+  const types = condition === 'request type' ? ['oneWayTrip', 'returnTrip'] : ['singleCity', 'multiCity'];
+  const [type1, type2] = types;
+  if (!types.includes(payload)) return `${condition} must be either ${type1} or ${type2}`;
   return false;
 };
 
-export const inValidTripPlan = (tripPlan) => {
-  if (!tripPlan) return undefined;
-  const tripPlans = ['singleCity', 'multiCity'];
-  if (!tripPlans.includes(tripPlan)) return 'trip plan must be either singleCity or multiCity';
-  return false;
-};
+// export const inValidTripPlan = (tripPlan) => {
+//   if (!tripPlan) return undefined;
+//   const tripPlans = ;
+//   if (!tripPlans.includes(tripPlan)) return 'trip plan must be either singleCity or multiCity';
+//   return false;
+// };
 
 export const inValidLocationId = (locationId) => {
   if (!locationId) return undefined;
