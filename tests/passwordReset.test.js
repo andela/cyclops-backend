@@ -35,7 +35,7 @@ describe('Password reset Tests', () => {
   let resetToken, userId;
   const email = 'dieudonneawa7@gmail.com';
   beforeEach(async () => {
-    const { uuid } = await UserRepository.findByEmail(email);
+    const { uuid } = await UserRepository.getOne({ email });
     resetToken = await createToken({ uuid, email });
     userId = uuid;
   });

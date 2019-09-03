@@ -50,7 +50,7 @@ class AuthController {
    *
    * @param {object} user accepts user details object
    *
-   * @param {res} res object* 
+   * @param {res} res object*
    *
    * @param {function} next returns error if process fails
    *
@@ -113,13 +113,13 @@ class AuthController {
 
   /**
   * @description Sends reset link to user Email
-  * 
+  *
   * @param {Object} req - Request object
-  * 
+  *
   * @param {Object} res - Response object
-  * 
+  *
   * @returns {Object} object containing user data which will be embedded in link sent to user
-  * 
+  *
   * @memberof UserController
   */
   async sendResetLink(req, res) {
@@ -128,23 +128,27 @@ class AuthController {
       const { uuid } = await UserRepository.getOne({ email });
       const token = await createToken({ uuid, email });
       const link = `http://${process.env.APP_URL}/api/v1/auth/resetPassword/${uuid}/${token}`;
-      await sendEmail(
-        email,
-        'Barefoot Nomad Password Reset',
-        `Please kindly click the link below to reset your password <br/> ${link}`
-      );
-      return successResponse(res, 200, 'A password reset link has been sent to your mailbox');
+      try {
+        await sendEmail(
+          email,
+          'Barefoot Nomad Password Reset',
+          `Please kindly click the link below to reset your password <br/> ${link}`
+        );
+        return successResponse(res, 200, 'A password reset link has been sent to your mailbox');
+      } catch (error) {
+        return sendErrorResponse(res, 500, 'Unable to perform the operation at the moment');
+      }
     }
     return sendErrorResponse(res, 400, inValidEmail(email));
   }
 
   /**
    * @description Updates the user's password
-   * 
+   *
    * @param {object} req - request object
-   * 
+   *
    * @param {object} res - response object
-   * 
+   *
    * @returns {object} either error or success
    */
   async resetPassword(req, res) {

@@ -9,6 +9,7 @@ export default async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1] || req.headers.authorization;
     const { email } = verifyToken(token);
     const user = await UserRepository.getOne({ email });
+    if (!user) return sendErrorResponse(res, 401, 'User does not exist');
     req.userData = user;
     next();
   } catch (err) {

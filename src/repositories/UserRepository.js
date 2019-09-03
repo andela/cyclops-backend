@@ -73,20 +73,23 @@ class UserRepository {
   }
 
   /**
-   * 
-   * @param {string} userId 
-   * 
-   * @param {string} changes
-   * 
+   *
+   * @param {string} userId
+   *
+   * @param {object} changes to update for user
+   *
    * @returns {object} updated user
    */
   async update(userId, changes) {
-    await this.getOne({ uuid: userId });
-    const updatedUser = await User.update(
-      changes,
-      { where: { uuid: userId } }
-    );
-    return updatedUser;
+    try {
+      await this.getOne({ uuid: userId });
+      return await User.update(
+        changes,
+        { where: { uuid: userId } }
+      );
+    } catch (e) {
+      throw new Error(e);
+    }
   }
   // async updatePassword(userId, newPassword) {
   //   try {
