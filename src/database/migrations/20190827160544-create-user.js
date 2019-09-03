@@ -4,7 +4,7 @@ export default {
       allowNull: false,
       primaryKey: true,
       type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: Sequelize.UUIDV4
     },
     email: {
       type: Sequelize.STRING
@@ -29,12 +29,6 @@ export default {
     },
     google_id: {
       type: Sequelize.STRING
-    },
-    manager_id: {
-      type: Sequelize.INTEGER
-    },
-    office_id: {
-      type: Sequelize.INTEGER
     },
     gender: {
       type: Sequelize.STRING

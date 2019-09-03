@@ -21,11 +21,8 @@ before_script:
   - psql -c 'create database cyclops_backend;' -U postgres
   - psql -c "CREATE USER cyclops WITH PASSWORD 'blue';" -U postgres
   - npm install -g sequelize-cli
-  - sequelize db:migrate
 
 script:
-  - npm run db:migrate:test
-  - npm run db:seed:all:test
   - npm run test
 
 after_success:

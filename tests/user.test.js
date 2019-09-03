@@ -1,25 +1,10 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import uuid from 'uuid';
-
 import app from '../src/index';
 import model from '../src/models';
 
 const { User } = model;
-const newUser = [{
-  uuid: uuid(),
-  name: 'Justin',
-  email: 'efejustin3@gmail.com',
-  password: '$2b$06$9PXuJTiU/uSbRTSaag5NW.OsY.iq9rVI/.Q4qGOhmIAnxtsDpk9W2',
-  is_verified: true
-}, {
-  uuid: uuid(),
-  name: 'Makaraba',
-  email: 'blessingmakaraba@gmail.com',
-  is_verified: false,
-  password: '$2b$06$9PXuJTiU/uSbRTSaag5NW.OsY.iq9rVI/.Q4qGOhmIAnxtsDpk9W2'
-}];
 
 chai.use(chaiHttp);
 
@@ -146,9 +131,6 @@ describe('User', () => {
   });
 
   describe('User', () => {
-    before(async () => {
-      await User.bulkCreate(newUser);
-    });
     it('Should return success for signin', (done) => {
       chai.request(app)
         .post('/api/v1/auth/signin')
@@ -181,11 +163,11 @@ describe('User', () => {
       chai.request(app)
         .post('/api/v1/auth/signin')
         .send({
-          email: 'blessingmakaraba@gmail.com',
-          password: 'Jei12345',
+          email: 'blessingpeople@gmail.com',
+          password: 'Bloated36',
         })
         .end((err, res) => {
-          expect(res.status).to.be.eql(400);
+          expect(res.status).to.be.eql(401);
           expect(res.body.status).to.eql('error');
           expect(res.body).to.have.property('error');
           done();

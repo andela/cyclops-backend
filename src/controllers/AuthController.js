@@ -2,10 +2,10 @@
 /* eslint-disable valid-jsdoc */
 import UserRepository from '../repositories/UserRepository';
 import { createToken } from '../modules/tokenProcessor';
-import { unhash } from '../utils/index';
 import { sendErrorResponse, successResponse, sendSuccessResponse } from '../utils/sendResponse';
 import { inValidEmail, inValidPassword } from '../modules/validator';
 import sendEmail from '../services/emails';
+import { unhash } from '../utils/hashPassword';
 
 const unhashPassword = unhash;
 
@@ -60,7 +60,8 @@ class AuthController {
    * @returns {obj} returns an response object
    */
   async signin({ body }, res) {
-    const foundUser = await UserRepository.find(body);
+    const { email } = body;
+    const foundUser = await UserRepository.findOne({ email });
     const { password } = body;
     if (!foundUser) return sendErrorResponse(res, 404, 'User not found');
     const confirmPassword = unhashPassword(password, foundUser.dataValues.password);
@@ -89,7 +90,7 @@ class AuthController {
   async sendResetLink(req, res) {
     const { email } = req.body;
     if (!inValidEmail(email)) {
-      const { uuid } = await UserRepository.findByEmail(email);
+      const { uuid } = await UserRepository.findOne({ email });
       const token = await createToken({ uuid, email });
       const link = `http://${process.env.APP_URL}/api/v1/auth/resetPassword/${uuid}/${token}`;
       await sendEmail(

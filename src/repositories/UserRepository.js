@@ -10,13 +10,12 @@
  * @requires models/User.js
  */
 
-import { hashPassword } from '../utils';
+import { hashPassword } from '../utils/hashPassword';
 import Model from '../models';
-import { sendErrorResponse } from '../utils/sendResponse';
 import { createToken } from '../modules/tokenProcessor';
 
 // Returns selected information for logged in user.
-const userInfo = (user) => {
+const userInfo = user => {
   const {
     email, name, role, uuid, image_url, is_verified
   } = user;
@@ -41,7 +40,7 @@ class UserRepository {
    *@constructor
    */
   constructor() {
-    this.model = User;
+    this.db = User;
   }
 
   /**
@@ -55,12 +54,9 @@ class UserRepository {
    */
   // eslint-disable-next-line class-methods-use-this
   async create({
-    password,
-    email,
-    name,
-    designation
+    password, email, name, designation
   }) {
-    const { dataValues } = await User.create({
+    const { dataValues } = await this.db.create({
       name,
       email,
       designation,
@@ -78,78 +74,24 @@ class UserRepository {
    */
   // eslint-disable-next-line class-methods-use-this
   async social({
-    social_id,
-    name,
-    image,
-    email,
-    provider
+    social_id, name, image, email, provider
   }) {
     const user = provider === 'facebook'
-      ? await User.findOne({ where: { facebook_id: social_id } })
-      : await User.findOne({ where: { google_id: social_id } });
+      ? await this.db.findOne({ where: { facebook_id: social_id } })
+      : await this.db.findOne({ where: { google_id: social_id } });
     if (user) return userInfo(user);
 
-    const { dataValues } = await User.create({
+    const { dataValues } = await this.db.create({
       name,
       email,
       is_verified: true,
       image_url: image,
-      facebook_id: (provider === 'facebook' ? social_id : ''),
-      google_id: (provider === 'google' ? social_id : ''),
+      facebook_id: provider === 'facebook' ? social_id : '',
+      google_id: provider === 'google' ? social_id : '',
       role: 'employee'
       // eslint-disable-next-line arrow-parens
     });
     return userInfo(dataValues);
-  }
-
-  /**
-   *@description This is a function that finds a user in the data base
-   * @param {string} email this is the response that parameter
-   * @param {string}  res This is the email the user provided on sign in
-   * @returns {object} returns the user information on the object
-   * @returns {object} returns error object if there is any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async find({ email }, res) {
-    try {
-      return await User.findOne({ where: { email } });
-    } catch (error) {
-      return sendErrorResponse(res, 500, 'Internal Server Error');
-    }
-  }
-
-  /**
-   * @description Find user by its attributes.
-   *
-   * @param {String} column - Name of column to search.
-   *
-   * @param {Object} value - The value to search for in column.
-   *
-   * @return {Object} returns user details
-   */
-  async findByAttr(column, value) {
-    const result = await this.model.findOne({
-      where: {
-        [column]: value
-      }
-    });
-    return result;
-  }
-  
-  /** 
-   * @description return an updated user
-   * 
-   * @param {string} email
-   * 
-   * @returns {object} returns an updated user
-   */
-  async findByEmail(email) {
-    try {
-      const user = await User.findOne({ where: { email } });
-      return user;
-    } catch (error) {
-      throw error;
-    }
   }
 
   /**
@@ -170,6 +112,24 @@ class UserRepository {
       return updatedUser;
     } catch (error) {
       throw error;
+    }
+  }
+
+  /**
+   * @description Returns the newly created user details
+   *
+   * @param {String} condition handles the limit of your search
+   *
+   * @param {String} include is a variable that handles table relationship
+   *
+   * @return {Object} returns new or existing user details
+   */
+  async findOne(condition, include = '') {
+    try {
+      const user = await this.db.findOne({ where: condition, include });
+      return user;
+    } catch (err) {
+      throw new Error(err);
     }
   }
 }
