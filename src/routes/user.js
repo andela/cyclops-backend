@@ -5,6 +5,7 @@ import passport from 'passport';
 import socialOAuth from '../services/socialOAuth';
 import AuthController from '../controllers/AuthController';
 import userAuth from '../middlewares/userAuth';
+import authenticate from '../middlewares/authenticateUser';
 
 const userRouter = Router();
 
@@ -16,6 +17,7 @@ userRouter.get('/oauth/google',
 userRouter.get('/oauth/facebook',
   passport.authenticate('facebook', { session: false }), AuthController.social);
 userRouter.post('/auth/signin', userAuth.signin, AuthController.signin);
+userRouter.get('/auth/signout', authenticate.authenticateUser, authenticate.isblackListedToken, AuthController.signout);
 
 userRouter.post('/auth/forgotPassword', AuthController.sendResetLink);
 userRouter.put('/auth/resetPassword/:uuid/:token', AuthController.resetPassword);

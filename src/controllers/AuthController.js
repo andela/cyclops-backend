@@ -2,10 +2,10 @@
 /* eslint-disable valid-jsdoc */
 import UserRepository from '../repositories/UserRepository';
 import { createToken } from '../modules/tokenProcessor';
+import { unhash, blackListThisToken } from '../utils/index';
 import { sendErrorResponse, successResponse, sendSuccessResponse } from '../utils/sendResponse';
 import { inValidEmail, inValidPassword } from '../modules/validator';
 import sendEmail from '../services/emails';
-import { unhash } from '../utils/hashPassword';
 
 const unhashPassword = unhash;
 
@@ -28,7 +28,7 @@ class AuthController {
       const message = 'User account created successfully';
       sendSuccessResponse(res, 201, message);
     } catch (error) {
-      next(error);
+      return next(error);  
     }
   }
 
@@ -48,7 +48,7 @@ class AuthController {
       const newUser = await UserRepository.social(user);
       sendSuccessResponse(res, 200, newUser);
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
@@ -60,9 +60,8 @@ class AuthController {
    * @returns {obj} returns an response object
    */
   async signin({ body }, res) {
-    const { email } = body;
-    const foundUser = await UserRepository.findOne({ email });
-    const { password } = body;
+    const { email, password } = body;
+    const foundUser = await UserRepository.find(email);
     if (!foundUser) return sendErrorResponse(res, 404, 'User not found');
     const confirmPassword = unhashPassword(password, foundUser.dataValues.password);
     if (!confirmPassword) return sendErrorResponse(res, 400, 'Incorrect Password');
@@ -112,7 +111,7 @@ class AuthController {
    * 
    * @returns {object} either error or success
    */
-  async resetPassword(req, res) {
+  async resetPassword(req, res, next) {
     const { password } = req.body;
     const { uuid } = req.params;
     if (!inValidPassword(password)) {
@@ -120,10 +119,21 @@ class AuthController {
         await UserRepository.updatePassword(uuid, password);
         return successResponse(res, 200, 'Password Reset Successfully');
       } catch (error) {
-        return sendErrorResponse(res, 500, 'Unable to update password');
+        return next(error);
       }
     }
     return sendErrorResponse(res, 400, inValidPassword(password));
+  }
+
+  /**
+   * @description logs out a user
+   * @param req request from body to log out
+   * @param res response to the body
+   */
+  async signout(req, res) {
+    const token = req.headers.authorization.split(' ')[1] || req.headers.authorization;
+    await blackListThisToken(token);
+    return sendSuccessResponse(res, 200, 'You have succesfully signout');
   }
 }
 
