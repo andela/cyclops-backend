@@ -2,36 +2,40 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import uuid from 'uuid/v4';
 import { createToken } from '../src/modules/tokenProcessor';
 import app from '../src';
 
 import model from '../src/models';
 
 const { User } = model;
-const userdata = {
-  role: 'employee',
-  uuid: 'abef6009-48be-4b38-80d0-b38c1bc39922',
-  email: 'greatness@andela.com',
-  name: 'Albert Faith',
-  password: 'MerryXmascoming19',
-  is_verified: true
-};
-const newUser = [userdata,
-  {
-    uuid: '407d0d03-be0d-477c-badd-5df63b04307e',
-    name: 'Makaraba Bles',
-    email: 'blessingmakaraba@gmal.com',
-    is_verified: false,
-    password: 'MerryXmascoming19'
-  }];
 
 chai.use(chaiHttp);
 
 describe('Trip Request CRUD', () => {
+  const testUser = {
+    uuid: uuid(),
+    name: 'John Doe',
+    email: 'helloworld@gmail.com',
+    password: 'workingwithseeds',
+    role: 'employee',
+    is_verified: true,
+    gender: 'male',
+    date_of_birth: '2019-08-28',
+    department: 'research',
+    preferred_language: 'french',
+    preferred_currency: 'FCFA',
+    image_url: 'http://images.com/myimagefile',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+
   before(async () => {
-    await User.bulkCreate(newUser);
+    await User.create(testUser);
   });
-  const token = createToken(userdata);
+  after(() => User.destroy({ where: {}, force: true }));
+
+  const token = createToken(testUser);
   it('Should return user trip records with details', (done) => {
     chai.request(app)
       .get('/api/v1/trips')

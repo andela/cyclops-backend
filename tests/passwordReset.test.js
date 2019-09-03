@@ -29,9 +29,12 @@ describe('Password reset Tests', () => {
     createdAt: new Date(),
     updatedAt: new Date()
   };
+
   before(async () => {
     await User.create(testData);
   });
+  after(() => User.destroy({ where: {}, force: true }));
+
   let resetToken, userId;
   const email = 'dieudonneawa7@gmail.com';
   beforeEach(async () => {
