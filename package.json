@@ -70,7 +70,6 @@
       "src/services/socialOAuth.js",
       "src/controllers/AuthController.js",
       "src/models/index.js",
-      "src/controllers/AuthController.js",
       "tests",
       "node_modules"
     ],

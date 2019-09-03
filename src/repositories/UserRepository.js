@@ -91,18 +91,6 @@ class UserRepository {
       throw new Error(e);
     }
   }
-  // async updatePassword(userId, newPassword) {
-  //   try {
-  //     const user = await User.findOne({ where: { uuid: userId } });
-  //     const updatedUser = await User.update(
-  //       { password: newPassword },
-  //       { where: { uuid: user.uuid } }
-  //     );
-  //     return updatedUser;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
 }
 
 export default new UserRepository(User);
