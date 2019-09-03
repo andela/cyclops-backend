@@ -83,10 +83,7 @@ class UserRepository {
   async update(userId, changes) {
     try {
       await this.getOne({ uuid: userId });
-      return await User.update(
-        changes,
-        { where: { uuid: userId } }
-      );
+      return await User.update(changes, { where: { uuid: userId } });
     } catch (e) {
       throw new Error(e);
     }
