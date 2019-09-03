@@ -7,3 +7,10 @@ export const sendSuccessResponse = (res, code, data) => res.status(code).send({
   status: 'success',
   data
 });
+
+export const successResponse = (res, code, successMessage) => {
+  res.status(code).json({
+    status: 'Success',
+    message: successMessage,
+  });
+};

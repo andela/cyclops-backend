@@ -28,8 +28,8 @@ export default (sequelize, DataTypes) => {
     preferred_language: DataTypes.STRING,
     residential_address: DataTypes.STRING
   }, {});
-  User.associate = () => {
-    // associations can be defined here
+  User.associate = (/* models */) => {
+    // Nothing here
   };
   return User;
 };

@@ -1,9 +1,11 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable valid-jsdoc */
 import UserRepository from '../repositories/UserRepository';
-import { sendSuccessResponse, sendErrorResponse } from '../utils/sendResponse';
 import { createToken } from '../modules/tokenProcessor';
 import { unhash } from '../utils/index';
+import { sendErrorResponse, successResponse, sendSuccessResponse } from '../utils/sendResponse';
+import { inValidEmail, inValidPassword } from '../modules/validator';
+import sendEmail from '../services/emails';
 
 const unhashPassword = unhash;
 
@@ -36,6 +38,8 @@ class AuthController {
    * @param {req} req object
    *
    * @param {res} res object
+   * 
+   * @param {next} next 
    *
    * @returns {obj} returns an response object
    */
@@ -69,6 +73,56 @@ class AuthController {
       name: foundUser.name
     };
     return sendSuccessResponse(res, 200, userInformation);
+  }
+
+  /**
+  * @description Sends reset link to user Email
+  * 
+  * @param {Object} req - Request object
+  * 
+  * @param {Object} res - Response object
+  * 
+  * @returns {Object} object containing user data which will be embedded in link sent to user
+  * 
+  * @memberof UserController
+  */
+  async sendResetLink(req, res) {
+    const { email } = req.body;
+    if (!inValidEmail(email)) {
+      const { uuid } = await UserRepository.findByEmail(email);
+      const token = await createToken({ uuid, email });
+      const link = `http://${process.env.APP_URL}/api/v1/auth/resetPassword/${uuid}/${token}`;
+      await sendEmail(
+        email,
+        'Barefoot Nomad Password Reset',
+        `Please kindly click the link below to reset your password <br/> ${link}`
+      );
+      return successResponse(res, 200, 'A password reset link has been sent to your mailbox');
+    }
+    return sendErrorResponse(res, 400, inValidEmail(email));
+  }
+
+  /**
+   * @description Updates the user's password
+   * 
+   * @param {object} req - request object
+   * 
+   * @param {object} res - response object
+   * 
+   * @returns {object} either error or success
+   */
+  async resetPassword(req, res) {
+    const { password } = req.body;
+    const { uuid } = req.params;
+    if (!inValidPassword(password)) {
+      try {
+        await UserRepository.updatePassword(uuid, password);
+        return successResponse(res, 200, 'Password Reset Successfully');
+      } catch (error) {
+        return sendErrorResponse(res, 500, 'Unable to update password');
+      }
+    }
+    return sendErrorResponse(res, 400, inValidPassword(password));
   }
 }
 

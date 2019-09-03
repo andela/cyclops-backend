@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-catch */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable require-jsdoc */
 /* eslint-disable camelcase */
 /**
@@ -10,8 +12,8 @@
 
 import { hashPassword } from '../utils';
 import Model from '../models';
-import { createToken } from '../modules/tokenProcessor';
 import { sendErrorResponse } from '../utils/sendResponse';
+import { createToken } from '../modules/tokenProcessor';
 
 // Returns selected information for logged in user.
 const userInfo = (user) => {
@@ -132,6 +134,43 @@ class UserRepository {
       }
     });
     return result;
+  }
+  
+  /** 
+   * @description return an updated user
+   * 
+   * @param {string} email
+   * 
+   * @returns {object} returns an updated user
+   */
+  async findByEmail(email) {
+    try {
+      const user = await User.findOne({ where: { email } });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * 
+   * @param {string} userId 
+   * 
+   * @param {string} newPassword
+   * 
+   * @returns {object} updated user
+   */
+  async updatePassword(userId, newPassword) {
+    try {
+      const user = await User.findOne({ where: { uuid: userId } });
+      const updatedUser = await User.update(
+        { password: newPassword },
+        { where: { uuid: user.uuid } }
+      );
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
