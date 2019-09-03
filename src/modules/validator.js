@@ -109,13 +109,6 @@ export const inValidType = (condition, payload) => {
   return false;
 };
 
-// export const inValidTripPlan = (tripPlan) => {
-//   if (!tripPlan) return undefined;
-//   const tripPlans = ;
-//   if (!tripPlans.includes(tripPlan)) return 'trip plan must be either singleCity or multiCity';
-//   return false;
-// };
-
 export const inValidLocationId = (locationId) => {
   if (!locationId) return undefined;
   if (!/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(locationId)) {

@@ -90,7 +90,7 @@ class AuthController {
   async sendResetLink(req, res) {
     const { email } = req.body;
     if (!inValidEmail(email)) {
-      const { uuid } = await UserRepository.findByEmail(email);
+      const { uuid } = await UserRepository.findOne({ email });
       const token = await createToken({ uuid, email });
       const link = `http://${process.env.APP_URL}/api/v1/auth/resetPassword/${uuid}/${token}`;
       await sendEmail(

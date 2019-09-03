@@ -23,8 +23,6 @@ before_script:
   - npm install -g sequelize-cli
 
 script:
-  - npm run db:migrate:test
-  - npm run db:seed:all:test
   - npm run test
 
 after_success:

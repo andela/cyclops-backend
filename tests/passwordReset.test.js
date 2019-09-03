@@ -1,41 +1,18 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
-import uuId from 'uuid';
 import chaiHttp from 'chai-http';
-
-import models from '../src/models';
 import app from '../src/app';
 import UserRepository from '../src/repositories/UserRepository';
 import { createToken } from '../src/modules/tokenProcessor';
 
-const { User } = models;
 
 chai.use(chaiHttp);
 
 describe('Password reset Tests', () => {
-  const testData = {
-    uuid: uuId.v4(),
-    name: 'Awa Dieudonne',
-    email: 'dieudonneawa7@gmail.com',
-    password: 'workingwithseeds',
-    role: 'employee',
-    is_verified: true,
-    gender: 'male',
-    date_of_birth: '2019-08-28',
-    department: 'research',
-    preferred_language: 'french',
-    preferred_currency: 'FCFA',
-    image_url: 'http://images.com/myimagefile',
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  before(async () => {
-    await User.create(testData);
-  });
   let resetToken, userId;
   const email = 'dieudonneawa7@gmail.com';
   beforeEach(async () => {
-    const { uuid } = await UserRepository.findByEmail(email);
+    const { uuid } = await UserRepository.findOne({ email });
     resetToken = await createToken({ uuid, email });
     userId = uuid;
   });

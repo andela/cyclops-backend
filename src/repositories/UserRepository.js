@@ -68,24 +68,6 @@ class UserRepository {
   /**
    * @description Returns the newly created user details
    *
-   * @param {String} condition handles the limit of your search
-   *
-   * @param {String} include is a variable that handles table relationship
-   *
-   * @return {Object} returns new or existing user details
-   */
-  async findOne(condition, include = '') {
-    try {
-      const user = await this.db.findOne({ where: condition, include });
-      return user;
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
-
-  /**
-   * @description Returns the newly created user details
-   *
    * @param {String} param0 social OAuth details
    *
    * @return {Object} returns new or existing user details
@@ -110,6 +92,45 @@ class UserRepository {
       // eslint-disable-next-line arrow-parens
     });
     return userInfo(dataValues);
+  }
+
+  /**
+   * 
+   * @param {string} userId 
+   * 
+   * @param {string} newPassword
+   * 
+   * @returns {object} updated user
+   */
+  async updatePassword(userId, newPassword) {
+    try {
+      const user = await User.findOne({ where: { uuid: userId } });
+      const updatedUser = await User.update(
+        { password: newPassword },
+        { where: { uuid: user.uuid } }
+      );
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * @description Returns the newly created user details
+   *
+   * @param {String} condition handles the limit of your search
+   *
+   * @param {String} include is a variable that handles table relationship
+   *
+   * @return {Object} returns new or existing user details
+   */
+  async findOne(condition, include = '') {
+    try {
+      const user = await this.db.findOne({ where: condition, include });
+      return user;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 }
 
