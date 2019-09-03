@@ -12,8 +12,15 @@ const seededUser = {
   name: 'Name Hettinger'
 };
 
+const seededUserI = {
+  uuid: '95ccd25d-2524-4b95-a441-8e2643c4c079',
+  email: 'efejustin3@gmail.com',
+  name: 'Efe Justin'
+};
+
 describe('Test Create Trip Request', () => {
   const token = createToken(seededUser);
+  const tokenI = createToken(seededUserI);
   it('Should tell the user to provide token', (done) => {
     chai.request(app)
       .post('/api/v1/trip_request')
@@ -72,7 +79,29 @@ describe('Test Create Trip Request', () => {
       .end((err, res) => {
         expect(res.status).eql(201);
         expect(res.body.status).to.eql('success');
-        expect(res.body.data).to.eql('Your trip request has been created successfully');
+        expect(res.body.data).to.be.an('object');
+        expect(res.body.data).to.have.all.keys('message', 'trip_request_uuid');
+        expect(res.body.data.message).to.be.eql('Your trip request has been created successfully');
+        done();
+      });
+  });
+  it('Should create a returnTrip for a user', (done) => {
+    chai.request(app)
+      .post('/api/v1/trip_request')
+      .set('Content-Type', 'application/json')
+      .set('authorization', `Bearer ${tokenI}`)
+      .send({
+        request_type: 'returnTrip',
+        trip_plan: 'singleCity',
+        leaving_from: 'dbf285c6-8d7c-4f71-8058-a82e22e27f6b',
+        return_date: '09/30/2019',
+        travel_date: '09/27/2019',
+        destination: '85b4a64e-331b-4051-a32c-6bc20eb0fc81'
+      })
+      .end((err, res) => {
+        expect(res.status).eql(403);
+        expect(res.body.status).to.eql('error');
+        expect(res.body.error).to.be.eql('You are not allowed to create a trip request because you don\'t have a manager');
         done();
       });
   });
@@ -229,8 +258,8 @@ describe('Test Create Trip Request', () => {
         expect(res.status).eql(422);
         expect(res.body.status).to.eql('error');
         expect(res.body.error).to.be.an('object');
-        expect(res.body.error).to.have.key('compare_dates');
-        expect(res.body.error.compare_dates).to.eql('Your travel date must be a future date');
+        expect(res.body.error).to.have.key('return_date');
+        expect(res.body.error.return_date).to.eql('Your travel date must be a future date');
         done();
       });
   });
@@ -252,8 +281,8 @@ describe('Test Create Trip Request', () => {
         expect(res.status).eql(422);
         expect(res.body.status).to.eql('error');
         expect(res.body.error).to.be.an('object');
-        expect(res.body.error).to.have.key('compare_dates');
-        expect(res.body.error.compare_dates).to.eql('You cannot enter a return date that is before your travel date');
+        expect(res.body.error).to.have.key('return_date');
+        expect(res.body.error.return_date).to.eql('You cannot enter a return date that is before your travel date');
         done();
       });
   });

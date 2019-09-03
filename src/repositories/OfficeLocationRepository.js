@@ -20,7 +20,7 @@ class OfficeRepository {
  *
  * @returns {object} the details of the office location that has been searched for
  */
-  async findOne(condition) {
+  async findById(condition) {
     try {
       const officeLocation = await this.db.findOne({ where: condition });
       return officeLocation;

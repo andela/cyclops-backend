@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { getMIlliSeconds, getDay } from '../utils';
 
 /**
  *
@@ -83,15 +84,7 @@ export const inValidDate = (date) => {
   return false;
 };
 
-// eslint-disable-next-line arrow-parens
-export const getMIlliSeconds = date => (date ? new Date(date).getTime() : new Date().getTime());
-
-export const getDay = (date) => {
-  const dateInMillisec = getMIlliSeconds(date);
-  return Math.floor(dateInMillisec / 86400000);
-};
-
-export const dateComparison = (travelDate, returnDate) => {
+export const inValidDateComparison = (travelDate, returnDate) => {
   const travelDateMilliSec = getMIlliSeconds(travelDate);
   const todayDateMilliSec = getMIlliSeconds();
   const travelDay = getDay(travelDate);
@@ -101,7 +94,7 @@ export const dateComparison = (travelDate, returnDate) => {
   return false;
 };
 
-export const inValidType = (condition, payload) => {
+export const inValidReturnType = (condition, payload) => {
   if (!payload) return undefined;
   const types = condition === 'request type' ? ['oneWayTrip', 'returnTrip'] : ['singleCity', 'multiCity'];
   const [type1, type2] = types;

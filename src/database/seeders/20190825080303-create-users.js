@@ -7,7 +7,7 @@ export default {
     const UsersData = [
       {
         uuid: uuid(),
-        name: 'Justin',
+        name: 'Efe Justin',
         email: 'efejustin3@gmail.com',
         password: bcrypt.hashSync('Jei12345', 10),
         is_verified: true,
@@ -15,7 +15,7 @@ export default {
         updatedAt: Sequelize.literal('NOW()')
       }, {
         uuid: uuid(),
-        name: 'Makaraba',
+        name: 'Makaraba Blessing',
         email: 'blessingpeople@gmail.com',
         is_verified: false,
         password: bcrypt.hashSync('Bloated36', 10),

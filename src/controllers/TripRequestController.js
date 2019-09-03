@@ -3,6 +3,7 @@ import OfficeLocationRepository from '../repositories/OfficeLocationRepository';
 import TripRequestRepository from '../repositories/TripRequestRepository';
 import TripDestinationRespository from '../repositories/TripDestinationRepository';
 import NotificationRepository from '../repositories/NotificationRepository';
+
 import { sendErrorResponse, sendSuccessResponse } from '../utils/sendResponse';
 
 /**
@@ -23,10 +24,15 @@ class TripRequestController {
   static async createTripRequest(req, res, next) {
     const { request_type: requestType, leaving_from: leavingFrom, destination } = req.body;
     try {
-      const tripDeparture = await OfficeLocationRepository.findOne({ uuid: leavingFrom });
+      const { manager } = await UserRepository.findOne({ uuid: req.userData.uuid }, ['manager']);
+      if (!manager) return sendErrorResponse(res, 403, 'You are not allowed to create a trip request because you don\'t have a manager');
+      // obtaining the user_uuid of the user's manager
+      req.userData.managerUuid = manager.dataValues.user_uuid;
+      const tripDeparture = await OfficeLocationRepository.findById({ uuid: leavingFrom });
       if (!tripDeparture) return sendErrorResponse(res, 404, 'The office location you are leaving from does not exist');
-      const tripDestination = await OfficeLocationRepository.findOne({ uuid: destination });
+      const tripDestination = await OfficeLocationRepository.findById({ uuid: destination });
       if (!tripDestination) return sendErrorResponse(res, 404, 'The office location you are going to does not exist');
+      // transfering control the TripRequestController based on the type of trip request
       return (requestType === 'oneWayTrip') ? TripRequestController.oneWayTripCreator(req, res, next)
         : TripRequestController.returnTripCreator(req, res, next);
     } catch (err) {
@@ -49,20 +55,25 @@ class TripRequestController {
     try {
       const tripRequest = { ...req.body, user_uuid: req.userData.uuid };
       const { destination } = req.body;
+      // creating the trip request
       const tripRequestDetails = await TripRequestRepository.create(tripRequest);
-      const { uuid: tripUuid } = tripRequestDetails;
+      const { uuid: tripRequestUuid } = tripRequestDetails;
       const tripDestinationDetails = {
-        trip_request_uuid: tripUuid,
+        trip_request_uuid: tripRequestUuid,
         office_location_uuid: destination
       };
-      const { manager } = await UserRepository.findOne({ uuid: req.userData.uuid }, ['manager']);
-      const { dataValues } = manager;
-      const { user_uuid: managerUuid } = dataValues;
+      // updating destination for trip request and creating notificationsfor manager
+      const { managerUuid } = req.userData;
       const [destinated, managerNotified] = await Promise.all(
         [TripDestinationRespository.create(tripDestinationDetails),
           NotificationRepository.create({ user_uuid: managerUuid })]
       );
-      if (destinated && managerNotified) return sendSuccessResponse(res, 201, 'Your trip request has been created successfully');
+      if (destinated && managerNotified) {
+        return sendSuccessResponse(res, 201, { 
+          message: 'Your trip request has been created successfully',
+          trip_request_uuid: tripRequestUuid 
+        });
+      }
     } catch (err) {
       return next(err);
     }

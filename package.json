@@ -8,8 +8,9 @@
     "test": "cross-env NODE_ENV=test npm run db:migrate:all && cross-env NODE_ENV=test nyc mocha --require @babel/register --no-timeout './tests/*.js' --exit",
     "test:report": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-summary mocha --require @babel/register --timeout 5000 './tests/*.js' --exit",
     "dev": "nodemon --exec babel-node src/index.js",
-    "start": "npm run db:migrate:all && node build/index.js",
+    "start": "npm run db:migrate:prod && node build/index.js",
     "build": "babel src --out-dir build",
+    "db:migrate:prod": "./node_modules/.bin/sequelize db:migrate && ./node_modules/.bin/sequelize db:seed:all",
     "db:migrate:all": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all",
     "coverage": "cross-env NODE_ENV=test nyc report --reporter=lcov --reporter=text-lcov | coveralls"
   },
@@ -22,6 +23,7 @@
     "body-parser": "^1.19.0",
     "dotenv": "^6.2.0",
     "express": "^4.17.1",
+    "faker": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "passport": "^0.4.0",
@@ -31,7 +33,6 @@
     "sequelize": "^5.15.1",
     "sequelize-cli": "^5.5.0",
     "swagger-ui-express": "^4.0.7",
-    "faker": "^4.1.0",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
