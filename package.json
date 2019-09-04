@@ -5,9 +5,14 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --fix \"./src/**/*.js\"",
+<<<<<<< HEAD
     "pretest": "cross-env NODE_ENV=test npm run db:migrate:all",
     "test": "cross-env NODE_ENV=test nyc mocha --no-timeout './tests/index.js' --exit",
     "test:report": "cross-env NODE_ENV=test npm run db:migrate:all && cross-env NODE_ENV=test nyc mocha --timeout 5000 './tests/*.js' --exit",
+=======
+    "test": "cross-env NODE_ENV=test npm run db:migrate:all && cross-env NODE_ENV=test nyc mocha --require @babel/register --no-timeout './tests/*.test.js' --exit",
+    "test:report": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text-summary mocha --require @babel/register --timeout 5000 './tests/*.test.js' --exit",
+>>>>>>> Increase test coverage percent
     "dev": "nodemon --exec babel-node src/index.js",
     "start": "npm run build && node build/index.js",
     "build": "babel src --out-dir build",
@@ -72,7 +77,11 @@
       "public",
       "node_modules"
     ],
+<<<<<<< HEAD
     "reporter": ["lcov", "text"],
+=======
+    "reporter":["html", "text-summary"],
+>>>>>>> Increase test coverage percent
     "cache": false,
     "require": ["@babel/register"],
     "report-dir": "tests/report"

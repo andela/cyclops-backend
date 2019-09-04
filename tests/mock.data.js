@@ -29,3 +29,6 @@ export const res = {
   status: () => {},
   send: () => {}
 };
+
+
+export const next = () => {};
