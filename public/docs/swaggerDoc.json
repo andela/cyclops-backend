@@ -742,6 +742,80 @@
           }
         }
       }
+    },
+    "/api/v1/comment/trips": {
+      "post": {
+        "tags": ["Comment"],
+        "summary": "Allow users to comment on a trip request",
+        "description": "",
+        "operationId": "CommentOnTripRequest",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "body",
+            "description": "comment details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "trip_request_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please approve my trip request"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "Comment Created Successfully",
+            "name": "type",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "user_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "trip_request_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please approve my trip request"
+                },
+                "createdAt": {
+                  "type": "date"
+                },
+                "updatedAt": {
+                  "type": "date"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "trip request details not found"
+          },
+          "403": {
+            "description": "A user is forbidden to comment on a trip request"
+          }
+        }
+      }
     }
   },
   "definitions": {
