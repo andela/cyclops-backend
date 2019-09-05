@@ -33,6 +33,7 @@ class CommentController {
     try {
       const { uuid: userUuid, role: userRole } = req.userData;
       const { trip_request_uuid: tripRequestUuid, message } = req.body;
+
       // checking for trip request
       const tripRequestDetails = await TripRequestRepository.findById({ uuid: tripRequestUuid });
       if (!tripRequestDetails) return sendErrorResponse(res, 404, 'This trip request does not exist');

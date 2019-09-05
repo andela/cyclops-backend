@@ -46,6 +46,7 @@ class TripRequestController {
       const { manager } = await UserRepository.getOne({ uuid: req.userData.uuid }, ['manager']);
       if (!manager) return sendErrorResponse(res, 403, 'You are not allowed to create a trip request because you don\'t have a manager');
       req.userData.managerUuid = manager.dataValues.user_uuid;
+      // checking if the office locations exist
       const tripDeparture = await OfficeLocationRepository.findById({ uuid: leavingFrom });
       if (!tripDeparture) return sendErrorResponse(res, 404, 'The office location you are leaving from does not exist');
       const tripDestination = await OfficeLocationRepository.findById({ uuid: destination });

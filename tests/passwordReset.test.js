@@ -45,7 +45,12 @@ describe('Password reset Tests', () => {
         done();
       });
   });
+<<<<<<< HEAD
   it('"/api/v1/auth/forgot_password" Should fail if email is not provided', (done) => {
+=======
+  
+  it('"/api/v1/auth/forgotPassword" Should fail if email is not provided', (done) => {
+>>>>>>> fx(git): esolve git conflicts
     chai.request(app)
       .post('/api/v1/auth/forgot_password')
       .send()
