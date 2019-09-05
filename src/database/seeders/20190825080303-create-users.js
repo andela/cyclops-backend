@@ -9,11 +9,23 @@ export default {
         uuid: uuid(),
         name: 'Efe Justin',
         email: 'efejustin3@gmail.com',
+        role: 'Manager',
         password: hashPassword('Jei12345'),
         is_verified: true,
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')
-      }, {
+      }, 
+      {
+        uuid: uuid(),
+        name: 'Efe Just',
+        email: 'efejustin@gmail.com',
+        role: 'Requester',
+        password: hashPassword('John3162'),
+        is_verified: true,
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
+      },
+      {
         uuid: uuid(),
         name: 'Makaraba Blessing',
         email: 'blessingpeople@gmail.com',
@@ -55,8 +67,9 @@ export default {
         uuid: '95ccd25d-2524-4b95-a441-8e2643c4c079',
         email: 'somemail@yahoo.com',
         password: hashPassword('Password123'),
-        is_verified: false,
         name: faker.name.findName(),
+        role: 'Manager',
+        is_verified: false,
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')
       },

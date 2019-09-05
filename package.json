@@ -1,4 +1,4 @@
-{
+ {
   "name": "barefoot-nomad",
   "version": "1.0.0",
   "description": "Making company travel and accommodation easy and convenient.",
@@ -7,7 +7,6 @@
     "lint": "eslint --fix \"./src/**/*.js\"",
     "pretest": "cross-env NODE_ENV=test npm run db:migrate:all",
     "test": "cross-env NODE_ENV=test nyc mocha --no-timeout './tests/index.js' --exit",
-    "test1": "cross-env NODE_ENV=test nyc mocha --no-timeout './tests/index.js' --exit",
     "test:report": "cross-env NODE_ENV=test npm run db:migrate:all && cross-env NODE_ENV=test nyc mocha --timeout 5000 './tests/*.js' --exit",
     "dev": "nodemon --exec babel-node src/index.js",
     "start": "npm run build && node build/index.js",
@@ -74,9 +73,14 @@
       "node_modules",
       "src/controllers/ExampleUserNotificationController.js"
     ],
-    "reporter": ["lcov", "text"],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
     "cache": false,
-    "require": ["@babel/register"],
+    "require": [
+      "@babel/register"
+    ],
     "report-dir": "tests/report"
   }
 }
