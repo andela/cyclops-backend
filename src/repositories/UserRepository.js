@@ -29,7 +29,7 @@ const userInfo = user => {
   };
 };
 
-const { User } = Model;
+const { User, BlackListedToken } = Model;
 /**
  * User repository class
  *
@@ -95,6 +95,56 @@ class UserRepository {
   }
 
   /**
+   *@description This is a function that finds a user in the data base
+   * @param {string} email this is the response that parameter
+   * @param {string}  res This is the email the user provided on sign in
+   * @returns {object} returns the user information on the object
+   * @returns {object} returns error object if there is any
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async find(email, next) {
+    try {
+      return await User.findOne({ where: { email } });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  /**
+   * @description Find user by its attributes.
+   *
+   * @param {String} column - Name of column to search.
+   *
+   * @param {Object} value - The value to search for in column.
+   *
+   * @return {Object} returns user details
+   */
+  async findByAttr(column, value) {
+    const result = await this.model.findOne({
+      where: {
+        [column]: value
+      }
+    });
+    return result;
+  }
+  
+  /** 
+   * @description return an updated user
+   * 
+   * @param {string} email
+   * 
+   * @returns {object} returns an updated user
+   */
+  async findByEmail(email) {
+    try {
+      const user = await User.findOne({ where: { email } });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
    * 
    * @param {string} userId 
    * 
@@ -132,6 +182,21 @@ class UserRepository {
       throw new Error(err);
     }
   }
-}
 
+  /**
+   *@description This is a function that finds a user in the data base
+   * @param {string} email this is the response that parameter
+   * @param {string}  res This is the email the user provided on sign in
+   * @returns {object} returns the user information on the object
+   * @returns {object} returns error object if there is any
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async findToken(token, res, next) {
+    try {
+      return await BlackListedToken.findOne({ where: { token } });
+    } catch (error) {
+      return next(error);
+    }
+  }
+}
 export default new UserRepository();

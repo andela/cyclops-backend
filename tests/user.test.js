@@ -4,6 +4,7 @@ import chaiHttp from 'chai-http';
 import app from '../src/index';
 import model from '../src/models';
 
+let userToken;
 const { User } = model;
 
 chai.use(chaiHttp);
@@ -141,6 +142,8 @@ describe('User', () => {
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body).to.have.property('data');
+
+          userToken = res.body.data.token;
           done();
         });
     });
@@ -184,6 +187,17 @@ describe('User', () => {
         .end((err, res) => {
           expect(res.status).to.be.eql(400);
           expect(res.body.status).to.eql('error');
+          done();
+        });
+    });
+  });
+  describe('Sign Out', () => {
+    it('should sign user out', (done) => {
+      chai.request(app)
+        .get('/api/v1/auth/signout')
+        .set('authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
           done();
         });
     });
