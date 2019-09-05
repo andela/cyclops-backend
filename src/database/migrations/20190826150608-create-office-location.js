@@ -6,16 +6,31 @@ export default {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4
     },
-    address: Sequelize.STRING,
-    city: Sequelize.STRING,
-    state: Sequelize.STRING,
+    address: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    city: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    state: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
+    country: {
+      type: Sequelize.STRING,
+      defaultValue: 'Nigeria'
+    },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      field: 'updated_at'
     }
   }),
   // eslint-disable-next-line arrow-parens

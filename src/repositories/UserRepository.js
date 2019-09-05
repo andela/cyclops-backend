@@ -1,6 +1,4 @@
-/* eslint-disable no-useless-catch */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable require-jsdoc */
 /* eslint-disable camelcase */
 /**
  * @fileoverview Contains the User Auth Repository class, an interface for querying User table
@@ -10,24 +8,7 @@
  * @requires models/User.js
  */
 
-import { hashPassword } from '../utils/hashPassword';
 import Model from '../models';
-import { createToken } from '../modules/tokenProcessor';
-
-// Returns selected information for logged in user.
-const userInfo = user => {
-  const {
-    email, name, role, uuid, image_url, is_verified
-  } = user;
-  return {
-    uuid,
-    name,
-    image_url,
-    email,
-    role,
-    token: is_verified ? createToken({ uuid, role, email }) : ''
-  };
-};
 
 const { User, BlackListedToken } = Model;
 /**
@@ -37,165 +18,97 @@ const { User, BlackListedToken } = Model;
  */
 class UserRepository {
   /**
-   *@constructor
+   * @description constructor handles the user model
+   *
+   * User Model constructor
+   *
+   * @constructor
+   *
    */
   constructor() {
     this.db = User;
   }
 
   /**
-   * @description Returns the newly created user details
+   * @description Creates a new user account with provided details
    *
-   * @param {String} param0 user password
+   * @param {Object} param users details
    *
-   * @param {Object} param1 other user detials
-   *
-   * @return {Object} returns user details
+   * @return {Object} returns new user details
    */
-  // eslint-disable-next-line class-methods-use-this
   async create({
-    password, email, name, designation
+    password,
+    email,
+    name,
+    designation,
+    is_verified,
+    image_url = '',
+    facebook_id = '',
+    google_id = ''
   }) {
-    const { dataValues } = await this.db.create({
-      name,
-      email,
-      designation,
-      password: hashPassword(password)
-    });
-    return dataValues;
-  }
-
-  /**
-   * @description Returns the newly created user details
-   *
-   * @param {String} param0 social OAuth details
-   *
-   * @return {Object} returns new or existing user details
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async social({
-    social_id, name, image, email, provider
-  }) {
-    const user = provider === 'facebook'
-      ? await this.db.findOne({ where: { facebook_id: social_id } })
-      : await this.db.findOne({ where: { google_id: social_id } });
-    if (user) return userInfo(user);
-
-    const { dataValues } = await this.db.create({
-      name,
-      email,
-      is_verified: true,
-      image_url: image,
-      facebook_id: provider === 'facebook' ? social_id : '',
-      google_id: provider === 'google' ? social_id : '',
-      role: 'employee'
-      // eslint-disable-next-line arrow-parens
-    });
-    return userInfo(dataValues);
-  }
-
-  /**
-   *@description This is a function that finds a user in the data base
-   * @param {string} email this is the response that parameter
-   * @param {string}  res This is the email the user provided on sign in
-   * @returns {object} returns the user information on the object
-   * @returns {object} returns error object if there is any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async find(email, next) {
     try {
-      return await User.findOne({ where: { email } });
-    } catch (error) {
-      return next(error);
+      const { dataValues } = await this.db.create({
+        name,
+        email,
+        designation,
+        password,
+        is_verified,
+        image_url,
+        facebook_id,
+        google_id
+      });
+      return dataValues;
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
   /**
-   * @description Find user by its attributes.
+   * @description Returns users details based on the provided parameters
    *
-   * @param {String} column - Name of column to search.
+   * @param {Object} condition checks required users parameter
    *
-   * @param {Object} value - The value to search for in column.
+   * @param {Object} include adds users managers
    *
-   * @return {Object} returns user details
+   * @return {Object} returns user details with managers uuid
    */
-  async findByAttr(column, value) {
-    const result = await this.model.findOne({
-      where: {
-        [column]: value
-      }
-    });
-    return result;
-  }
-  
-  /** 
-   * @description return an updated user
-   * 
-   * @param {string} email
-   * 
-   * @returns {object} returns an updated user
-   */
-  async findByEmail(email) {
+  async getOne(condition = {}, include = '') {
     try {
-      const user = await User.findOne({ where: { email } });
-      return user;
-    } catch (error) {
-      throw error;
+      return await this.db.findOne({ where: condition, include });
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
   /**
-   * 
-   * @param {string} userId 
-   * 
-   * @param {string} newPassword
-   * 
+   *
+   * @param {string} userId
+   *
+   * @param {object} changes to update for user
+   *
    * @returns {object} updated user
    */
-  async updatePassword(userId, newPassword) {
+  async update(userId, changes) {
     try {
-      const user = await User.findOne({ where: { uuid: userId } });
-      const updatedUser = await User.update(
-        { password: newPassword },
-        { where: { uuid: user.uuid } }
-      );
-      return updatedUser;
-    } catch (error) {
-      throw error;
+      await this.getOne({ uuid: userId });
+      return await User.update(changes, { where: { uuid: userId } });
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
   /**
-   * @description Returns the newly created user details
+   * @description This is a function that finds a user token in the data base
    *
-   * @param {String} condition handles the limit of your search
+   * @param {Object} condition checks token in db
    *
-   * @param {String} include is a variable that handles table relationship
-   *
-   * @return {Object} returns new or existing user details
+   * @return {Object} returns token
    */
-  async findOne(condition, include = '') {
+  async findToken(condition = {}) {
     try {
-      const user = await this.db.findOne({ where: condition, include });
-      return user;
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
-
-  /**
-   *@description This is a function that finds a user in the data base
-   * @param {string} email this is the response that parameter
-   * @param {string}  res This is the email the user provided on sign in
-   * @returns {object} returns the user information on the object
-   * @returns {object} returns error object if there is any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async findToken(token, res, next) {
-    try {
-      return await BlackListedToken.findOne({ where: { token } });
-    } catch (error) {
-      return next(error);
+      return await BlackListedToken.findOne({ where: condition });
+    } catch (e) {
+      throw new Error(e);
     }
   }
 }

@@ -10,7 +10,26 @@ import { sendErrorResponse, sendSuccessResponse } from '../utils/sendResponse';
  * @description TripRequestController handles all logic pertains to rtrip request
  */
 class TripRequestController {
-/**
+  /**
+   * @param {Object} req - HTTP request object
+   *
+   * @param {Object} res - HTTP response object
+   *
+   * @param {Function} next - Function to trigger next middleware
+   *
+   * @return {Object} Object resoponse with current user created status
+   */
+  static async tripsByUser(req, res, next) {
+    try {
+      const user = req.userData.uuid;
+      const userTrips = await TripRequestRepository.getAll({ user_uuid: user });
+      return sendSuccessResponse(res, 200, userTrips);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  /**
  * @description createRequest is a method that handles the logic to create a request
  *
  * @param {object} req is the request object
@@ -24,7 +43,7 @@ class TripRequestController {
   static async createTripRequest(req, res, next) {
     const { request_type: requestType, leaving_from: leavingFrom, destination } = req.body;
     try {
-      const { manager } = await UserRepository.findOne({ uuid: req.userData.uuid }, ['manager']);
+      const { manager } = await UserRepository.getOne({ uuid: req.userData.uuid }, ['manager']);
       if (!manager) return sendErrorResponse(res, 403, 'You are not allowed to create a trip request because you don\'t have a manager');
       // obtaining the user_uuid of the user's manager
       req.userData.managerUuid = manager.dataValues.user_uuid;
@@ -54,24 +73,23 @@ class TripRequestController {
   static async returnTripCreator(req, res, next) {
     try {
       const tripRequest = { ...req.body, user_uuid: req.userData.uuid };
-      const { destination } = req.body;
       // creating the trip request
       const tripRequestDetails = await TripRequestRepository.create(tripRequest);
       const { uuid: tripRequestUuid } = tripRequestDetails;
       const tripDestinationDetails = {
         trip_request_uuid: tripRequestUuid,
-        office_location_uuid: destination
+        office_location_uuid: tripRequest.destination
       };
-      // updating destination for trip request and creating notificationsfor manager
+      // updating destination for trip request and creating notifications for manager
       const { managerUuid } = req.userData;
       const [destinated, managerNotified] = await Promise.all(
         [TripDestinationRespository.create(tripDestinationDetails),
           NotificationRepository.create({ user_uuid: managerUuid })]
       );
       if (destinated && managerNotified) {
-        return sendSuccessResponse(res, 201, { 
+        return sendSuccessResponse(res, 201, {
           message: 'Your trip request has been created successfully',
-          trip_request_uuid: tripRequestUuid 
+          trip_request_uuid: tripRequestUuid
         });
       }
     } catch (err) {
@@ -93,7 +111,7 @@ class TripRequestController {
     try {
       return sendSuccessResponse(res, 200, 'oneWayTrip still in progress');
     } catch (err) {
-      // return sendErrorResponse(res, 500, 'Internal Server Error');   
+      // return sendErrorResponse(res, 500, 'Internal Server Error');
     }
   }
 }
