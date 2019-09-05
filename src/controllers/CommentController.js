@@ -32,16 +32,14 @@ class CommentController {
     try {
       const { uuid: userUuid, role: userRole } = req.userData;
       const { trip_request_uuid: tripRequestUuid, message } = req.body;
-
-      // checking for trip request
       const tripRequestDetails = await TripRequestRepository.findById({ uuid: tripRequestUuid });
       if (!tripRequestDetails) return sendErrorResponse(res, 404, 'This trip request does not exist');
       const { user_uuid: tripRequestOwner } = tripRequestDetails;
-      // ensuring ownership
+
       const isAllowed = await checkrequestOwner(tripRequestOwner, userUuid, userRole);
       if (!isAllowed && userRole === 'Manager') return sendErrorResponse(res, 403, 'You are not the manager of the user that created this trip request');
       if (!isAllowed && userRole !== 'Manager') return sendErrorResponse(res, 403, 'You can\'t comment on a trip request you did not create');
-      // creating comment
+    
       const commentDetails = {
         user_uuid: userUuid,
         trip_request_uuid: tripRequestUuid,
@@ -70,9 +68,11 @@ class CommentController {
       const { uuid: userUuid } = req.userData;
       const { message } = req.body;
       const { commentUuid } = req.params;
+
       const comment = await CommentRepository.getOne({ uuid: commentUuid });
       if (!comment) return sendErrorResponse(res, 404, 'This comment does not exist');
       const { dataValues } = comment;
+
       if (userUuid !== dataValues.user_uuid) return sendErrorResponse(res, 403, 'You can\'t edit a comment you didn\'t post');
       const [editedComment] = await CommentRepository.updateOne({ message }, { uuid: commentUuid });
       if (editedComment) return sendSuccessResponse(res, 200, ...editedComment);
