@@ -16,7 +16,7 @@ export default {
       }
     },
     trip_plan: {
-      type: Sequelize.ENUM('singleCity', 'multiCity'),
+      type: Sequelize.ENUM('multiCity', 'singleCity'),
       defaultValue: 'singleCity'
     },
     request_type: {
@@ -35,10 +35,6 @@ export default {
       type: Sequelize.STRING,
       defaultValue: 'Business Assignment',
     },
-    destination: {
-      allowNull: false,
-      type: Sequelize.UUID,
-    },
     return_date: {
       allowNull: false,
       type: Sequelize.DATE
@@ -53,11 +49,13 @@ export default {
     },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      field: 'updated_at'
     }
   }),
   // eslint-disable-next-line arrow-parens

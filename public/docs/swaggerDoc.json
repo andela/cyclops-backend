@@ -28,8 +28,12 @@
       "description": "Barefoot Nomad landing"
     },
     {
-      "name": "Authentication",
+      "name": "User",
       "description": "Registers and login users"
+    },
+    {
+      "name": "Trip",
+      "description": "Users travel request, information and history"
     }
   ],
   "schemes": ["http", "https"],
@@ -56,7 +60,7 @@
     "/api/v1/auth/signup": {
       "post": {
         "summary": "user signup",
-        "tags": ["Authentication"],
+        "tags": ["User"],
         "operationId": "SignupPost",
         "deprecated": false,
         "produces": ["application/json"],
@@ -141,7 +145,7 @@
     },
     "/api/v1/auth/signin": {
       "post": {
-        "tags": ["Authentication"],
+        "tags": ["User"],
         "summary": "Logs user into the system",
         "description": "",
         "operationId": "loginUser",
@@ -195,7 +199,7 @@
       "/api/v1/auth/forgotPassword": {
         "post": {
            "tags": [
-              "Authentication"
+              "User"
            ],
            "summary": "Sends a reset link to the user",
            "produces": [
@@ -223,7 +227,7 @@
      "/api/v1/auth/resetPassword/:uuid/:token": {
        "put": {
           "tags": [
-             "Authentication"
+             "User"
           ],
           "summary": "Send new password",
           "produces": [
@@ -256,9 +260,9 @@
           "in": "header"
       }
     },
-    "/api/v1/trip_request": {
+    "/api/v1/trips": {
       "post": {
-        "tags": ["tripRequest"],
+        "tags": ["Trip"],
         "summary": "Allow users to create a return trip",
         "description": "",
         "operationId": "CreateAReturnTrip",
@@ -285,6 +289,24 @@
             "description": "Trip Request Created Successfully",
             "type": "string",
             "example": "Your trip request has been created successfully"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Trip"],
+        "summary": "Shows users trip requests records with status",
+        "description": "",
+        "operationId": "ReturnsAllTrips",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "status": "success",
+            "type": "object"
           }
         }
       }
@@ -345,8 +367,7 @@
         "trip_plan",
         "leaving_from",
         "return_date",
-        "travel_date",
-        "destination"
+        "travel_date"
       ],
       "properties": {
         "request_type": {

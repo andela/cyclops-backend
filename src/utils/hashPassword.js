@@ -9,9 +9,9 @@ const hashPassword = (password) => bcrypt.hashSync(password, 10);
 /**
  * Function to decrypt a hash password compares it
  * @param {string} password it accepts password
- * @param {string} hashpassword it accepts user's hashed password
+ * @param {string} hashed it accepts user's hashed password
  * @returns {boolean} unhash returns true if comparism is matched
  */
-const unhash = (password, hashpassword) => bcrypt.compareSync(password, hashpassword);
+const unhashPassword = (password, hashed) => bcrypt.compareSync(password, hashed);
 
-export { hashPassword, unhash };
+export { hashPassword, unhashPassword };

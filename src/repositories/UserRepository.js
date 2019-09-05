@@ -1,6 +1,3 @@
-/* eslint-disable no-useless-catch */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable require-jsdoc */
 /* eslint-disable camelcase */
 /**
  * @fileoverview Contains the User Auth Repository class, an interface for querying User table
@@ -10,24 +7,7 @@
  * @requires models/User.js
  */
 
-import { hashPassword } from '../utils/hashPassword';
 import Model from '../models';
-import { createToken } from '../modules/tokenProcessor';
-
-// Returns selected information for logged in user.
-const userInfo = user => {
-  const {
-    email, name, role, uuid, image_url, is_verified
-  } = user;
-  return {
-    uuid,
-    name,
-    image_url,
-    email,
-    role,
-    token: is_verified ? createToken({ uuid, role, email }) : ''
-  };
-};
 
 const { User } = Model;
 /**
@@ -37,99 +17,82 @@ const { User } = Model;
  */
 class UserRepository {
   /**
-   *@constructor
+   * @description constructor handles the user model
+   *
+   * User Model constructor
+   *
+   * @constructor
+   *
    */
   constructor() {
     this.db = User;
   }
 
   /**
-   * @description Returns the newly created user details
+   * @description Creates a new user account with provided details
    *
-   * @param {String} param0 user password
+   * @param {Object} param users details
    *
-   * @param {Object} param1 other user detials
-   *
-   * @return {Object} returns user details
+   * @return {Object} returns new user details
    */
-  // eslint-disable-next-line class-methods-use-this
   async create({
-    password, email, name, designation
+    password,
+    email,
+    name,
+    designation,
+    is_verified,
+    image_url = '',
+    facebook_id = '',
+    google_id = ''
   }) {
-    const { dataValues } = await this.db.create({
-      name,
-      email,
-      designation,
-      password: hashPassword(password)
-    });
-    return dataValues;
-  }
-
-  /**
-   * @description Returns the newly created user details
-   *
-   * @param {String} param0 social OAuth details
-   *
-   * @return {Object} returns new or existing user details
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async social({
-    social_id, name, image, email, provider
-  }) {
-    const user = provider === 'facebook'
-      ? await this.db.findOne({ where: { facebook_id: social_id } })
-      : await this.db.findOne({ where: { google_id: social_id } });
-    if (user) return userInfo(user);
-
-    const { dataValues } = await this.db.create({
-      name,
-      email,
-      is_verified: true,
-      image_url: image,
-      facebook_id: provider === 'facebook' ? social_id : '',
-      google_id: provider === 'google' ? social_id : '',
-      role: 'employee'
-      // eslint-disable-next-line arrow-parens
-    });
-    return userInfo(dataValues);
-  }
-
-  /**
-   * 
-   * @param {string} userId 
-   * 
-   * @param {string} newPassword
-   * 
-   * @returns {object} updated user
-   */
-  async updatePassword(userId, newPassword) {
     try {
-      const user = await User.findOne({ where: { uuid: userId } });
-      const updatedUser = await User.update(
-        { password: newPassword },
-        { where: { uuid: user.uuid } }
-      );
-      return updatedUser;
-    } catch (error) {
-      throw error;
+      const { dataValues } = await this.db.create({
+        name,
+        email,
+        designation,
+        password,
+        is_verified,
+        image_url,
+        facebook_id,
+        google_id
+      });
+      return dataValues;
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
   /**
-   * @description Returns the newly created user details
+   * @description Returns users details based on the provided parameters
    *
-   * @param {String} condition handles the limit of your search
+   * @param {Object} condition checks required users parameter
    *
-   * @param {String} include is a variable that handles table relationship
+   * @param {Object} include adds users managers
    *
-   * @return {Object} returns new or existing user details
+   * @return {Object} returns user details with managers uuid
    */
-  async findOne(condition, include = '') {
+  async getOne(condition = {}, include = '') {
     try {
-      const user = await this.db.findOne({ where: condition, include });
-      return user;
-    } catch (err) {
-      throw new Error(err);
+      return await this.db.findOne({ where: condition, include });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
+   *
+   * @param {string} userId
+   *
+   * @param {object} changes to update for user
+   *
+   * @returns {object} updated user
+   */
+  async update(userId, changes) {
+    try {
+      await this.getOne({ uuid: userId });
+      return await User.update(changes, { where: { uuid: userId } });
+    } catch (e) {
+      throw new Error(e);
     }
   }
 }

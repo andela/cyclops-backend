@@ -6,15 +6,6 @@ export default {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4
     },
-    office_location_uuid: {
-      allowNull: false,
-      type: Sequelize.UUID,
-      onDelete: 'CASCADE',
-      references: {
-        model: 'OfficeLocations',
-        key: 'uuid'
-      },
-    },
     trip_request_uuid: {
       allowNull: false,
       type: Sequelize.UUID,
@@ -24,13 +15,24 @@ export default {
         key: 'uuid'
       },
     },
+    office_location_uuid: {
+      allowNull: false,
+      type: Sequelize.UUID,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'OfficeLocations',
+        key: 'uuid'
+      },
+    },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
+      field: 'updated_at'
     }
   }),
   // eslint-disable-next-line arrow-parens

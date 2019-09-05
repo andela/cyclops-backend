@@ -1,22 +1,62 @@
+/* eslint-disable camelcase */
+/**
+ * @fileoverview Contains the User Auth Repository class, an interface for querying User table
+ *
+ * @author TeamCyclops
+ *
+ * @requires models/TripRequest.js
+ */
+
 import Models from '../models';
 
-const { TripRequest } = Models;
+const { TripRequest, TripDestination } = Models;
 
 /**
- * @description RequestRepository handles method that query our database
+ * @description RequestRepository handles TripRequest model
+ *
+ * @class TripRequestRepository
  */
 class RequestRepository {
   /**
+   * Trip Model constructor
+   *
    * @description constructor handles the properties/univsersal data for our requestRepository
+   *
+   * @constructor
+   *
    */
   constructor() {
     this.db = TripRequest;
   }
 
+
+  /**
+   * @description Returns user's trip request information based on the provided parameters
+   *
+   * @param {Object} condition checks trip request required parameter for a user
+   *
+   * @return {Object} returns trip request details
+   */
+  async getAll(condition = {}) {
+    try {
+      return await this.db.findAll({
+        where: condition,
+        attributes: {
+          exclude: ['leaving_from']
+        },
+        include: [{
+          model: TripDestination, as: 'destinations', attributes: ['uuid'], include: ['office']
+        }, 'departure']
+      });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
   /**
  * @description RequestRepository handles method that query our database
  *
- * @param {objecct} requestDetails refers to the details of the user's request
+ * @param {object} requestDetails refers to the details of the user's request
  *
  * @returns {object} the details of the request that was created
  */
@@ -29,6 +69,5 @@ class RequestRepository {
     }
   }
 }
-
 
 export default new RequestRepository();

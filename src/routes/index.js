@@ -1,7 +1,7 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../../public/docs/swaggerDoc.json';
 import user from './user';
-import tripRequest from './tripRequest';
+import trip from './trip';
 import office from './office';
 
 export default (app) => {
@@ -10,7 +10,7 @@ export default (app) => {
     data: 'Welcome to the Cyclops Barefoot Nomad backend API'
   }));
 
-  app.use('/api/v1', user, tripRequest, office);
+  app.use('/api/v1', [user, trip, office]);
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 

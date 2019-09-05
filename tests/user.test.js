@@ -23,7 +23,7 @@ describe('User', () => {
         expect(res.status).eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('success');
-        expect(res.body.data).to.eql('User account created successfully');
+        expect(res.body.data.message).to.eql('User account created successfully');
         done();
       });
   });

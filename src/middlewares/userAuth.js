@@ -72,7 +72,7 @@ export default class userAuth {
   static async userExistCheck(req, res, next) {
     const userData = magicTrimmer(req.body);
     const { email } = userData;
-    const result = await UserRepository.findOne({ email });
+    const result = await UserRepository.getOne({ email });
     if (!result) {
       return next();
     }

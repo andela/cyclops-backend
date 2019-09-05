@@ -25,7 +25,15 @@ export default (sequelize, DataTypes) => {
     department: DataTypes.STRING,
     preferred_currency: DataTypes.STRING,
     preferred_language: DataTypes.STRING,
-    residential_address: DataTypes.STRING
+    residential_address: DataTypes.STRING,
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    }
   }, {});
   User.associate = (models) => {
     User.belongsTo(models.Manager, {
