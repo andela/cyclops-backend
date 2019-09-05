@@ -7,7 +7,8 @@ import UserRepository from '../repositories/UserRepository';
 export default async (req, res, next) => {
   const rawToken = req.headers.authorization
     || req.headers['x-access-token']
-    || req.body.token;
+    || req.body.token
+    || req.query.slt;
 
   const err = 'Please provide a token';
 

@@ -14,6 +14,21 @@ class NotificationRepository {
   }
 
   /**
+   * @description Returns user's selected notifications
+   *
+   * @param {Object} condition - Checks notification based on the condition
+   *
+   * @return {Object} returns selected notification details
+   */
+  async getAll(condition = {}) {
+    try {
+      return await this.db.findAll({ where: condition });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
  * @description NotificationRepository handles method that query our database
  *
  * @param {object} notificationDetails refers to the notification data

@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 describe('Server Tests', () => {
   it('Should display "Welcome to the Cyclops Barefoot Nomad backend API"', (done) => {
     chai.request(app)
-      .get('/api/v1')
+      .get('/')
       .end((err, res) => {
         expect(res.status).eql(200);
         expect(res.body).to.be.an('object');
