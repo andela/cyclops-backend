@@ -12,7 +12,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "basePath": "/api/v1",
+  "basePath": "/",
   "securityDefinitions": {
     "bearerAuth": {
       "type": "apiKey",
@@ -70,7 +70,7 @@
       }
       }
     },
-    "/auth/signin": {
+    "/api/v1/auth/signin": {
       "post": {
         "tags": ["User"],
         "summary": "Logs user into the system",
@@ -104,16 +104,6 @@
               "example": {
                 "status": "success",
                 "data": {
-                  "booking_id": 9,
-                  "user_id": 1,
-                  "trip_id": 4,
-                  "bus_id": 5,
-                  "trip_date": "2019-02-13T08:00:00.000Z",
-                  "seat_number": 4,
-                  "first_name": "Douye",
-                  "last_name": "Wokoro",
-                  "email": "wokorosamuel@yahoo.com",
-                  "phone_number": "09066027359"
                 }
               }
             }
@@ -143,7 +133,7 @@
         }
       }
     },
-    "/auth/signup": {
+    "/api/v1/auth/signup": {
       "post": {
         "summary": "user signup",
         "tags": ["User"],
@@ -229,7 +219,7 @@
         }
       }
     },
-    "/user": {
+    "/api/v1/user": {
       "get": {
         "description": "Endpoint to enable users view profile details",
         "summary": "View profile details",
@@ -261,16 +251,6 @@
               "example": {
                 "status": "success",
                 "data": {
-                  "booking_id": 9,
-                  "user_id": 1,
-                  "trip_id": 4,
-                  "bus_id": 5,
-                  "trip_date": "2019-02-13T08:00:00.000Z",
-                  "seat_number": 4,
-                  "first_name": "Douye",
-                  "last_name": "Wokoro",
-                  "email": "wokorosamuel@yahoo.com",
-                  "phone_number": "09066027359"
                 }
               }
             }
@@ -298,192 +278,118 @@
             }
           }
         }
-      },
-      "put": {
-        "description": "Enables users edit profile information",
-        "summary": "Users profile edit",
-        "tags": [
-          "User"
-        ],
-        "operationId": "UsersPut",
-        "deprecated": false,
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
+      }
+    },
+    "/api/v1/auth/forgotPassword": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Sends a reset link to the user",
+        "produces": ["application/json"],
         "parameters": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "default": "Bearer {token}",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "in": "formData",
-            "required": false,
-            "default": "E.g. Wokoro Douye Samuel",
-            "type": "string"
-          },
-          {
             "name": "email",
-            "in": "formData",
-            "required": false,
-            "default": "E.g. douyesamuel@yahoo.com",
-            "type": "string"
-          },
-          {
-            "name": "gender",
-            "in": "formData",
-            "required": false,
-            "default": "male",
-            "type": "string"
-          },
-          {
-            "name": "date_of_birth",
-            "in": "formData",
-            "required": false,
-            "default": "E.g. 23/4/1998",
-            "type": "string"
-          },
-          {
-            "name": "preferred_currency",
-            "in": "formData",
-            "required": false,
-            "default": "NG",
-            "type": "string"
-          },
-          {
-            "name": "preferred_language",
-            "in": "formData",
-            "required": false,
-            "default": "English",
-            "type": "string"
-          },
-          {
-            "name": "image_url",
-            "in": "formData",
-            "required": false,
-            "default": "https:",
+            "in": "path",
+            "description": "for password reset link",
+            "required": true,
             "type": "string"
           }
         ],
         "responses": {
-          "200": {
-            "schema" :{
-              "example": {
-                "status": "success",
-                "data": {
-                    "uuid": "2d33e804-8326-41bf-96d6-2501525bef12",
-                    "email": "wokorosamudel@yahoo.com",
-                    "password": "Samsizzy199",
-                    "name": "Wokoro Douye Samuel",
-                    "role": "manager",
-                    "is_verified": false,
-                    "facebook_id": null,
-                    "google_id": null,
-                    "manager_id": null,
-                    "office_id": null,
-                    "gender": "male",
-                    "date_of_birth": "1993-27-3",
-                    "department": null,
-                    "preferred_currency": "Naira",
-                    "preferred_language": "English",
-                    "residential_address": "No. 32 Arizonal street yenezuegene yenegoa",
-                    "image_url": "/url/path/filename",
-                    "createdAt": "2019-09-01T15:46:59.418Z",
-                    "updatedAt": "2019-09-02T20:52:47.056Z"
-                }
-              }
-            },
-            "description": "Success",
-            "headers": {}
-          },
           "400": {
-            "description": "",
-            "schema":{
-              "example": {
-                "application/json; charset=utf-8": {
-                  "status": "error",
-                  "error": "Invalid token"
+            "description": "Invalid email supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/resetPassword/:uuid/:token": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Send new password",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "password",
+            "in": "path",
+            "description": "that need to be updated",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid password supplied"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/office": {
+      "get": {
+        "tags": ["Office"],
+        "summary": "Get company's office locations",
+        "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "9 shagamnu"
+                },
+                "state": {
+                  "type": "string",
+                  "example": "Vinci"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "bangkok"
+                },
+                "country": {
+                  "type": "string",
+                  "example": "spain"
+                },
+                "created_at": {
+                  "type": "date",
+                  "example": ""
+                },
+                "updated_at": {
+                  "type": "date",
+                  "example": ""
                 }
               }
             }
           },
           "401": {
-            "description": "",
-            "schema": {
-              "example": {
-                "application/json; charset=utf-8": {
-                  "status": "error",
-                  "error": "Authorization Failed"
-                }
-              }
-            }
+            "description": "Unauthorized"
           }
         }
       }
     },
-    "/auth/forgotPassword": {
-      "post": {
-          "tags": [
-             "User"
-          ],
-          "summary": "Sends a reset link to the user",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-              {
-                  "name": "email",
-                  "in": "path",
-                  "description": "for password reset link",
-                  "required": true,
-                  "type": "string"
-              }
-          ],
-          "responses": {
-              "400": {
-              "description": "Invalid email supplied"
-              },
-              "404": {
-              "description": "User not found"
-              }
-          }
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "token",
+        "in": "header"
       }
     },
-    "/auth/resetPassword/:uuid/:token": {
-      "put": {
-        "tags": [
-            "Authentication"
-        ],
-        "summary": "Send new password",
-        "produces": [
-            "application/json"
-        ],
-        "parameters": [
-            {
-              "name": "password",
-              "in": "path",
-              "description": "that need to be updated",
-              "required": true,
-              "type": "string"
-            }
-        ],
-        "responses": {
-            "400": {
-              "description": "Invalid password supplied"
-            },
-            "500": {
-              "description": "Server Error"
-            }
-        }
-      }
-    },
-    "/trips": {
+    "/api/v1/trips": {
       "post": {
         "tags": ["Trip"],
         "summary": "Allow users to create a return trip",
@@ -607,6 +513,64 @@
           }
         }
       }
+    },
+    "api/v1/comment/trips/:commentUuid": {
+      "put": {
+        "tags": ["Comment"],
+        "summary": "Update the comment on a trip request",
+        "description": "",
+        "consumes": "application/json",
+        "operationId": "UpdatePropertyPrice",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "commentUuid",
+            "in": "path",
+            "description": "uuid of comment to update",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "comment that has been updated",
+            "name": "type",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "user_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "trip_request_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please approve my trip request"
+                },
+                "createdAt": {
+                  "type": "date"
+                },
+                "updatedAt": {
+                  "type": "date"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -699,4 +663,3 @@
     }
   }
   }
-}
