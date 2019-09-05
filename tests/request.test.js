@@ -2,8 +2,12 @@ import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import uuid from 'uuid/v4';
+import sinon from 'sinon';
 import { createToken } from '../src/modules/tokenProcessor';
 import app from '../src';
+import tripReqRepo from '../src/repositories/TripRequestRepository';
+import tripController from '../src/controllers/TripRequestController';
+import { req, res } from './mock.data';
 
 import model from '../src/models';
 
@@ -44,7 +48,7 @@ describe('Test Create Trip Request', () => {
   before(async () => {
     await User.create(testUser);
   });
-  // after(() => User.destroy({ where: {}, force: true }));
+  after(() => User.destroy({ where: {}, force: true }));
 
   const token = createToken(seededUser);
   const token1 = createToken(seededUserI);
@@ -381,6 +385,16 @@ describe('Test Create Trip Request', () => {
           expect(res.body.error).to.eql('The office location you are going to does not exist');
           done();
         });
+    });
+
+    it('it should call next for server errors', async () => {
+      sinon.stub(res, 'send').returnsThis();
+      sinon.stub(res, 'status').returnsThis();
+      sinon.stub(tripReqRepo, 'getAll').throws();
+      const next = sinon.spy();
+      expect(await tripController.tripsByUser(req, res, next)).to.throw;
+      expect(next.called).to.true;
+      sinon.restore();
     });
   });
 });

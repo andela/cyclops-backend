@@ -5,13 +5,31 @@ import app from '../src/app';
 import UserRepository from '../src/repositories/UserRepository';
 import { createToken } from '../src/modules/tokenProcessor';
 
+import model from '../src/models';
 
+const { User } = model;
+const testUser = {
+  name: 'John Doe',
+  email: 'dieudonneawa7@gmail.com',
+  password: 'workingwithseeds',
+  role: 'employee',
+  is_verified: true,
+  gender: 'male',
+  date_of_birth: '2019-08-28',
+  department: 'research',
+  preferred_language: 'french',
+  preferred_currency: 'FCFA',
+  image_url: 'http://images.com/myimagefile',
+  created_at: new Date(),
+  updated_at: new Date()
+};
 chai.use(chaiHttp);
 
 describe('Password reset Tests', () => {
   let resetToken, userId;
   const email = 'dieudonneawa7@gmail.com';
   beforeEach(async () => {
+    await User.create(testUser);
     const { uuid } = await UserRepository.getOne({ email });
     resetToken = await createToken({ uuid, email });
     userId = uuid;

@@ -1,13 +1,38 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import chaiHttp from 'chai-http';
 import { createToken } from '../src/modules/tokenProcessor';
 import app from '../src/index';
+import authController from '../src/controllers/AuthController';
+import userRepo from '../src/repositories/UserRepository';
+import { req, res } from './mock.data';
 
+chai.use(sinonChai);
 
 chai.use(chaiHttp);
 
 describe('User Profile Edit Tests PUT: /api/v1/user', () => {
+  before(() => {
+    sinon.stub(res, 'send').returnsThis();
+    sinon.stub(res, 'status').returnsThis();
+  });
+  after(() => { sinon.restore(); });
+  it('it should return no edit made for no edits', async () => {
+    const next = sinon.spy();
+    sinon.stub(userRepo, 'update').returns([0, [{ dataValue: {} }]]);
+    await authController.update(req, res, next);
+    expect(res.status).to.be.calledWith(200);
+    userRepo.update.restore();
+  });
+  it('it should return no edit made for no edits', (done) => {
+    const next = sinon.spy();
+    sinon.stub(userRepo, 'update').throws();
+    expect(authController.update(req, res, next)).to.throw;
+    userRepo.update.restore();
+    done();
+  });
   it('it should return updated user info', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
