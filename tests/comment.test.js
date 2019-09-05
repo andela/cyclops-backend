@@ -27,7 +27,7 @@ const seededUserII = {
   role: 'Requester',
 };
 
-describe('Trip Request CRUD', () => {
+describe('Trip Comment CRUD', () => {
   const token = createToken(seededUser);
   const tokenI = createToken(seededUserI);
   const tokenII = createToken(seededUserII);
