@@ -18,7 +18,7 @@ export default {
     role: {
       type: Sequelize.ENUM,
       values: ['employee', 'super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'supplier'],
-      defaultValue: 'manager'
+      defaultValue: 'employee'
     },
     is_verified: {
       type: Sequelize.BOOLEAN,
@@ -51,15 +51,25 @@ export default {
     image_url: {
       type: Sequelize.STRING
     },
+    office_uuid: {
+      type: Sequelize.UUID,
+      references: {
+        model: 'OfficeLocations',
+        key: 'uuid'
+      },
+      onDelete: 'CASCADE'
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+      defaultValue: Sequelize.NOW,
+      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+      defaultValue: Sequelize.NOW,
+      field: 'updated_at'
     }
   }),
   // eslint-disable-next-line arrow-parens

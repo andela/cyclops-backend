@@ -1,6 +1,6 @@
 import uuid from 'uuid/v4';
 import faker from 'faker';
-import bcrypt from 'bcrypt';
+import { hashPassword } from '../../utils/hashPassword';
 
 export default {
   up: (queryInterface, Sequelize) => {
@@ -9,34 +9,52 @@ export default {
         uuid: uuid(),
         name: 'Efe Justin',
         email: 'efejustin3@gmail.com',
-        password: bcrypt.hashSync('Jei12345', 10),
+        password: hashPassword('Jei12345'),
         is_verified: true,
-        createdAt: Sequelize.literal('NOW()'),
-        updatedAt: Sequelize.literal('NOW()')
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
       }, {
         uuid: uuid(),
         name: 'Makaraba Blessing',
         email: 'blessingpeople@gmail.com',
         is_verified: false,
-        password: bcrypt.hashSync('Bloated36', 10),
-        createdAt: Sequelize.literal('NOW()'),
-        updatedAt: Sequelize.literal('NOW()')
+        password: hashPassword('Bloated36'),
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
+      },
+      {
+        uuid: 'abef6009-48be-4b38-80d0-b38c1bc39922',
+        email: 'greatness@andela.com',
+        password: hashPassword('Password123'),
+        name: 'Albert Faith',
+        is_verified: true,
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
+      },
+      {
+        uuid: '407d0d03-be0d-477c-badd-5df63b04307e',
+        email: 'mymail@naija.com',
+        password: hashPassword('Password123'),
+        name: 'Robert Dick',
+        is_verified: true,
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
       },
       {
         uuid: '95ccd25d-2524-4b95-a441-8e2643c4c077',
         email: 'Jessica_Bins@hotmail.com',
         password: 'Password123',
         name: 'Name Hettinger',
-        createdAt: Sequelize.literal('NOW()'),
-        updatedAt: Sequelize.literal('NOW()')
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
       },
       {
         uuid: '95ccd25d-2524-4b95-a441-8e2643c4c079',
         email: faker.internet.email(),
         password: 'Password123',
         name: faker.name.findName(),
-        createdAt: Sequelize.literal('NOW()'),
-        updatedAt: Sequelize.literal('NOW()')
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
       },
       {
         uuid: uuid(),
@@ -51,8 +69,8 @@ export default {
         preferred_language: 'french',
         preferred_currency: 'FCFA',
         image_url: 'http://images.com/myimagefile',
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ];
     return queryInterface.bulkInsert('Users', UsersData, {});

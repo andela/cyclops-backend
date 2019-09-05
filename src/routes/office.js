@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import authenticate from '../middlewares/authenticateUser';
+import authenticateUser from '../middlewares/authenticateUser';
 import OfficeController from '../controllers/OfficeController';
 
 const router = Router();
 
-router.get('/office', authenticate.authenticateUser, OfficeController.getOfficeLocations);
+router.get('/office', authenticateUser, OfficeController.getOfficeLocations);
 
 export default router;

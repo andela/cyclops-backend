@@ -8,7 +8,15 @@ export default (sequelize, DataTypes) => {
     },
     message: DataTypes.STRING,
     status: DataTypes.STRING,
-    notification_type: DataTypes.STRING
+    notification_type: DataTypes.STRING,
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    }
   }, {});
   Notification.associate = () => {
   };

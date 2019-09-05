@@ -7,7 +7,7 @@ export default (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     trip_plan: {
-      type: DataTypes.ENUM('singleCity', 'multiCity'),
+      type: DataTypes.ENUM('multiCity', 'singleCity'),
       defaultValue: 'singleCity'
     },
     request_type: {
@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
     },
     leaving_from: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
     },
     travel_date: {
       allowNull: false,
@@ -25,10 +25,6 @@ export default (sequelize, DataTypes) => {
     travel_reasons: {
       type: DataTypes.STRING,
       defaultValue: 'Business Assignment',
-    },
-    destination: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
     },
     return_date: {
       allowNull: false,
@@ -41,16 +37,30 @@ export default (sequelize, DataTypes) => {
     show_profile: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
     }
   }, {});
   TripRequest.associate = (models) => {
     TripRequest.belongsTo(models.User, {
       as: 'user',
       foreignKey: 'user_uuid',
+      onDelete: 'CASCADE'
     });
     TripRequest.hasMany(models.TripDestination, {
       as: 'destinations',
-      foreignKey: 'trip_request_uuid'
+      foreignKey: 'trip_request_uuid',
+      onDelete: 'CASCADE'
+    });
+    TripRequest.belongsTo(models.OfficeLocation, {
+      foreignKey: 'leaving_from',
+      as: 'departure'
     });
   };
   return TripRequest;
