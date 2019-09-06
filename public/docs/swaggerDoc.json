@@ -816,6 +816,64 @@
           }
         }
       }
+    },
+    "api/v1/comment/trips/:commentUuid": {
+      "put": {
+        "tags": ["Comment"],
+        "summary": "Update the comment on a trip request",
+        "description": "",
+        "consumes": "application/json",
+        "operationId": "UpdatePropertyPrice",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "commentUuid",
+            "in": "path",
+            "description": "uuid of comment to update",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "comment that has been updated",
+            "name": "type",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "user_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "trip_request_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please approve my trip request"
+                },
+                "createdAt": {
+                  "type": "date"
+                },
+                "updatedAt": {
+                  "type": "date"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
