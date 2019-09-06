@@ -25,7 +25,7 @@ class TripRequestController {
       const userTrips = await TripRequestRepository.getAll({ user_uuid: user });
       return sendSuccessResponse(res, 200, userTrips);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -103,14 +103,15 @@ class TripRequestController {
  *
  * @param {object} res is the response object
  *
+ * @param {function} next forwards request to the next middleware in the call stack
  *
  * @returns {object} it returns a response that is an object
  */
-  static oneWayTripCreator(req, res) {
+  static oneWayTripCreator(req, res, next) {
     try {
       return sendSuccessResponse(res, 200, 'oneWayTrip still in progress');
     } catch (err) {
-      // return sendErrorResponse(res, 500, 'Internal Server Error');
+      return next(err);
     }
   }
 }

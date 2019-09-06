@@ -27,7 +27,9 @@ const seededUserII = {
   role: 'Requester',
 };
 
-describe('Trip Comment CRUD', () => {
+let commentUuid;
+const fakeCommentUuid = '95ccd25d-2524-4b95-a441-8e2643c4c072';
+describe('Trip Request CRUD', () => {
   const token = createToken(seededUser);
   const tokenI = createToken(seededUserI);
   const tokenII = createToken(seededUserII);
