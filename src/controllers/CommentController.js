@@ -54,6 +54,30 @@ class CommentController {
       return next(err);
     }
   }
+
+  /**
+ * @description editTripRequestComment method handles the logic to get comment on a trip request
+ *
+ * @param {object} req is the request object
+ *
+ * @param {object} res is the response object
+ *
+ * @param {function} next forwards request to the next middleware in the czall stack
+ *
+ * @returns {object} it returns a response that is an object
+ */
+  static async editTripRequestComment(req, res, next) {
+    try {
+      const { message } = req.body;
+      const { commentUuid } = req.params;
+      const comment = await CommentRepository.findById({ uuid: commentUuid });
+      if (!comment) return sendErrorResponse(res, 404, 'This comment does not exist');
+      const [editedComment] = await CommentRepository.updateOne({ message }, { uuid: commentUuid });
+      if (editedComment) return sendSuccessResponse(res, 200, ...editedComment);
+    } catch (err) {
+      return next(err);
+    }
+  } 
 }
 
 export default CommentController;
