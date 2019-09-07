@@ -36,10 +36,9 @@ class CommentRepository {
  *
  * @returns {object} the details of the request that was created
  */
-  async findById(condition) {
+  async getOne(condition) {
     try {
-      const commentDetails = await this.db.findOne({ where: condition });
-      return commentDetails;
+      return await this.db.findOne({ where: condition });
     } catch (err) {
       throw new Error(err);
     }
@@ -50,7 +49,7 @@ class CommentRepository {
  *
  * @param {object} data refers to the an object that contains the column/data you want to update
  *
- * @param {object} condition refers to the an object that contains the 
+ * @param {object} condition refers to the an object that contains the
  *
  * @returns {object} the details of the comment that was created
  */
@@ -60,6 +59,21 @@ class CommentRepository {
         data, { returning: true, where: condition }
       );
       return [updatedData, rowsUpdate];
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  /**
+   * @description deletes a users comment
+   *
+   * @param {object} condition contains the reference to the comment to delete
+   *
+   * @returns {boolean} returns true when delete successful
+   */
+  async delete(condition) {
+    try {
+      return await this.db.destroy({ where: condition });
     } catch (err) {
       throw new Error(err);
     }

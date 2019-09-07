@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 // Returns selected information for logged in user.
 import { createToken } from '../modules/tokenProcessor';
 

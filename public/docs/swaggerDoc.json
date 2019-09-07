@@ -472,145 +472,6 @@
         }
       }
     },
-    "securityDefinitions": {
-      "api_key": {
-        "type": "apiKey",
-        "name": "token",
-        "in": "header"
-      }
-    },
-    "/api/v1/trips": {
-      "post": {
-        "tags": ["Comment"],
-        "summary": "Allow users to comment on a trip request",
-        "description": "",
-        "operationId": "CommentOnTripRequest",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "type",
-            "in": "body",
-            "description": "comment details",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "trip_request_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Please approve my trip request"
-                }
-              }
-            }
-          }
-        ],
-        "produces": ["application/json"],
-        "responses": {
-          "201": {
-            "description": "Comment Created Successfully",
-            "name": "type",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "user_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "trip_request_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Please approve my trip request"
-                },
-                "createdAt": {
-                  "type": "date"
-                },
-                "updatedAt": {
-                  "type": "date"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "trip request details not found"
-          },
-          "403": {
-            "description": "A user is forbidden to comment on a trip request"
-          }
-        }
-      }
-    },
-    "api/v1/comment/trips/:commentUuid": {
-      "put": {
-        "tags": ["Comment"],
-        "summary": "Update the comment on a trip request",
-        "description": "",
-        "consumes": "application/json",
-        "operationId": "UpdatePropertyPrice",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "commentUuid",
-            "in": "path",
-            "description": "uuid of comment to update",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "comment that has been updated",
-            "name": "type",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "user_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "trip_request_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Please approve my trip request"
-                },
-                "createdAt": {
-                  "type": "date"
-                },
-                "updatedAt": {
-                  "type": "date"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/comment/trips": {
       "post": {
         "tags": ["Comment"],
@@ -743,87 +604,14 @@
         }
       }
     },
-    "/api/v1/comment/trips": {
-      "post": {
-        "tags": ["Comment"],
-        "summary": "Allow users to comment on a trip request",
-        "description": "",
-        "operationId": "CommentOnTripRequest",
-        "security": [
-          {
-            "bearerAuth": []
-          }
+    "api/v1/comment/trips/:uuid": {
+      "delete": {
+        "tags": [
+          "Comment"
         ],
-        "parameters": [
-          {
-            "name": "type",
-            "in": "body",
-            "description": "comment details",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "trip_request_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Please approve my trip request"
-                }
-              }
-            }
-          }
-        ],
-        "produces": ["application/json"],
-        "responses": {
-          "201": {
-            "description": "Comment Created Successfully",
-            "name": "type",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "user_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "trip_request_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Please approve my trip request"
-                },
-                "createdAt": {
-                  "type": "date"
-                },
-                "updatedAt": {
-                  "type": "date"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "trip request details not found"
-          },
-          "403": {
-            "description": "A user is forbidden to comment on a trip request"
-          }
-        }
-      }
-    },
-    "api/v1/comment/trips/:commentUuid": {
-      "put": {
-        "tags": ["Comment"],
-        "summary": "Update the comment on a trip request",
-        "description": "",
+        "summary": "Delete a user's comment",
+        "description": "Deletes a user's comment",
         "consumes": "application/json",
-        "operationId": "UpdatePropertyPrice",
         "security": [
           {
             "bearerAuth": []
@@ -831,46 +619,20 @@
         ],
         "parameters": [
           {
-            "name": "commentUuid",
+            "name": "uuid",
             "in": "path",
-            "description": "uuid of comment to update",
+            "description": "uuid of comment to delete",
             "required": true,
             "type": "string"
           }
         ],
-        "produces": ["application/json"],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
-            "description": "comment that has been updated",
-            "name": "type",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "user_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "trip_request_uuid": {
-                  "type": "string",
-                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Please approve my trip request"
-                },
-                "createdAt": {
-                  "type": "date"
-                },
-                "updatedAt": {
-                  "type": "date"
-                }
-              }
-            }
+            "description": "Comment deleted successful",
+            "name": "type"
           }
         }
       }

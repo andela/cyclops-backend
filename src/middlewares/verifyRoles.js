@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { verifyToken } from '../modules/tokenProcessor';
 import { sendErrorResponse } from '../utils/sendResponse';
 

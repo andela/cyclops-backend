@@ -28,15 +28,19 @@ export default {
       allowNull: false,
       type: Sequelize.STRING
     },
+    deletedAt: {
+      type: Sequelize.DATE,
+      field: 'deleted_at'
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+      field: 'updated_at'
     }
   }),
   // eslint-disable-next-line arrow-parens

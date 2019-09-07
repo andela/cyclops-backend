@@ -4,7 +4,6 @@ import TripRequestRepository from '../repositories/TripRequestRepository';
 
 import { sendSuccessResponse, sendErrorResponse } from '../utils/sendResponse';
 
-
 /**
  * @description CommentController handles all logic pertaining to comments
  */
@@ -71,7 +70,7 @@ class CommentController {
       const { uuid: userUuid } = req.userData;
       const { message } = req.body;
       const { commentUuid } = req.params;
-      const comment = await CommentRepository.findById({ uuid: commentUuid });
+      const comment = await CommentRepository.getOne({ uuid: commentUuid });
       if (!comment) return sendErrorResponse(res, 404, 'This comment does not exist');
       const { dataValues } = comment;
       if (userUuid !== dataValues.user_uuid) return sendErrorResponse(res, 403, 'You can\'t edit a comment you didn\'t post');
@@ -80,7 +79,31 @@ class CommentController {
     } catch (err) {
       return next(err);
     }
-  } 
+  }
+
+  /**
+   * @description deletes the users comment from display
+   *
+   * @param {object} req contains the comment details and requester
+   *
+   * @param {object} res is the response object
+   *
+   * @param {function} next forwards request to the next middleware in the call stack
+   *
+   * @returns {object} it returns a response that is an object
+   */
+  static async delete(req, res, next) {
+    try {
+      const { uuid } = req.params;
+      const comment = await CommentRepository.getOne({ uuid });
+      if (!comment) return sendErrorResponse(res, 404, 'This comment does not exist');
+      if (comment.dataValues.user_uuid !== req.userData.uuid) return sendErrorResponse(res, 401, 'You are not allowed to perform this action');
+      await CommentRepository.delete({ uuid });
+      return sendSuccessResponse(res, 200, { message: 'Comment deleted successful' });
+    } catch (err) {
+      return next(err);
+    }
+  }
 }
 
 export default CommentController;

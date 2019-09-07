@@ -62,6 +62,11 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'leaving_from',
       as: 'departure'
     });
+    TripRequest.hasMany(models.Comment, {
+      as: 'comments',
+      foreignKey: 'trip_request_uuid',
+      onDelete: 'CASCADE'
+    });
   };
   return TripRequest;
 };
