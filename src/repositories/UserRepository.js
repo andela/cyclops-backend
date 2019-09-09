@@ -1,4 +1,7 @@
-/* eslint-disable require-jsdoc */
+/* eslint-disable no-plusplus */
+/* eslint-disable linebreak-style */
+/* eslint-disable no-useless-catch */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable camelcase */
 /**
  * @fileoverview Contains the User Auth Repository class, an interface for querying User table
@@ -9,25 +12,16 @@
  */
 
 import Model from '../models';
-import { createToken } from '../modules/tokenProcessor';
-import { sendErrorResponse } from '../utils/sendResponse';
 
-// Returns selected information for logged in user.
-const userInfo = (user) => {
-  const {
-    email, name, role, uuid, image_url, is_verified
-  } = user;
-  return {
-    uuid,
-    name,
-    image_url,
-    email,
-    role,
-    token: is_verified ? createToken({ uuid, role, email }) : ''
-  };
-};
+const {
+  User,
+  BlackListedToken,
+  Role,
+  Permission,
+  RolePermission,
+  Manager
+} = Model;
 
-const { User } = Model;
 /**
  * User repository class
  *
@@ -35,85 +29,238 @@ const { User } = Model;
  */
 class UserRepository {
   /**
-   *@constructor
+   * @description constructor handles the user model
+   *
+   * User Model constructor
+   *
+   * @constructor
+   *
    */
   constructor() {
-    this.model = User;
+    this.db = User;
   }
 
   /**
-   * @description Returns the newly created user details
+   * @description Creates a new user account with provided details
    *
-   * @param {String} param0 user password
+   * @param {Object} param users details
    *
-   * @param {Object} param1 other user detials
-   *
-   * @return {Object} returns user details
+   * @return {Object} returns new user details
    */
-  // eslint-disable-next-line class-methods-use-this
   async create({
     password,
     email,
     name,
-    designation
+    designation,
+    is_verified,
+    image_url = '',
+    facebook_id = '',
+    google_id = ''
   }) {
-    const { dataValues } = await User.create({
-      name,
-      email,
-      designation,
-      password
-    });
-    return userInfo(dataValues);
-  }
-
-  /**
-   * @description Returns the newly created user details
-   *
-   * @param {String} param0 social OAuth details
-   *
-   * @return {Object} returns new or existing user details
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async social({
-    social_id,
-    name,
-    image,
-    email,
-    provider
-  }) {
-    const user = provider === 'facebook'
-      ? await User.findOne({ where: { facebook_id: social_id } })
-      : await User.findOne({ where: { google_id: social_id } });
-    if (user) return userInfo(user);
-
-    const { dataValues } = await User.create({
-      name,
-      email,
-      is_verified: true,
-      image_url: image,
-      facebook_id: (provider === 'facebook' ? social_id : ''),
-      google_id: (provider === 'google' ? social_id : ''),
-      role: 'employee'
-      // eslint-disable-next-line arrow-parens
-    });
-    return userInfo(dataValues);
-  }
-
-  /**
-   *@description This is a function that finds a user in the data base
-   * @param {string} email this is the response that parameter
-   * @param {string}  res This is the email the user provided on sign in
-   * @returns {object} returns the user information on the object
-   * @returns {object} returns error object if there is any
-   */
-  // eslint-disable-next-line class-methods-use-this
-  async find({ email }, res) {
     try {
-      return await User.findOne({ where: { email } });
+      const { dataValues } = await this.db.create({
+        name,
+        email,
+        designation,
+        password,
+        is_verified,
+        image_url,
+        facebook_id,
+        google_id
+      });
+      return dataValues;
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * @description Returns users details based on the provided parameters
+   *
+   * @param {Object} condition checks required users parameter
+   *
+   * @param {Object} include adds users managers
+   *
+   * @return {Object} returns user details with managers uuid
+   */
+  async getOne(condition = {}, include = '') {
+    try {
+      return await this.db.findOne({ where: condition, include });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+  
+  /**
+   * @description this is a method that gets all users in the database
+   * 
+   * @returns {array} returns an array of user objects
+   */
+  async getAll() {
+    try {
+      return await User.findAll();
     } catch (error) {
-      return sendErrorResponse(res, 500, 'Internal Server Error');
+      throw new Error(error);
+    }
+  }
+
+
+  /**
+   * @description This is a function that finds a user token in the data base
+   *
+   * @param {Object} condition checks token in db
+   *
+   * @return {Object} returns token
+   */
+  async findToken(condition = {}) {
+    try {
+      return await BlackListedToken.findOne({ where: condition });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
+   *
+   * @param {string} userId
+   *
+   * @param {object} changes to update for user
+   *
+   * @returns {object} updated user
+   */
+  async update(userId, changes) {
+    try {
+      await this.getOne({ uuid: userId });
+      return await User.update(changes, { returning: true, where: { uuid: userId } });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * @description gets a list of roles from the database
+   * 
+   * @returns {*} an array of role names
+   */
+  async getRoles() {
+    try {
+      const roles = await Role.findAll();
+      if (!roles) return;
+      const roleNames = roles.map(role => role.dataValues.name);
+      return roleNames;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /**
+   * @description gets a list of permissions from the database
+   * 
+   * @param {*} roleId
+   * 
+   * @returns {array} an array of permission names
+   */
+  async getRolePermissions(roleId) {
+    try {
+      const [roles] = await Role.findAll(
+        {
+          where: { uuid: roleId }, 
+          include: [
+            {
+              model: Permission,
+              as: 'permissions',
+              required: true,
+              attributes: ['uuid', 'name'],
+              through: { attributes: [] }
+            }
+          ],
+        }
+      );
+      return roles.dataValues.permissions;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * @description gets a list of permissions from the database
+   * 
+   * @returns {array} an array of permission names
+   */
+  async getPermissions() {
+    try {
+      const permissions = await Permission.findAll();
+      if (!permissions) return;
+      const permissionNames = permissions.map(permission => permission.dataValues.name);
+      return permissionNames;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  /**
+   * 
+   * @param {string} email 
+   * 
+   * @param {string} newRole
+   * 
+   * @returns {object} updated user
+   */
+  async setRole(email, newRole) {
+    try {
+      const { uuid } = await Role.findOne({ where: { name: newRole } });
+      const data = await User.update(
+        { role_uuid: uuid, role: newRole },
+        { where: { email }, returning: true, plain: true }
+      );
+      if (newRole === 'Manager') {
+        await Manager.create(
+          { uuid: data.uuid }
+        );
+      }
+      
+      return data;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
+  /**
+   * 
+   * @param {string} role
+   * 
+   * @param {string} permission
+   * 
+   * @returns {object} updated user
+   */
+  async setPermission(role, permission) {
+    try {
+      const userRole = await Role.findOne({ where: { name: role } });
+      const userPermission = await Permission.findOne({ where: { name: permission } });
+      const newRolePermission = await RolePermission.create(
+        { role_uuid: userRole.uuid, permission_id: userPermission.uuid }
+      );
+      return newRolePermission;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  /**
+   * @param {*} userId
+   * 
+   * @returns {*} returns a verified user object
+   */
+  async verifyUser(userId) {
+    try {
+      const user = await User.update(
+        { is_verified: true },
+        { where: { uuid: userId }, returning: true }
+      );
+      return user;
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }
-
 export default new UserRepository();

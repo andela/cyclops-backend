@@ -1,17 +1,38 @@
-import bcrypt from 'bcrypt';
+// eslint-disable-next-line arrow-parens
+import models from '../models';
+import UserRepository from '../repositories/UserRepository';
+
+export const getMIlliSeconds = date => (date ? new Date(date).getTime() : new Date().getTime());
+
+export const getDay = (date) => {
+  const dateInMillisec = getMIlliSeconds(date);
+  return Math.floor(dateInMillisec / 86400000);
+};
+
+const { BlackListedToken } = models;
+
 /**
- * Function to hash user password
- * @param {string} password
- * @returns {string} returns encryted password
+ *
+ * @param {string} token it acepts a valid token
+ * @returns {boolean} returns true when token is found otherwise false
  */
 
-const hashPassword = password => bcrypt.hashSync(password, 10);
-/**
- * Function to decrypt a hash password compares it
- * @param {string} password it accepts password
- * @param {string} hashpassword it accepts user's hashed password
- * @returns {boolean} unhash returns true if comparism is matched
- */
-const unhash = (password, hashpassword) => bcrypt.compareSync(password, hashpassword);
+const isBlackListed = async (token) => {
+  const blockedToken = await UserRepository.findToken({ token });
+  return !!blockedToken;
+};
 
-export { hashPassword, unhash };
+/**
+ * @param {text} token accepts token
+ *
+ * @returns {string} returns error when it could not create a user
+ */
+const blackListThisToken = async (token) => {
+  await BlackListedToken.create({
+    token,
+  });
+};
+
+export {
+  blackListThisToken, isBlackListed
+};

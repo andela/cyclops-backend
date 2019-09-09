@@ -4,21 +4,24 @@ export default {
       allowNull: false,
       primaryKey: true,
       type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: Sequelize.UUIDV4
     },
     email: {
       type: Sequelize.STRING
     },
     password: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      select: false
     },
     name: {
       type: Sequelize.STRING
     },
     role: {
-      type: Sequelize.ENUM,
-      values: ['super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'employee', 'supplier'],
-      defaultValue: 'employee'
+      type: Sequelize.STRING,
+      defaultValue: 'Requester'
+    },
+    role_uuid: {
+      type: Sequelize.UUID
     },
     is_verified: {
       type: Sequelize.BOOLEAN,
@@ -30,17 +33,11 @@ export default {
     google_id: {
       type: Sequelize.STRING
     },
-    manager_id: {
-      type: Sequelize.INTEGER
-    },
-    office_id: {
-      type: Sequelize.INTEGER
-    },
     gender: {
       type: Sequelize.STRING
     },
     date_of_birth: {
-      type: Sequelize.DATE
+      type: Sequelize.STRING
     },
     department: {
       type: Sequelize.STRING
@@ -57,15 +54,25 @@ export default {
     image_url: {
       type: Sequelize.STRING
     },
+    office_uuid: {
+      type: Sequelize.UUID,
+      references: {
+        model: 'OfficeLocations',
+        key: 'uuid'
+      },
+      onDelete: 'CASCADE'
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+      defaultValue: Sequelize.NOW,
+      field: 'created_at'
     },
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+      defaultValue: Sequelize.NOW,
+      field: 'updated_at'
     }
   }),
   // eslint-disable-next-line arrow-parens

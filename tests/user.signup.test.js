@@ -1,42 +1,37 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import uuid from 'uuid';
 import app from '../src/index';
-import model from '../src/models';
-
-const { User } = model;
-const newUser = [{
-  uuid: uuid(),
-  name: 'Justin',
-  email: 'efejustin3@gmail.com',
-  password: '$2b$06$9PXuJTiU/uSbRTSaag5NW.OsY.iq9rVI/.Q4qGOhmIAnxtsDpk9W2',
-  is_verified: true
-}, {
-  uuid: uuid(),
-  name: 'Makaraba',
-  email: 'blessingmakaraba@gmail.com',
-  is_verified: false,
-  password: '$2b$06$9PXuJTiU/uSbRTSaag5NW.OsY.iq9rVI/.Q4qGOhmIAnxtsDpk9W2'
-}];
+import { createToken } from '../src/modules/tokenProcessor';
 
 chai.use(chaiHttp);
 
+// after(() => User.destroy({ where: {}, force: true }));
 describe('User', () => {
-  after(() => User.destroy({ where: {}, force: true }));
-
-  it('Should return success for signup', (done) => {
+  let newUserToken, newUserUuid, verifiedUserToken, verifiedUserUuid;
+  before(async () => {
+    newUserToken = await createToken({
+      uuid: '95ccd25d-2524-4b95-a441-8e2643c4c079',
+      email: 'somemail@yahoo.com'
+    });
+    verifiedUserToken = await createToken({
+      uuid: '95ccd25d-2524-4b95-a441-8e2643c4c077',
+      email: 'Jessica_Bins@hotmail.com'
+    });
+  });
+  it('Should return success for signup POST: /auth/signup', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send({
-        email: '  giftabobo@gmail.com  ',
-        name: ' Bles Abobo',
-        password: 'Blessing9',
+        email: 'wokoro@yahoo.com',
+        name: 'Douye Samuel Wokoro',
+        password: 'Djkladjkaldfj129',
       })
       .end((err, res) => {
         expect(res.status).eql(201);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('success');
+        expect(res.body).to.have.property('data');
         done();
       });
   });
@@ -53,7 +48,7 @@ describe('User', () => {
         expect(res.status).to.be.eql(422);
         expect(res.body).to.be.an('object');
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.be.have.all.keys('name', 'email', 'password');
+        expect(res.body.error).to.have.all.keys('name', 'email', 'password');
         done();
       });
   });
@@ -64,7 +59,7 @@ describe('User', () => {
       .send({
         email: 'giftabobo@gmail.com',
         name: 'bles33',
-        password: 'Blessing9',
+        password: 'Blesn sing9',
       })
       .end((err, res) => {
         expect(res.status).to.be.eql(422);
@@ -143,10 +138,31 @@ describe('User', () => {
       });
   });
 
+  it('should verify account if not yet verified', (done) => {
+    chai.request(app)
+      .get('/api/v1/auth/confirm_email')
+      .query({ uuid: newUserUuid, token: newUserToken })
+      .end((err, res) => {
+        if (err) throw new Error(err);
+        expect(res).to.have.status(200);
+        expect(res.body.message).eql('Email verified successfully');
+        done();
+      });
+  });
+
+  it('should fail if account is already verified', (done) => {
+    chai.request(app)
+      .get('/api/v1/auth/confirm_email')
+      .query({ uuid: verifiedUserUuid, token: verifiedUserToken })
+      .end((err, res) => {
+        if (err) throw new Error(err);
+        expect(res).to.have.status(400);
+        expect(res.body.error).eql('Account verified already');
+        done();
+      });
+  });
+
   describe('User', () => {
-    before(async () => {
-      await User.bulkCreate(newUser);
-    });
     it('Should return success for signin', (done) => {
       chai.request(app)
         .post('/api/v1/auth/signin')
@@ -179,12 +195,13 @@ describe('User', () => {
       chai.request(app)
         .post('/api/v1/auth/signin')
         .send({
-          email: 'blessingmakaraba@gmail.com',
-          password: 'Jei12345',
+          email: 'blessingpeople@gmail.com',
+          password: 'Bloated36',
         })
         .end((err, res) => {
           expect(res.status).to.be.eql(401);
           expect(res.body.status).to.eql('error');
+          expect(res.body).to.have.property('error');
           done();
         });
     });

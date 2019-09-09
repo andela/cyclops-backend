@@ -1,16 +1,19 @@
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     uuid: {
+      allowNull: false,
+      primaryKey: true,
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
+      defaultValue: DataTypes.UUIDV4
     },
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     name: DataTypes.STRING,
+    role_uuid: {
+      type: DataTypes.UUID
+    },
     role: {
-      type: DataTypes.ENUM('super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'employee', 'supplier'),
-      defaultValue: 'employee'
+      type: DataTypes.STRING
     },
     is_verified: {
       type: DataTypes.BOOLEAN,
@@ -18,18 +21,40 @@ export default (sequelize, DataTypes) => {
     },
     facebook_id: DataTypes.STRING,
     google_id: DataTypes.STRING,
-    manager_id: DataTypes.INTEGER,
-    office_id: DataTypes.INTEGER,
     gender: DataTypes.STRING,
     image_url: DataTypes.STRING,
-    date_of_birth: DataTypes.DATE,
+    date_of_birth: DataTypes.STRING,
     department: DataTypes.STRING,
     preferred_currency: DataTypes.STRING,
     preferred_language: DataTypes.STRING,
-    residential_address: DataTypes.STRING
+    residential_address: DataTypes.STRING,
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    }
   }, {});
-  User.associate = () => {
-    // associations can be defined here
+  User.associate = (models) => {
+    User.belongsTo(models.Manager, {
+      as: 'manager',
+      foreignKey: 'manager_uuid'
+    });
+    User.hasMany(models.TripRequest, {
+      as: 'trips',
+      foreignKey: 'user_uuid',
+      onDelete: 'CASCADE'
+    });
+    User.hasMany(models.Notification, {
+      as: 'notifications',
+      foreignKey: 'user_uuid',
+      onDelete: 'CASCADE'
+    });
+    User.belongsTo(models.Role, {
+      foreignKey: 'role_uuid'
+    });
   };
   return User;
 };

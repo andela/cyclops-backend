@@ -7,11 +7,11 @@ import { createToken, verifyToken } from '../src/modules/tokenProcessor';
 
 chai.use(chaiHttp);
 
-describe('Process token', () => {
+describe('Verify Token Test', () => {
   const email = 'somemail@mail.com';
   const token = createToken({ email });
   const verifiedToken = verifyToken(token);
-  describe('Test Create Token', () => {
+  describe('Create Token Test', () => {
     it('Should return a token string', (done) => {
       expect(token).to.be.a('string');
       done();
