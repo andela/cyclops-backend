@@ -3,13 +3,13 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../src/app';
 import verifyRoles from '../src/middlewares/verifyRoles';
+import authenticateUser from '../src/middlewares/authenticateUser';
 
 chai.use(chaiHttp);
 
 describe('User Role Settings tests', () => {
   describe('Unit test verifyRoles and verifyPermissions middlewares', () => {
     it('All Role verification middlewares should return a function', (done) => {
-      expect(verifyRoles.verifyManager).to.be.a('function');
       expect(verifyRoles.verifySupAdmin).to.be.a('function');
       expect(verifyRoles.verifyRequester).to.be.a('function');
       done();

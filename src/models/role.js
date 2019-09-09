@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Role.associate = (models) => {
     Role.hasMany(models.User, {
-      foreignKey: 'role_id',
+      foreignKey: 'role_uuid',
       as: 'roles'
     });
     Role.belongsToMany(models.Permission, {
       through: 'RolePermission',
       as: 'permissions',
-      foreignKey: 'role_id'
+      foreignKey: 'role_uuid'
     });
   };
   return Role;

@@ -20,7 +20,7 @@ export default {
       type: Sequelize.STRING,
       defaultValue: 'Requester'
     },
-    role_id: {
+    role_uuid: {
       type: Sequelize.UUID
     },
     is_verified: {

@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    role_id: DataTypes.UUID,
+    role_uuid: DataTypes.UUID,
     permission_id: DataTypes.UUID
   }, {});
   RolePermission.associate = () => {

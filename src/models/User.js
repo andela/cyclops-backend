@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     name: DataTypes.STRING,
-    role_id: {
+    role_uuid: {
       type: DataTypes.UUID
     },
     role: {
@@ -53,7 +53,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     User.belongsTo(models.Role, {
-      foreignKey: 'role_id'
+      foreignKey: 'role_uuid'
     });
   };
   return User;
