@@ -148,7 +148,7 @@ class AuthController {
         uuid: foundUser.uuid,
         role: foundUser.role,
         email: foundUser.email,
-        role_id: foundUser.role_id
+        role_uuid: foundUser.role_uuid
       }
     );
     const userInformation = {

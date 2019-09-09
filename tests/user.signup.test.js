@@ -2,15 +2,11 @@ import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../src/index';
-import model from '../src/models';
 import { createToken } from '../src/modules/tokenProcessor';
-
-let userToken;
-const { User } = model;
 
 chai.use(chaiHttp);
 
-after(() => User.destroy({ where: {}, force: true }));
+// after(() => User.destroy({ where: {}, force: true }));
 describe('User', () => {
   let newUserToken, newUserUuid, verifiedUserToken, verifiedUserUuid;
   before(async () => {
@@ -144,7 +140,7 @@ describe('User', () => {
 
   it('should verify account if not yet verified', (done) => {
     chai.request(app)
-      .get('/api/v1/auth/confirmEmail')
+      .get('/api/v1/auth/confirm_email')
       .query({ uuid: newUserUuid, token: newUserToken })
       .end((err, res) => {
         if (err) throw new Error(err);
@@ -156,7 +152,7 @@ describe('User', () => {
 
   it('should fail if account is already verified', (done) => {
     chai.request(app)
-      .get('/api/v1/auth/confirmEmail')
+      .get('/api/v1/auth/confirm_email')
       .query({ uuid: verifiedUserUuid, token: verifiedUserToken })
       .end((err, res) => {
         if (err) throw new Error(err);
@@ -177,8 +173,6 @@ describe('User', () => {
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body).to.have.property('data');
-
-          userToken = res.body.data.token;
           done();
         });
     });
@@ -222,17 +216,6 @@ describe('User', () => {
         .end((err, res) => {
           expect(res.status).to.be.eql(400);
           expect(res.body.status).to.eql('error');
-          done();
-        });
-    });
-  });
-  describe('Sign Out', () => {
-    it('should sign user out', (done) => {
-      chai.request(app)
-        .get('/api/v1/auth/signout')
-        .set('authorization', userToken)
-        .end((err, res) => {
-          expect(res.status).to.equal(200);
           done();
         });
     });

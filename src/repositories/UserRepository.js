@@ -210,7 +210,7 @@ class UserRepository {
     try {
       const { uuid } = await Role.findOne({ where: { name: newRole } });
       const data = await User.update(
-        { role_id: uuid, role: newRole },
+        { role_uuid: uuid, role: newRole },
         { where: { email }, returning: true, plain: true }
       );
       if (newRole === 'Manager') {
@@ -238,7 +238,7 @@ class UserRepository {
       const userRole = await Role.findOne({ where: { name: role } });
       const userPermission = await Permission.findOne({ where: { name: permission } });
       const newRolePermission = await RolePermission.create(
-        { role_id: userRole.uuid, permission_id: userPermission.uuid }
+        { role_uuid: userRole.uuid, permission_id: userPermission.uuid }
       );
       return newRolePermission;
     } catch (error) {

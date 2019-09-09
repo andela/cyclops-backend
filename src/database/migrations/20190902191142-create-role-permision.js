@@ -7,7 +7,7 @@ export default {
       defaultValue: Sequelize.UUIDV4,
       unique: true
     },
-    role_id: {
+    role_uuid: {
       type: Sequelize.UUID,
       allowNull: false
     },
