@@ -12,7 +12,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "basePath": "/",
+  "basePath": "/api/v1",
   "securityDefinitions": {
     "bearerAuth": {
       "type": "apiKey",
@@ -51,13 +51,91 @@
               "$ref": "#/definitions/Landing"
             }
           },
+	  "400": {
+                   "description": "Invalid"
+          },
+          "security": [
+              {
+                  "api_key": []
+              }
+          ]
+      }
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "signin",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "johndoe@company.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema":{
+              "title": "Success",
+              "example": {
+                "status": "success",
+                "data": {
+                  "booking_id": 9,
+                  "user_id": 1,
+                  "trip_id": 4,
+                  "bus_id": 5,
+                  "trip_date": "2019-02-13T08:00:00.000Z",
+                  "seat_number": 4,
+                  "first_name": "Douye",
+                  "last_name": "Wokoro",
+                  "email": "wokorosamuel@yahoo.com",
+                  "phone_number": "09066027359"
+                }
+              }
+            }
+          },
           "400": {
-            "description": "Invalid"
+            "description": "User not found and token error",
+            "schema": {
+              "example": {
+                "application/json; charset=utf-8": {
+                  "status": "Error",
+                  "errors": "User not found"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User authorization error",
+            "schema": {
+              "example": {
+                "application/json; charset=utf-8": {
+                  "status": 401,
+                  "message": "Authorization failed"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/v1/auth/signup": {
+    "/auth/signup": {
       "post": {
         "summary": "user signup",
         "tags": ["User"],
@@ -113,7 +191,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "schema": {
               "title": "Success",
               "example": {
@@ -143,124 +221,294 @@
         }
       }
     },
-    "/api/v1/auth/signin": {
-      "post": {
-        "tags": ["User"],
-        "summary": "Logs user into the system",
-        "description": "",
-        "operationId": "loginUser",
-        "produces": ["application/json"],
+    "/user": {
+      "get": {
+        "description": "Endpoint to enable users view profile details",
+        "summary": "View profile details",
+        "tags": [
+          "User"
+        ],
+        "operationId": "UsersGet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "parameters": [
           {
-            "in": "body",
-            "name": "signin",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "example": "johndoe@company.com"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "password"
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "default": "Bearer {token}",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Success",
+            "schema":{
+              "title": "Success",
+              "example": {
+                "status": "success",
+                "data": {
+                  "booking_id": 9,
+                  "user_id": 1,
+                  "trip_id": 4,
+                  "bus_id": 5,
+                  "trip_date": "2019-02-13T08:00:00.000Z",
+                  "seat_number": 4,
+                  "first_name": "Douye",
+                  "last_name": "Wokoro",
+                  "email": "wokorosamuel@yahoo.com",
+                  "phone_number": "09066027359"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User not found and token error",
             "schema": {
-              "$ref": "#/definitions/User"
+              "example": {
+                "application/json; charset=utf-8": {
+                  "status": "Error",
+                  "errors": "User not found"
+                }
+              }
             }
           },
           "401": {
-            "description": "Authorization Error",
+            "description": "User authorization error",
             "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "403": {
-            "description": "Authentication",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/User"
+              "example": {
+                "application/json; charset=utf-8": {
+                  "status": 401,
+                  "message": "Authorization failed"
+                }
+              }
             }
           }
         }
       },
-      "/api/v1/auth/forgotPassword": {
-        "post": {
-           "tags": [
-              "User"
-           ],
-           "summary": "Sends a reset link to the user",
-           "produces": [
-              "application/json"
-           ],
-           "parameters": [
-                {
-                    "name": "email",
-                    "in": "path",
-                    "description": "for password reset link",
-                    "required": true,
-                    "type": "string"
+      "put": {
+        "description": "Enables users edit profile information",
+        "summary": "Users profile edit",
+        "tags": [
+          "User"
+        ],
+        "operationId": "UsersPut",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": false,
+            "default": "E.g. Wokoro Douye Samuel",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": false,
+            "default": "E.g. douyesamuel@yahoo.com",
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "formData",
+            "required": false,
+            "default": "male",
+            "type": "string"
+          },
+          {
+            "name": "date_of_birth",
+            "in": "formData",
+            "required": false,
+            "default": "E.g. 23/4/1998",
+            "type": "string"
+          },
+          {
+            "name": "preferred_currency",
+            "in": "formData",
+            "required": false,
+            "default": "NG",
+            "type": "string"
+          },
+          {
+            "name": "preferred_language",
+            "in": "formData",
+            "required": false,
+            "default": "English",
+            "type": "string"
+          },
+          {
+            "name": "image_url",
+            "in": "formData",
+            "required": false,
+            "default": "https:",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema" :{
+              "example": {
+                "status": "success",
+                "data": {
+                    "uuid": "2d33e804-8326-41bf-96d6-2501525bef12",
+                    "email": "wokorosamudel@yahoo.com",
+                    "password": "Samsizzy199",
+                    "name": "Wokoro Douye Samuel",
+                    "role": "manager",
+                    "is_verified": false,
+                    "facebook_id": null,
+                    "google_id": null,
+                    "manager_id": null,
+                    "office_id": null,
+                    "gender": "male",
+                    "date_of_birth": "1993-27-3",
+                    "department": null,
+                    "preferred_currency": "Naira",
+                    "preferred_language": "English",
+                    "residential_address": "No. 32 Arizonal street yenezuegene yenegoa",
+                    "image_url": "/url/path/filename",
+                    "createdAt": "2019-09-01T15:46:59.418Z",
+                    "updatedAt": "2019-09-02T20:52:47.056Z"
                 }
-           ],
-           "responses": {
-                "400": {
-                "description": "Invalid email supplied"
-                },
-                "404": {
-                "description": "User not found"
+              }
+            },
+            "description": "Success",
+            "headers": {}
+          },
+          "400": {
+            "description": "",
+            "schema":{
+              "example": {
+                "application/json; charset=utf-8": {
+                  "status": "error",
+                  "error": "Invalid token"
                 }
+              }
             }
+          },
+          "401": {
+            "description": "",
+            "schema": {
+              "example": {
+                "application/json; charset=utf-8": {
+                  "status": "error",
+                  "error": "Authorization Failed"
+                }
+              }
+            }
+          }
         }
-     },
-     "/api/v1/auth/resetPassword/:uuid/:token": {
-       "put": {
+      }
+    },
+    "/auth/forgotPassword": {
+      "post": {
           "tags": [
              "User"
           ],
-          "summary": "Send new password",
+          "summary": "Sends a reset link to the user",
           "produces": [
-             "application/json"
+            "application/json"
           ],
           "parameters": [
-             {
-                "name": "password",
-                "in": "path",
-                "description": "that need to be updated",
-                "required": true,
-                "type": "string"
-             }
+              {
+                  "name": "email",
+                  "in": "path",
+                  "description": "for password reset link",
+                  "required": true,
+                  "type": "string"
+              }
           ],
           "responses": {
-             "400": {
-                "description": "Invalid password supplied"
-             },
-             "500": {
-                "description": "Server Error"
-             }
+              "400": {
+              "description": "Invalid email supplied"
+              },
+              "404": {
+              "description": "User not found"
+              }
           }
-       }
-    }
-  },
-  "securityDefinitions": {
-      "api_key": {
-          "type": "apiKey",
-          "name": "token",
-          "in": "header"
       }
     },
-    "/api/v1/trips": {
+    "/auth/resetPassword/:uuid/:token": {
+      "put": {
+        "tags": [
+            "Authentication"
+        ],
+        "summary": "Send new password",
+        "produces": [
+            "application/json"
+        ],
+        "parameters": [
+            {
+              "name": "password",
+              "in": "path",
+              "description": "that need to be updated",
+              "required": true,
+              "type": "string"
+            }
+        ],
+        "responses": {
+            "400": {
+              "description": "Invalid password supplied"
+            },
+            "500": {
+              "description": "Server Error"
+            }
+        }
+      }
+    },
+    "/trip_request": {
+      "post": {
+        "tags": ["tripRequest"],
+        "summary": "Allow users to create a return trip",
+        "description": "",
+        "operationId": "CreateAReturnTrip",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "body",
+            "description": "details of trip request to create",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/CreateReturnTripRequest"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "Trip Request Created Successfully",
+            "type": "string",
+            "example": "Your trip request has been created successfully"
+          }
+        }
+      }
+    },
+    "/trips": {
       "post": {
         "tags": ["Trip"],
         "summary": "Allow users to create a return trip",
@@ -310,8 +558,7 @@
           }
         }
       }
-    }
-  },
+    },
   "definitions": {
     "Landing": {
       "type": "object",
@@ -367,7 +614,8 @@
         "trip_plan",
         "leaving_from",
         "return_date",
-        "travel_date"
+        "travel_date",
+        "destination"
       ],
       "properties": {
         "request_type": {
@@ -399,5 +647,6 @@
         "name": "CreateTripRequest"
       }
     }
+  }
   }
 }

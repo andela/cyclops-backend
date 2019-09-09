@@ -5,10 +5,10 @@ import app from '../src/index';
 
 chai.use(chaiHttp);
 
-describe('App', () => {
-  it('Should display a Welcome to the Cyclops Barefoot Nomad backend API', (done) => {
+describe('Server Tests', () => {
+  it('Should display "Welcome to the Cyclops Barefoot Nomad backend API"', (done) => {
     chai.request(app)
-      .get('/')
+      .get('/api/v1')
       .end((err, res) => {
         expect(res.status).eql(200);
         expect(res.body).to.be.an('object');
@@ -18,7 +18,7 @@ describe('App', () => {
       });
   });
 
-  it('Should display a This route is unavailable on this serve for GET method', (done) => {
+  it('Should display "This route is unavailable on this serve for GET method"', (done) => {
     chai.request(app)
       .get('/api/v1/hjhjh')
       .end((err, res) => {
@@ -30,7 +30,7 @@ describe('App', () => {
       });
   });
 
-  it('Should display a This route is unavailable on this serve for POST method', (done) => {
+  it('Should display "This route is unavailable on this serve for POST method"', (done) => {
     chai.request(app)
       .post('/api/v1/hjhjh')
       .end((err, res) => {
@@ -42,7 +42,7 @@ describe('App', () => {
       });
   });
 
-  it('Should display a This route is unavailable on this serve for PATCH method', (done) => {
+  it('Should display a "This route is unavailable on this serve for PATCH method"', (done) => {
     chai.request(app)
       .patch('/api/v1/hjhjh')
       .end((err, res) => {
@@ -54,7 +54,7 @@ describe('App', () => {
       });
   });
 
-  it('Should display a This route is unavailable on this serve for DELETE method', (done) => {
+  it('Should display "This route is unavailable on this serve for DELETE method"', (done) => {
     chai.request(app)
       .delete('/api/v1/hjhjh')
       .end((err, res) => {

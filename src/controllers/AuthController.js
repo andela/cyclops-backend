@@ -165,6 +165,31 @@ class AuthController {
   }
 
   /**
+   * @description Function to get specific user details
+   *
+   * @param {Object} req - HTTP request object
+   *
+   * @param {Object} res - HTTP response object
+   *
+   * @param {Function} next - Function to trigger next middleware
+   *
+   * @return {Object} Object resoponse with current user information status
+   */
+  async show({ userData }, res, next) {
+    const { dataValues: { email } } = userData;
+    try {
+      const { dataValues: user } = await UserRepository.getOne({ email });
+      if (user) {
+        user.password = undefined;
+        return sendSuccessResponse(res, 200, user);
+      }
+      return sendErrorResponse(res, 400, 'User not found');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * @description logs out a user
    *
    * @param {object} req request from body to log out
@@ -182,6 +207,30 @@ class AuthController {
       return sendErrorResponse(res, 400, error);
     }
   }
+
+  /**
+   * @description Function to update user details
+   *
+   * @param {Object} req - HTTP request object
+   *
+   * @param {Object} res - HTTP response object
+   *
+   * @param {Function} next - Function to trigger next middleware
+   *
+   * @return {Object} Object resoponse with current user created status
+   */
+  async update(req, res, next) {
+    try {
+      const { body, userData: { dataValues: { uuid: userId } } } = req;
+      const [numberOfEdits, [{ dataValues }]] = await UserRepository.update(userId, body);
+      numberOfEdits > 0
+        ? sendSuccessResponse(res, 200, dataValues)
+        : sendSuccessResponse(res, 200, 'No edit made');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
+
 
 export default new AuthController();

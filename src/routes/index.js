@@ -5,14 +5,14 @@ import trip from './trip';
 import office from './office';
 
 export default (app) => {
-  app.get('/', (req, res) => res.status(200).send({
+  app.get('/api/v1/', (req, res) => res.status(200).send({
     status: 'success',
     data: 'Welcome to the Cyclops Barefoot Nomad backend API'
   }));
 
   app.use('/api/v1', [user, trip, office]);
 
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+  app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
   app.all('/*', (req, res) => res.status(404).send({
     status: 'error',

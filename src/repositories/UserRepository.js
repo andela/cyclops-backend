@@ -80,22 +80,6 @@ class UserRepository {
     }
   }
 
-  /**
-   *
-   * @param {string} userId
-   *
-   * @param {object} changes to update for user
-   *
-   * @returns {object} updated user
-   */
-  async update(userId, changes) {
-    try {
-      await this.getOne({ uuid: userId });
-      return await User.update(changes, { where: { uuid: userId } });
-    } catch (e) {
-      throw new Error(e);
-    }
-  }
 
   /**
    * @description This is a function that finds a user token in the data base
@@ -107,6 +91,23 @@ class UserRepository {
   async findToken(condition = {}) {
     try {
       return await BlackListedToken.findOne({ where: condition });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
+   *
+   * @param {string} userId
+   *
+   * @param {object} changes to update for user
+   *
+   * @returns {object} updated user
+   */
+  async update(userId, changes) {
+    try {
+      await this.getOne({ uuid: userId });
+      return await User.update(changes, { returning: true, where: { uuid: userId } });
     } catch (e) {
       throw new Error(e);
     }

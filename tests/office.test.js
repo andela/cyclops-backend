@@ -1,9 +1,13 @@
 import { describe, it } from 'mocha';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import { createToken } from '../src/modules/tokenProcessor';
 import app from '../src';
+import userRepo from '../src/repositories/UserRepository';
 
+chai.use(sinonChai);
 chai.use(chaiHttp);
 
 const seededUser = {
@@ -15,6 +19,7 @@ const seededUser = {
 describe('Trip Request CRUD', () => {
   const token = createToken(seededUser);
   it('Should create a returnTrip for a user', (done) => {
+    sinon.stub(userRepo, 'getOne').returns([]);
     chai.request(app)
       .get('/api/v1/office')
       .set('Content-Type', 'application/json')
@@ -22,6 +27,7 @@ describe('Trip Request CRUD', () => {
       .end((err, res) => {
         expect(res.status).to.eql(200);
         expect(res.body.data).to.be.an('array');
+        sinon.restore();
         done();
       });
   });
