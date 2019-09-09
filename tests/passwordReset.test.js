@@ -34,9 +34,9 @@ describe('Password reset Tests', () => {
     resetToken = await createToken({ uuid, email });
     userId = uuid;
   });
-  it('"/api/v1/auth/forgotPassword" Should send a reset link if email exists and is valid', (done) => {
+  it('"/api/v1/auth/forgot_password" Should send a reset link if email exists and is valid', (done) => {
     chai.request(app)
-      .post('/api/v1/auth/forgotPassword')
+      .post('/api/v1/auth/forgot_password')
       .send({ email: 'dieudonneawa7@gmail.com' })
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -45,9 +45,9 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  it('"/api/v1/auth/forgotPassword" Should fail if email is not provided', (done) => {
+  it('"/api/v1/auth/forgot_password" Should fail if email is not provided', (done) => {
     chai.request(app)
-      .post('/api/v1/auth/forgotPassword')
+      .post('/api/v1/auth/forgot_password')
       .send()
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -56,9 +56,9 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  it('"/api/v1/auth/forgotPassword" Should fail if email is invalid', (done) => {
+  it('"/api/v1/auth/forgot_password" Should fail if email is invalid', (done) => {
     chai.request(app)
-      .post('/api/v1/auth/forgotPassword')
+      .post('/api/v1/auth/forgot_password')
       .send({ email: 'iaminvalidemail.com' })
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -67,9 +67,9 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  it('"/api/v1/auth/resetPassword/:uuid/:token" Should fail if password is not provided', (done) => {
+  it('"/api/v1/auth/reset_password/:uuid/:token" Should fail if password is not provided', (done) => {
     chai.request(app)
-      .put(`/api/v1/auth/resetPassword/${userId}/${resetToken}`)
+      .put(`/api/v1/auth/reset_password/${userId}/${resetToken}`)
       .send()
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -78,9 +78,9 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  it('"/api/v1/auth/resetPassword/:uuid/:token" Should fail if password is invalid', (done) => {
+  it('"/api/v1/auth/reset_password/:uuid/:token" Should fail if password is invalid', (done) => {
     chai.request(app)
-      .put(`/api/v1/auth/resetPassword/${userId}/${resetToken}`)
+      .put(`/api/v1/auth/reset_password/${userId}/${resetToken}`)
       .send({ password: 'nouppercasenordigit' })
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -89,9 +89,9 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  it('"/api/v1/auth/resetPassword/:uuid/:token" Should fail if password length is less than 8', (done) => {
+  it('"/api/v1/auth/reset_password/:uuid/:token" Should fail if password length is less than 8', (done) => {
     chai.request(app)
-      .put(`/api/v1/auth/resetPassword/${userId}/${resetToken}`)
+      .put(`/api/v1/auth/reset_password/${userId}/${resetToken}`)
       .send({ password: 'Nouppe1' })
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -100,9 +100,9 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  it('"/api/v1/auth/resetPassword/:uuid/:token" Should pass if token and id matche user token and id', (done) => {
+  it('"/api/v1/auth/reset_password/:uuid/:token" Should pass if token and id matche user token and id', (done) => {
     chai.request(app)
-      .put(`/api/v1/auth/resetPassword/${userId}/${resetToken}`)
+      .put(`/api/v1/auth/reset_password/${userId}/${resetToken}`)
       .send({ password: 'Mynumber1password' })
       .end((err, res) => {
         expect(res).to.have.status(200);

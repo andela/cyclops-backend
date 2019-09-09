@@ -1,18 +1,20 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../../public/docs/swaggerDoc.json';
+
 import user from './user';
 import trip from './trip';
 import office from './office';
+import comment from './comment';
 
 export default (app) => {
-  app.get('/api/v1/', (req, res) => res.status(200).send({
+  app.get('/', (req, res) => res.status(200).send({
     status: 'success',
     data: 'Welcome to the Cyclops Barefoot Nomad backend API'
   }));
 
-  app.use('/api/v1', [user, trip, office]);
+  app.use('/api/v1', [user, trip, office, comment]);
 
-  app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
   app.all('/*', (req, res) => res.status(404).send({
     status: 'error',

@@ -68,6 +68,22 @@ class RequestRepository {
       throw new Error(err);
     }
   }
+
+  /**
+ * @description RequestRepository handles method that query our database
+ *
+ * @param {object} condition refers to the details of your search
+ *
+ * @returns {object} the details of the request that was created
+ */
+  async findById(condition) {
+    try {
+      const tripRequestDetails = await this.db.findOne({ where: condition });
+      return tripRequestDetails;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 }
 
 export default new RequestRepository();

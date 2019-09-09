@@ -1,11 +1,14 @@
 // FEATURES
 
 // User tests
+import './user.signout.test';
 import './user.signup.test';
 import './user.signin.test';
-import './user.signout.test';
 import './user.profile.edit.test';
 import './user.profile.view.test';
+
+// Comment tests
+import './comment.test';
 
 // Request tests
 import './request.test';

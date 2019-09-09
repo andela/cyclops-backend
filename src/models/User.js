@@ -9,9 +9,11 @@ export default (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     name: DataTypes.STRING,
+    role_uuid: {
+      type: DataTypes.UUID
+    },
     role: {
-      type: DataTypes.ENUM('employee', 'super_admin', 'travel_admin', 'travel_team_manager', 'manager', 'supplier'),
-      defaultValue: 'manager'
+      type: DataTypes.STRING
     },
     is_verified: {
       type: DataTypes.BOOLEAN,
@@ -49,6 +51,9 @@ export default (sequelize, DataTypes) => {
       as: 'notifications',
       foreignKey: 'user_uuid',
       onDelete: 'CASCADE'
+    });
+    User.belongsTo(models.Role, {
+      foreignKey: 'role_uuid'
     });
   };
   return User;

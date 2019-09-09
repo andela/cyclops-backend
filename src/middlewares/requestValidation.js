@@ -1,5 +1,5 @@
 import {
-  validate, inValidDate, inValidReturnType, inValidLocationId, inValidDateComparison,
+  validate, inValidDate, inValidReturnType, inValidLocationId, inValidDateComparison, isRequired,
 } from '../modules/validator';
 import { sendErrorResponse } from '../utils/sendResponse';
 
@@ -40,6 +40,29 @@ export default class requestValidator {
     if (error) return sendErrorResponse(res, 422, error);
     const dateErrors = validate(dateSchema);
     if (dateErrors) return sendErrorResponse(res, 422, dateErrors);
+    return next();
+  }
+
+  
+  /**
+   *
+   * @param {req} req object
+   *
+   * @param {res} res object
+   *
+   * @param {next} next forwards request to the next middleware function
+   *
+   * @returns {obj} reurns an response object
+   */
+  static createComment(req, res, next) {
+    const { message } = req.body;
+
+    const schema = {
+      message: isRequired(message)
+    };
+
+    const error = validate(schema);
+    if (error) return sendErrorResponse(res, 422, error);
     return next();
   }
 }
