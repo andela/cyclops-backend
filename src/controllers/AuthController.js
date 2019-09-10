@@ -217,7 +217,7 @@ class AuthController {
    * @return {Object} Object resoponse with current user information status
    */
   async show({ userData }, res, next) {
-    const { dataValues: { email } } = userData;
+    const { email } = userData;
     try {
       const { dataValues: user } = await UserRepository.getOne({ email });
       if (user) {
@@ -267,7 +267,7 @@ class AuthController {
       const { email } = userData;
       const result = await UserRepository.getOne({ email });
       if (!result) {
-        const { userData: { dataValues: { uuid: userId } } } = req;
+        const { userData: { uuid: userId } } = req;
         const [numberOfEdits, [{ dataValues }]] = await UserRepository.update(userId, body);
         numberOfEdits > 0
           ? sendSuccessResponse(res, 200, dataValues)
