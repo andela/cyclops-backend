@@ -21,6 +21,9 @@ export const magicTrimmer = payload => {
   return payload;
 };
 
+// eslint-disable-next-line arrow-parens
+export const isRequired = value => ((!value) ? undefined : false);
+
 /**
    *
    * @description inValidName is function which validates a name

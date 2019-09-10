@@ -1,5 +1,9 @@
 // FEATURES
 
+
+// Comment tests
+import './comment.test';
+
 // User tests
 import './user.signup.test';
 import './user.signin.test';
@@ -8,6 +12,7 @@ import './user.profile.edit.test';
 import './user.profile.view.test';
 import './social.login.test';
 import './userRole.test';
+
 
 // Request tests
 import './request.test';

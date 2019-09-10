@@ -46,10 +46,9 @@ class AuthController {
           'Barefoot Nomad Account Verification',
           `Please kindly click on the link below to verify your account <br/> ${link}`
         );
-        sendSuccessResponse(res, 201, { message: 'User account created successfully' });
-      } else {
-        return sendErrorResponse(res, 409, `User ${email} already exists`);
-      }
+        return sendSuccessResponse(res, 201, { message: 'User account created successfully' });
+      } 
+      return sendErrorResponse(res, 409, `User ${email} already exists`);
     } catch (err) {
       return next(err);
     }
