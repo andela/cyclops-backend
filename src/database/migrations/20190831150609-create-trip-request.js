@@ -36,7 +36,7 @@ export default {
       defaultValue: 'Business Assignment',
     },
     return_date: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.DATE
     },
     status: {

@@ -471,7 +471,7 @@
         "in": "header"
       }
     },
-    "/api/v1/trips": {
+    "/api/v1/comment/trips": {
       "post": {
         "tags": ["Comment"],
         "summary": "Allow users to comment on a trip request",
@@ -719,6 +719,39 @@
       },
       "xml": {
         "name": "CreateTripRequest"
+      }
+    }
+  },
+  "/trips": {
+    "post": {
+      "tags": ["Trip"],
+      "summary": "Allow users to create a one-way trip",
+      "description": "",
+      "operationId": "CreateAOneWayTrip",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "in": "body",
+          "description": "details of trip request to create",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "$ref": "#/definitions/CreateOneWayTripRequest"
+          }
+        }
+      ],
+      "produces": ["application/json"],
+      "responses": {
+        "201": {
+          "description": "Trip Request Created Successfully",
+          "type": "string",
+          "example": "Your trip request has been created successfully and is waiting approval"
+        }
       }
     }
   }

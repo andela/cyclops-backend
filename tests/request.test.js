@@ -166,7 +166,7 @@ describe('Test Create Trip Request', () => {
         });
     });
 
-    it('Should create a mock oneWayTrip for a user', (done) => {
+    it('Should create a oneWayTrip for a user', (done) => {
       chai.request(app)
         .post('/api/v1/trips')
         .set('Content-Type', 'application/json')
@@ -175,14 +175,15 @@ describe('Test Create Trip Request', () => {
           request_type: 'oneWayTrip',
           trip_plan: 'singleCity',
           leaving_from: 'dbf285c6-8d7c-4f71-8058-a82e22e27f6b',
-          return_date: '09/30/2019',
           travel_date: '09/27/2019',
           destination: '85b4a64e-331b-4051-a32c-6bc20eb0fc81'
         })
         .end((err, res) => {
-          expect(res.status).eql(200);
+          expect(res.status).eql(201);
           expect(res.body.status).to.eql('success');
-          expect(res.body.data).to.eql('oneWayTrip still in progress');
+          expect(res.body.data).to.be.an('object');
+          expect(res.body.data).to.have.all.keys('message', 'trip_request_uuid');
+          expect(res.body.data.message).to.be.eql('Your trip request has been created successfully and is waiting approval');
           done();
         });
     });
@@ -284,7 +285,7 @@ describe('Test Create Trip Request', () => {
         .set('Content-Type', 'application/json')
         .set('authorization', `Bearer ${token}`)
         .send({
-          request_type: 'oneWayTrip',
+          request_type: 'returnTrip',
           trip_plan: 'singleCity',
           leaving_from: 'dbf285c6-8d7c-4f71-8058-a82e22e27f6b',
           return_date: '07-27-2018',
@@ -307,7 +308,7 @@ describe('Test Create Trip Request', () => {
         .set('Content-Type', 'application/json')
         .set('authorization', `Bearer ${token}`)
         .send({
-          request_type: 'oneWayTrip',
+          request_type: 'returnTrip',
           trip_plan: 'singleCity',
           leaving_from: 'dbf285c6-8d7c-4f71-8058-a82e22e27f6b',
           return_date: '09/30/2019',
@@ -330,7 +331,7 @@ describe('Test Create Trip Request', () => {
         .set('Content-Type', 'application/json')
         .set('authorization', `Bearer ${token}`)
         .send({
-          request_type: 'oneWayTrip',
+          request_type: 'returnTrip',
           trip_plan: 'singleCity',
           leaving_from: 'dbf285c6-8d7c-4f71-8058-a82e22e27f6b',
           return_date: '09/21/2019',

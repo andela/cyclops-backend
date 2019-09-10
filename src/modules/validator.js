@@ -97,6 +97,13 @@ export const inValidDateComparison = (travelDate, returnDate) => {
   return false;
 };
 
+export const inValidDatesComparison = (travelDate) => {
+  const travelDateMilliSec = getMIlliSeconds(travelDate);
+  const todayDateMilliSec = getMIlliSeconds();
+  if (travelDateMilliSec <= todayDateMilliSec) return 'Your travel date must be a future date';
+  return false;
+};
+
 export const inValidReturnType = (condition, payload) => {
   if (!payload) return undefined;
   const types = condition === 'request type' ? ['oneWayTrip', 'returnTrip'] : ['singleCity', 'multiCity'];

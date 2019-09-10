@@ -1,5 +1,6 @@
 import {
-  validate, inValidDate, inValidReturnType, inValidLocationId, inValidDateComparison, isRequired,
+  validate, inValidDate, inValidReturnType, inValidLocationId, inValidDateComparison, 
+  inValidDatesComparison, isRequired,
 } from '../modules/validator';
 import { sendErrorResponse } from '../utils/sendResponse';
 
@@ -17,11 +18,31 @@ export default class requestValidator {
    *
    * @returns {obj} reurns an response object
    */
-  static returnTrip(req, res, next) {
+  static createTrip(req, res, next) {
     const {
       request_type: requestType, trip_plan: tripPlan, leaving_from: leavingFrom,
       return_date: returnDate, travel_date: travelDate, destination,
     } = req.body;
+
+    if (requestType === 'oneWayTrip') {
+      const schema = {
+        request_type: inValidReturnType('request type', requestType),
+        trip_plan: inValidReturnType('trip plan', tripPlan),
+        leaving_from: inValidLocationId(leavingFrom),
+        travel_date: inValidDate(travelDate),
+        destination: inValidLocationId(destination),
+      };
+
+      const dateSchema = {
+        travel_date: inValidDatesComparison(travelDate)
+      };
+
+      const error = validate(schema);
+      if (error) return sendErrorResponse(res, 422, error);
+      const dateErrors = validate(dateSchema);
+      if (dateErrors) return sendErrorResponse(res, 422, dateErrors);
+      return next();
+    }
 
     const schema = {
       request_type: inValidReturnType('request type', requestType),

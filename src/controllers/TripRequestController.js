@@ -108,11 +108,30 @@ class TripRequestController {
  *
  * @returns {object} it returns a response that is an object
  */
-  static oneWayTripCreator(req, res, next) {
-    try {
-      return sendSuccessResponse(res, 200, 'oneWayTrip still in progress');
+  static async oneWayTripCreator(req, res) {
+    try { 
+      const tripRequest = { ...req.body, user_uuid: req.userData.uuid };
+      // creating the trip request
+      const tripRequestDetails = await TripRequestRepository.create(tripRequest);
+      const { uuid: tripRequestUuid } = tripRequestDetails;
+      const tripDestinationDetails = {
+        trip_request_uuid: tripRequestUuid,
+        office_location_uuid: tripRequest.destination
+      };
+      // updating destination for trip request and creating notifications for manager
+      const { managerUuid } = req.userData;
+      const [destinated, managerNotified] = await Promise.all(
+        [TripDestinationRespository.create(tripDestinationDetails),
+          NotificationRepository.create({ user_uuid: managerUuid })]
+      );
+      if (destinated && managerNotified) {
+        return sendSuccessResponse(res, 201, { 
+          message: 'Your trip request has been created successfully and is waiting approval',
+          trip_request_uuid: tripRequestUuid 
+        });
+      }
     } catch (err) {
-      return next(err);
+      return sendErrorResponse(res, 500, ' Unable to create Trip request');
     }
   }
 }

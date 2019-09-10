@@ -57,19 +57,19 @@ export default {
         uuid: '95ccd25d-2524-4b95-a441-8e2643c4c077',
         email: 'Jessica_Bins@hotmail.com',
         password: hashPassword('Password123', 10),
+        is_verified: true,
         name: 'Name Hettinger',
         role: 'Requester',
-        is_verified: true,
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')
       },
       {
         uuid: '95ccd25d-2524-4b95-a441-8e2643c4c079',
-        email: faker.internet.email(),
+        email: 'somemail@yahoo.com',
         password: hashPassword('Password123', 10),
-        name: faker.name.findName(),
-        role: 'Manager',
         is_verified: false,
+        role: 'Manager',
+        name: faker.name.findName(),
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')
       },
