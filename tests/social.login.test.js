@@ -21,9 +21,9 @@ describe('User social login tests', () => {
     sinon.restore();
   });
   it('it should trigger error handler for server errors', () => {
-    sinon.stub(userRepository, 'social').throws();
+    sinon.stub(userRepository, 'getOne').throws();
     authController.social(req, res, next);
     expect(next.called).to.be.true;
-    userRepository.social.restore();
+    userRepository.getOne.restore();
   });
 });

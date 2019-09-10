@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
@@ -6,16 +8,17 @@ import verifyRoles from '../src/middlewares/verifyRoles';
 
 chai.use(chaiHttp);
 
+chai.use(sinonChai);
+
 describe('User Role Settings tests', () => {
   describe('Unit test verifyRoles and verifyPermissions middlewares', () => {
     it('All Role verification middlewares should return a function', (done) => {
-      expect(verifyRoles.verifyManager).to.be.a('function');
       expect(verifyRoles.verifySupAdmin).to.be.a('function');
       expect(verifyRoles.verifyRequester).to.be.a('function');
       done();
     });
   });
-  
+
   let supAdminToken, RequesterToken;
   before('Sign in a Super Administrator', (done) => {
     chai.request(app)
@@ -25,7 +28,7 @@ describe('User Role Settings tests', () => {
         password: 'Workingwith1seed'
       })
       .end((err, res) => {
-        supAdminToken = res.body.data.token;
+        supAdminToken = `Bearer ${res.body.data.token}`;
         done();
       });
   });
@@ -37,7 +40,7 @@ describe('User Role Settings tests', () => {
         password: 'Password123',
       })
       .end((err, res) => {
-        RequesterToken = res.body.data.token;
+        RequesterToken = `Bearer ${res.body.data.token}`;
         done();
       });
   });

@@ -48,7 +48,6 @@ describe('Test Create Trip Request', () => {
   before(async () => {
     await User.create(testUser);
   });
-  after(() => User.destroy({ where: {}, force: true }));
 
   const token = createToken(seededUser);
   const token1 = createToken(seededUserI);

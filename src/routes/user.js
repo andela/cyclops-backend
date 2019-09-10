@@ -1,8 +1,6 @@
 /* eslint-disable linebreak-style */
 import { Router } from 'express';
 import passport from 'passport';
-// eslint-disable-next-line no-unused-vars
-import socialOAuth from '../services/socialOAuth';
 import AuthController from '../controllers/AuthController';
 import AdminCrontroller from '../controllers/AdminController';
 import userAuth from '../middlewares/userAuth';
@@ -11,7 +9,7 @@ import verifyRoles from '../middlewares/verifyRoles';
 
 const userRouter = Router();
 
-userRouter.post('/auth/signup', userAuth.signup, userAuth.userExistCheck, AuthController.signup);
+userRouter.post('/auth/signup', userAuth.signup, AuthController.signup);
 userRouter.get('/user', authenticateUser, AuthController.show);
 userRouter.put('/user', authenticateUser, AuthController.update);
 
