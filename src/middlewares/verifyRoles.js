@@ -27,6 +27,27 @@ class VerifyRoles {
   }
 
   /**
+   * @description verify and authorize Super Administrator roles
+   * 
+   * @param {*} req
+   * 
+   * @param {*} res
+   * 
+   * @param {*} next
+   * 
+   * @returns {*} pass control to the next middleware
+   */
+  async verifyTravelAdmin(req, res, next) {
+    const token = req.headers.authorization.split(' ')[1] || req.headers.authorization;
+    const userDetail = await verifyToken(token);
+    req.userData = userDetail;
+    if (req.userData.role !== 'Travel Administrator') {
+      return sendErrorResponse(res, 401, 'Unauthorized access');
+    }
+    next();
+  }
+
+  /**
    * @description verify and authorize Requester roles
    * 
    * @param {*} req

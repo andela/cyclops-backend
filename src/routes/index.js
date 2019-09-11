@@ -5,6 +5,7 @@ import swaggerDoc from '../../public/docs/swaggerDoc.json';
 
 import user from './user';
 import trip from './trip';
+import accommodation from './accommodation';
 import office from './office';
 import notifications from './notifications';
 import comment from './comment';
@@ -19,6 +20,7 @@ export default (app) => {
 
   // Add notification endpoints to application
   app.use('/api/v1/notifications', notifications);
+  app.use('/api/v1', [user, trip, office, accommodation]);
 
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 

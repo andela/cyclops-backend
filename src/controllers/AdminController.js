@@ -1,4 +1,5 @@
 import UserRepository from '../repositories/UserRepository';
+import AccommodationRepository from '../repositories/AccommodationRepository';
 import { sendSuccessResponse, sendErrorResponse, successResponse } from '../utils/sendResponse';
 import { inValidEmail } from '../modules/validator';
 
@@ -105,6 +106,45 @@ class AdminController {
       return successResponse(res, 200, `${permission} permission assigned to ${role} successfully`);
     } catch (error) {
       return sendErrorResponse(res, 500, 'Unable to assign permission');
+    }
+  }
+
+  /**
+   * @param {*} req 
+   * @param {*} res 
+   * @returns {object} returns either a success or an error response
+   */
+  async createAccommodationLocation(req, res) {
+    try {
+      const accommodationInfo = req.body;
+      const accommodationLocations = await AccommodationRepository.getAllAcc();
+      const acccommodationNames = accommodationLocations
+        .map(accommodationLocation => accommodationLocation.dataValues.name);
+      if (acccommodationNames.includes(accommodationInfo.name)) {
+        return sendErrorResponse(res, 400, 'Accommodation location exists already');
+      }
+      const accommodationLocation = await AccommodationRepository.createAcc(accommodationInfo);
+      return sendSuccessResponse(res, 201, accommodationLocation);
+    } catch (error) {
+      return sendErrorResponse(res, 500, error.message);
+    }
+  }
+
+  /**
+   * @param {*} req 
+   * 
+   * @param {*} res 
+   * 
+   * @returns {object} returns a success or an error response 
+   */
+  async createRoom(req, res) {
+    try {
+      const roomData = req.body;
+      roomData.accommodation_location_uuid = req.params.accommodation_location_uuid;
+      const room = await AccommodationRepository.createAccRoom(roomData);
+      return sendSuccessResponse(res, 201, room);
+    } catch (error) {
+      return sendErrorResponse(res, 500, error.message);
     }
   }
 }

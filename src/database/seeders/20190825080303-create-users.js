@@ -75,6 +75,26 @@ export default {
       },
       {
         uuid: uuid(),
+        name: 'Travel Admin',
+        email: 'traveladmin@email.com',
+        password: hashPassword('1TravelAdmin'),
+        role: 'Travel Administrator',
+        is_verified: true,
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        uuid: uuid(),
+        name: 'I\'m no Travel Admin',
+        email: 'imnotraveladmin@email.com',
+        password: hashPassword('1ImnoTravelAdmin'),
+        is_verified: true,
+        role: 'Requester',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        uuid: uuid(),
         name: 'Awa Mail',
         email: 'awamail@gmail.com',
         password: hashPassword('Workingwith1seed'),
