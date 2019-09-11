@@ -3,10 +3,7 @@ import { createToken } from '../src/modules/tokenProcessor';
 export const req = {
   email: 'wokorosamuel@yahoo.com',
   userData: {
-    uuid: '12344564344534545',
-    dataValues: {
-      uuid: '137832957832468945'
-    }
+    uuid: '12344564344534545'
   },
   headers: {
     authorization: `Bearer ${createToken({ email: 'wokorosamuel@yahoo.com' })}`

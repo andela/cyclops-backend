@@ -31,8 +31,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DATE
     },
     status: {
-      type: DataTypes.ENUM('pending', 'accepted', 'rejected', 'open'),
-      defaultValue: 'pending'
+      type: DataTypes.ENUM('accepted', 'rejected', 'open'),
+      defaultValue: 'open'
     },
     show_profile: {
       type: DataTypes.BOOLEAN,

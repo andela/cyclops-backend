@@ -46,10 +46,9 @@ class AuthController {
           'Barefoot Nomad Account Verification',
           `Please kindly click on the link below to verify your account <br/> ${link}`
         );
-        sendSuccessResponse(res, 201, { message: 'User account created successfully' });
-      } else {
-        return sendErrorResponse(res, 409, `User ${email} already exists`);
-      }
+        return sendSuccessResponse(res, 201, { message: 'User account created successfully' });
+      } 
+      return sendErrorResponse(res, 409, `User ${email} already exists`);
     } catch (err) {
       return next(err);
     }
@@ -217,7 +216,7 @@ class AuthController {
    * @return {Object} Object resoponse with current user information status
    */
   async show({ userData }, res, next) {
-    const { dataValues: { email } } = userData;
+    const { email } = userData;
     try {
       const { dataValues: user } = await UserRepository.getOne({ email });
       if (user) {
@@ -267,7 +266,7 @@ class AuthController {
       const { email } = userData;
       const result = await UserRepository.getOne({ email });
       if (!result) {
-        const { userData: { dataValues: { uuid: userId } } } = req;
+        const { userData: { uuid: userId } } = req;
         const [numberOfEdits, [{ dataValues }]] = await UserRepository.update(userId, body);
         numberOfEdits > 0
           ? sendSuccessResponse(res, 200, dataValues)

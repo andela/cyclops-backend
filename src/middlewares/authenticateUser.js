@@ -24,7 +24,7 @@ export default async (req, res, next) => {
     const user = await UserRepository.getOne({ email });
 
     if (!user) return sendErrorResponse(res, 403, 'Unauthorized');
-    req.userData = user;
+    req.userData = user.dataValues;
     next();
   } catch (err) {
     const error = err.message ? 'Authentication Failed' : err;
