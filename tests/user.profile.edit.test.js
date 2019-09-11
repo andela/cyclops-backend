@@ -3,11 +3,9 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import chaiHttp from 'chai-http';
-import { createToken } from '../src/modules/tokenProcessor';
-import app from '../src/index';
 import authController from '../src/controllers/AuthController';
 import userRepo from '../src/repositories/UserRepository';
-import { req, res } from './mock.data';
+import { req, res, signUpReq } from './mock.data';
 
 chai.use(sinonChai);
 
@@ -22,41 +20,51 @@ describe('User Profile Edit Tests PUT: /api/v1/user', () => {
   it('it should return no edit made for no edits', async () => {
     const next = sinon.spy();
     sinon.stub(userRepo, 'update').returns([0, [{ dataValue: {} }]]);
-    await authController.update(req, res, next);
+    sinon.stub(userRepo, 'getOne').returns(false);
+    await authController.update(signUpReq, res, next);
     expect(res.status).to.be.calledWith(200);
+    expect(res.status).to.be.calledWith(200);
+    expect(res.send).to.be.calledWith({
+      status: 'success',
+      data: 'No edit made'
+    });
     userRepo.update.restore();
+    userRepo.getOne.restore();
   });
-  it('it should return no edit made for no edits', (done) => {
+  it('it should call next for server side errors', (done) => {
     const next = sinon.spy();
+    sinon.stub(userRepo, 'getOne').returns(false);
     sinon.stub(userRepo, 'update').throws();
     expect(authController.update(req, res, next)).to.throw;
+    expect(next.called).to.be.true;
+    userRepo.getOne.restore();
     userRepo.update.restore();
     done();
   });
-  it('it should return updated user info', (done) => {
-    chai.request(app)
-      .post('/api/v1/auth/signup')
-      .send({
-        email: 'douyesamuel@yahoo.com',
-        name: 'Wokoro Douye Samuel',
-        password: 'Ssmsmsmmsm199',
-      })
-      .then(() => {
-        chai.request(app)
-          .put('/api/v1/user')
-          .send({
-            email: 'wokorosamuel@yahoo.com',
-            name: 'Elijah'
-          })
-          .set('authorization', `Bearer ${createToken({ email: 'douyesamuel@yahoo.com' })}`)
-          .end((err, res) => {
-            expect(res.status).to.eql(200);
-            expect(res.body).to.be.an('object');
-            expect(res.body.status).to.eql('success');
-            expect(res.body.data).to.be.an('object');
-            expect(res.body.data.email).to.eql('wokorosamuel@yahoo.com');
-            done();
-          });
-      });
+  it('it should return updated user info', async () => {
+    const next = sinon.spy();
+    sinon.stub(userRepo, 'update').returns([1, [{ dataValues: {} }]]);
+    sinon.stub(userRepo, 'getOne').returns(false);
+    await authController.update(signUpReq, res, next);
+    expect(res.status).to.be.calledWith(200);
+    expect(res.send).to.be.calledWith({
+      status: 'success',
+      data: {}
+    });
+    userRepo.update.restore();
+    userRepo.getOne.restore();
+  });
+  it('it should return user already exist error', async () => {
+    const next = sinon.spy();
+    sinon.stub(userRepo, 'update').returns([1, [{ dataValues: {} }]]);
+    sinon.stub(userRepo, 'getOne').returns(true);
+    await authController.update(signUpReq, res, next);
+    expect(res.status).to.be.calledWith(409);
+    expect(res.send).to.be.calledWith({
+      status: 'error',
+      error: 'User wokorosamuel@yahoo.com already exists'
+    });
+    userRepo.update.restore();
+    userRepo.getOne.restore();
   });
 });

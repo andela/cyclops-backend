@@ -4,24 +4,11 @@ import UserRepository from '../repositories/UserRepository';
 import { blackListThisToken } from '../utils';
 import { createToken, verifyToken } from '../modules/tokenProcessor';
 import { sendErrorResponse, successResponse, sendSuccessResponse } from '../utils/sendResponse';
-import { inValidEmail, inValidPassword } from '../modules/validator';
+import { inValidEmail, inValidPassword, magicTrimmer } from '../modules/validator';
 import sendEmail from '../services/emails';
-import { unhashPassword } from '../utils/hashPassword';
+import { hashPassword, unhashPassword } from '../utils/hashPassword';
+import userInfo from '../utils/getUserInfo';
 
-// Returns selected information for logged in user.
-const userInfo = (user) => {
-  const {
-    email, name, role, uuid, is_verified
-  } = user;
-  return {
-    token: is_verified ? createToken({
-      name,
-      uuid,
-      email,
-      role
-    }) : ''
-  };
-};
 
 /**
  * @description User controller
@@ -38,36 +25,41 @@ class AuthController {
    */
   async signup({ protocol, headers, body }, res, next) {
     try {
-      const { email, name } = body;
-      const newUser = await UserRepository.create(body);
-      const message = 'User account created successfully';
-      const token = createToken(
-        {
-          uuid: newUser.uuid,
-          name,
+      const userData = magicTrimmer(body);
+      const { email, name } = userData;
+      const result = await UserRepository.getOne({ email });
+      if (!result) {
+        body.password = hashPassword(body.password);
+        const newUser = await UserRepository.create(body);
+        const token = createToken(
+          {
+            uuid: newUser.uuid,
+            name,
+            email,
+            role: newUser.role
+          }
+        );
+        newUser.token = token;
+        const link = `${protocol}//${headers.host}/api/v1/auth/confirm_email?token=${token}&id=${newUser.uuid}`;
+        await sendEmail(
           email,
-          role: newUser.role
-        }
-      );
-      newUser.token = token;
-      const link = `${protocol}//${headers.host}/api/v1/auth/confirm_email?token=${token}&id=${newUser.uuid}`;
-      await sendEmail(
-        email,
-        'Barefoot Nomad Account Verification',
-        `Please kindly click on the link below to verify your account <br/> ${link}`
-      );
-      return sendSuccessResponse(res, 201, message);
-    } catch (error) {
-      next(error);
+          'Barefoot Nomad Account Verification',
+          `Please kindly click on the link below to verify your account <br/> ${link}`
+        );
+        sendSuccessResponse(res, 201, { message: 'User account created successfully' });
+      } else {
+        return sendErrorResponse(res, 409, `User ${email} already exists`);
+      }
+    } catch (err) {
+      return next(err);
     }
   }
 
   /**
-   * 
    * @param {object} req
-   * 
+   *
    * @param {object} res
-   * 
+   *
    * @returns {object} returns a response object
    */
   async confirmEmail(req, res) {
@@ -126,13 +118,13 @@ class AuthController {
 
   /**
    * @description Uses login with email and password
-   * 
+   *
    * @param {req} req the request object
-   * 
+   *
    * @param {res} res the response object
-   * 
+   *
    * @param {object} body this is the body of the request
-   * 
+   *
    * @returns {obj} returns an response object
    */
   async signin({ body }, res) {
@@ -269,12 +261,20 @@ class AuthController {
    * @return {Object} Object resoponse with current user created status
    */
   async update(req, res, next) {
+    const { body } = req;
     try {
-      const { body, userData: { dataValues: { uuid: userId } } } = req;
-      const [numberOfEdits, [{ dataValues }]] = await UserRepository.update(userId, body);
-      numberOfEdits > 0
-        ? sendSuccessResponse(res, 200, dataValues)
-        : sendSuccessResponse(res, 200, 'No edit made');
+      const userData = magicTrimmer(body);
+      const { email } = userData;
+      const result = await UserRepository.getOne({ email });
+      if (!result) {
+        const { userData: { dataValues: { uuid: userId } } } = req;
+        const [numberOfEdits, [{ dataValues }]] = await UserRepository.update(userId, body);
+        numberOfEdits > 0
+          ? sendSuccessResponse(res, 200, dataValues)
+          : sendSuccessResponse(res, 200, 'No edit made');
+      } else {
+        return sendErrorResponse(res, 409, `User ${email} already exists`);
+      }
     } catch (error) {
       next(error);
     }

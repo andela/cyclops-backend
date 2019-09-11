@@ -10,13 +10,13 @@ import { inValidEmail } from '../modules/validator';
 class AdminController {
   /**
    * @description Assign roles to users
-   * 
+   *
    * @param {*} req - Request Object
-   * 
+   *
    * @param {*} res - Response Object
-   * 
+   *
    * @returns {object} - returns a response object
-   * 
+   *
    * @memberof AdminController
    */
   async assignRole(req, res) {
@@ -36,13 +36,13 @@ class AdminController {
 
   /**
    * @description gets a list of all users
-   * 
+   *
    * @param {object} req - request object
-   * 
+   *
    * @param {object} res - response object
-   * 
+   *
    * @returns {object} returns a response object
-   * 
+   *
    * @memberof AdminController
    */
   async getUsers(req, res) {
@@ -62,13 +62,13 @@ class AdminController {
 
   /**
    * @description gets a user by uuid
-   * 
+   *
    * @param {object} req request object
-   * 
+   *
    * @param {object} res response object
-   * 
+   *
    * @returns {object} returns a response containing the user object
-   * 
+   *
    * @memberof AdminController
    */
   async getUser(req, res) {
@@ -86,13 +86,13 @@ class AdminController {
 
   /**
    * @description assigns permissions to role
-   * 
+   *
    * @param {object} req request object
-   * 
+   *
    * @param {object} res response object
-   * 
+   *
    * @returns {object} returns a response containing the user object
-   * 
+   *
    * @memberof AdminController
    */
   async assignPermission(req, res) {
