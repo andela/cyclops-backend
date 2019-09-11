@@ -46,11 +46,12 @@ class TripRequestController {
       const { manager } = await UserRepository.getOne({ uuid: req.userData.uuid }, ['manager']);
       if (!manager) return sendErrorResponse(res, 403, 'You are not allowed to create a trip request because you don\'t have a manager');
       req.userData.managerUuid = manager.dataValues.user_uuid;
-      // checking if the office locations exist
+
       const tripDeparture = await OfficeLocationRepository.findById({ uuid: leavingFrom });
       if (!tripDeparture) return sendErrorResponse(res, 404, 'The office location you are leaving from does not exist');
       const tripDestination = await OfficeLocationRepository.findById({ uuid: destination });
       if (!tripDestination) return sendErrorResponse(res, 404, 'The office location you are going to does not exist');
+
       if (leavingFrom === destination) return sendErrorResponse(res, 422, 'your destination must be a location different from where you are leaving from');
       return (requestType === 'oneWayTrip') ? TripRequestController.oneWayTripCreator(req, res, next)
         : TripRequestController.returnTripCreator(req, res, next);
@@ -79,7 +80,7 @@ class TripRequestController {
         trip_request_uuid: tripRequestUuid,
         office_location_uuid: tripRequest.destination
       };
-      // updating destination for trip request and creating notifications for manager
+      
       const { managerUuid } = req.userData;
       const [destinated, managerNotified] = await Promise.all(
         [TripDestinationRespository.create(tripDestinationDetails),
