@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import UserRepository from '../repositories/UserRepository';
 import { sendSuccessResponse, sendErrorResponse, successResponse } from '../utils/sendResponse';
 import { inValidEmail } from '../modules/validator';

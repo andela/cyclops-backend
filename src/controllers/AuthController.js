@@ -1,5 +1,3 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable camelcase */
 import UserRepository from '../repositories/UserRepository';
 import { blackListThisToken } from '../utils';
 import { createToken, verifyToken } from '../modules/tokenProcessor';
@@ -7,8 +5,7 @@ import { sendErrorResponse, successResponse, sendSuccessResponse } from '../util
 import { inValidEmail, inValidPassword, magicTrimmer } from '../modules/validator';
 import sendEmail from '../services/emails';
 import { hashPassword, unhashPassword } from '../utils/hashPassword';
-import userInfo from '../utils/getUserInfo';
-
+import userInfo from '../utils/createAccessToken';
 
 /**
  * @description User controller
@@ -225,7 +222,7 @@ class AuthController {
       }
       return sendErrorResponse(res, 400, 'User not found');
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
@@ -275,10 +272,9 @@ class AuthController {
         return sendErrorResponse(res, 409, `User ${email} already exists`);
       }
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 }
-
 
 export default new AuthController();

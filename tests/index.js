@@ -13,7 +13,6 @@ import './user.profile.view.test';
 import './social.login.test';
 import './userRole.test';
 
-
 // Request tests
 import './request.test';
 

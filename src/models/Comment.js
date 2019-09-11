@@ -10,13 +10,20 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING
     },
-  }, {});
+    deletedAt: {
+      type: DataTypes.DATE,
+      field: 'deleted_at'
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at'
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at'
+    },
+  }, { paranoid: true });
   Comment.associate = (models) => {
-    Comment.belongsTo(models.TripRequest, {
-      as: 'tripDetails',
-      foreignKey: 'trip_request_uuid',
-      onDelete: 'CASCADE'
-    });
     Comment.belongsTo(models.User, {
       as: 'user',
       foreignKey: 'user_uuid',

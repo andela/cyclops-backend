@@ -46,7 +46,7 @@ describe('Notification Helper methods tests', () => {
       expect(details).to.have.property('uuid');
       expect(details).to.have.property('email');
     });
-    it('it should return sinfle user info(s)', async () => {
+    it('it should return single user info(s)', async () => {
       const details = getUserInfo(model, 'uuid');
       expect(details).to.be.an('object');
       expect(details).to.have.property('uuid');

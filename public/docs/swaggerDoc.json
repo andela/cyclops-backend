@@ -603,6 +603,39 @@
           }
         }
       }
+    },
+    "api/v1/comment/trips/:uuid": {
+      "delete": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Delete a user's comment",
+        "description": "Deletes a user's comment",
+        "consumes": "application/json",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "uuid of comment to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment deleted successful",
+            "name": "type"
+          }
+        }
+      }
     }
   },
   "definitions": {

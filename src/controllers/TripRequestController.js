@@ -25,7 +25,7 @@ class TripRequestController {
       const userTrips = await TripRequestRepository.getAll({ user_uuid: user });
       return sendSuccessResponse(res, 200, userTrips);
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -46,6 +46,7 @@ class TripRequestController {
       const { manager } = await UserRepository.getOne({ uuid: req.userData.uuid }, ['manager']);
       if (!manager) return sendErrorResponse(res, 403, 'You are not allowed to create a trip request because you don\'t have a manager');
       req.userData.managerUuid = manager.dataValues.user_uuid;
+      // checking if the office locations exist
       const tripDeparture = await OfficeLocationRepository.findById({ uuid: leavingFrom });
       if (!tripDeparture) return sendErrorResponse(res, 404, 'The office location you are leaving from does not exist');
       const tripDestination = await OfficeLocationRepository.findById({ uuid: destination });
@@ -102,14 +103,15 @@ class TripRequestController {
  *
  * @param {object} res is the response object
  *
+ * @param {function} next forwards request to the next middleware in the call stack
  *
  * @returns {object} it returns a response that is an object
  */
-  static oneWayTripCreator(req, res) {
+  static oneWayTripCreator(req, res, next) {
     try {
       return sendSuccessResponse(res, 200, 'oneWayTrip still in progress');
     } catch (err) {
-      // return sendErrorResponse(res, 500, 'Internal Server Error');
+      return next(err);
     }
   }
 }

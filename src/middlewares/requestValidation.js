@@ -54,7 +54,7 @@ export default class requestValidator {
    *
    * @returns {obj} reurns an response object
    */
-  static createComment(req, res, next) {
+  static comment(req, res, next) {
     const { message } = req.body;
 
     const schema = {

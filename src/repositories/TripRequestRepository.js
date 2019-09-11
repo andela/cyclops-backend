@@ -46,7 +46,7 @@ class RequestRepository {
         },
         include: [{
           model: TripDestination, as: 'destinations', attributes: ['uuid'], include: ['office']
-        }, 'departure']
+        }, 'departure', 'comments']
       });
     } catch (e) {
       throw new Error(e);
