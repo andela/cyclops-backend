@@ -5,7 +5,6 @@ export default {
       primaryKey: true,
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
-      unique: true
     },
     role_uuid: {
       type: Sequelize.UUID,
