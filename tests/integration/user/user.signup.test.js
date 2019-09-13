@@ -1,12 +1,11 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../src/index';
-import { createToken } from '../src/modules/tokenProcessor';
+import app from '../../../src';
+import { createToken } from '../../../src/modules/tokenProcessor';
 
 chai.use(chaiHttp);
 
-// after(() => User.destroy({ where: {}, force: true }));
 describe('User', () => {
   let newUserToken, newUserUuid, verifiedUserToken, verifiedUserUuid;
   before(async () => {

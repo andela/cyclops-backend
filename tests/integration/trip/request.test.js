@@ -3,13 +3,13 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import uuid from 'uuid/v4';
 import sinon from 'sinon';
-import { createToken } from '../src/modules/tokenProcessor';
-import app from '../src';
-import tripReqRepo from '../src/repositories/TripRequestRepository';
-import tripController from '../src/controllers/TripRequestController';
-import { req, res } from './mock.data';
+import { createToken } from '../../../src/modules/tokenProcessor';
+import app from '../../../src';
+import tripReqRepo from '../../../src/repositories/TripRequestRepository';
+import tripController from '../../../src/controllers/TripRequestController';
+import { req, res } from '../../mock.data';
 
-import model from '../src/models';
+import model from '../../../src/models';
 
 const { User } = model;
 
@@ -46,7 +46,7 @@ describe('Test Create Trip Request', () => {
     name: 'Efe Justin',
     role: 'Requester'
   };
-  
+
 
   before(async () => {
     await User.create(testUser);

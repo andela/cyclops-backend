@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 
-import { createToken, verifyToken } from '../src/modules/tokenProcessor';
+import { createToken, verifyToken } from '../../src/modules/tokenProcessor';
 
 chai.use(chaiHttp);
 

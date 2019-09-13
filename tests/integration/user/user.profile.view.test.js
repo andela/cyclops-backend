@@ -3,12 +3,12 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import chaiHttp from 'chai-http';
 import sinonChai from 'sinon-chai';
-import { createToken } from '../src/modules/tokenProcessor';
-import app from '../src/index';
+import { createToken } from '../../../src/modules/tokenProcessor';
+import app from '../../../src';
 
-import authController from '../src/controllers/AuthController';
-import userRepo from '../src/repositories/UserRepository';
-import { req, res } from './mock.data';
+import authController from '../../../src/controllers/AuthController';
+import userRepo from '../../../src/repositories/UserRepository';
+import { req, res } from '../../mock.data';
 
 chai.use(sinonChai);
 

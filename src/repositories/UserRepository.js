@@ -213,9 +213,10 @@ class UserRepository {
         { role_uuid: uuid, role: newRole },
         { where: { email }, returning: true, plain: true }
       );
+      const { uuid: userUuid } = data[1].dataValues;
       if (newRole === 'Manager') {
         await Manager.create(
-          { uuid: data.uuid }
+          { user_uuid: userUuid }
         );
       }
       

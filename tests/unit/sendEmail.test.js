@@ -4,7 +4,7 @@ import chaiHttp from 'chai-http';
 import sgMail from '@sendgrid/mail';
 import sinon from 'sinon';
 
-import sendEmail from '../src/services/emails';
+import sendEmail from '../../src/services/emails';
 
 chai.use(chaiHttp);
 

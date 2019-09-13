@@ -3,8 +3,8 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { setHeaders, addHook, getUserInfo } from '../src/utils/NotificationHelpers';
-import { req, res, model } from './mock.data';
+import { setHeaders, addHook, getUserInfo } from '../../src/utils/NotificationHelpers';
+import { req, res, model } from '../mock.data';
 
 chai.use(sinonChai);
 

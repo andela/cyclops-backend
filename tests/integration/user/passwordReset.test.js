@@ -1,11 +1,11 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../src/app';
-import UserRepository from '../src/repositories/UserRepository';
-import { createToken } from '../src/modules/tokenProcessor';
+import app from '../../../src/app';
+import UserRepository from '../../../src/repositories/UserRepository';
+import { createToken } from '../../../src/modules/tokenProcessor';
 
-import model from '../src/models';
+import model from '../../../src/models';
 
 const { User } = model;
 const testUser = {
@@ -45,7 +45,7 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  
+
   it('"/api/v1/auth/forgotPassword" Should fail if email is not provided', (done) => {
     chai.request(app)
       .post('/api/v1/auth/forgot_password')
@@ -57,7 +57,7 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  
+
   it('"/api/v1/auth/forgot_password" Should fail if email is invalid', (done) => {
     chai.request(app)
       .post('/api/v1/auth/forgot_password')

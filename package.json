@@ -1,4 +1,4 @@
- {
+{
   "name": "barefoot-nomad",
   "version": "1.0.0",
   "description": "Making company travel and accommodation easy and convenient.",
@@ -62,7 +62,8 @@
   },
   "nyc": {
     "exclude": [
-      "test/mock.data.js",
+      "tests/mock.data.js",
+      "tests/index.js",
       "src/config/index.js",
       "src/services/socialOAuth.js",
       "src/models/index.js",

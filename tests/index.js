@@ -1,40 +1,48 @@
 // FEATURES
 
-
 // Comment tests
-import './comment.test';
+import './integration/trip/comment.test';
 
 // User tests
-import './user.signup.test';
-import './user.signin.test';
-import './user.signout.test';
-import './user.profile.edit.test';
-import './user.profile.view.test';
-import './social.login.test';
-import './userRole.test';
+import './integration/user/user.signup.test';
+import './integration/user/user.signin.test';
+import './integration/user/user.signout.test';
+import './integration/user/user.profile.edit.test';
+import './integration/user/user.profile.view.test';
+import './integration/user/social.login.test';
+import './integration/user/userRole.test';
+
+// Accommodation tests
+import './integration/accommodation/accommodation.test';
+
+// Booking tests
+import './integration/accommodation/booking.test';
 
 // Request tests
-import './request.test';
+import './integration/trip/request.test';
 
 // Office tests
-import './office.test';
+import './integration/accommodation/office.test';
 
 // Password reset
-import './passwordReset.test';
+import './integration/user/passwordReset.test';
 
 // UTILITIES
 
 // Getting user info test
-import './user.info.getter';
+import './unit/user.info.getter';
 
 // Send email tests
-import './sendEmail.test';
+import './unit/sendEmail.test';
 
 // Notification helper test
-import './util.notification.test';
+import './unit/util.notification.test';
 
 // Token processor tests
-import './tokenProcessor.test';
+import './unit/tokenProcessor.test';
 
 // Server tests
-import './server.test';
+import './unit/server.test';
+
+// Date range array generator
+import './unit/dateRange.test';

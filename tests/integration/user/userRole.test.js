@@ -2,8 +2,8 @@ import sinonChai from 'sinon-chai';
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../src/app';
-import verifyRoles from '../src/middlewares/verifyRoles';
+import app from '../../../src/app';
+import verifyRoles from '../../../src/middlewares/verifyRoles';
 
 chai.use(chaiHttp);
 
