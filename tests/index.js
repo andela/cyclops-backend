@@ -13,6 +13,9 @@ import './user.profile.view.test';
 import './social.login.test';
 import './userRole.test';
 
+// Accommodation tests
+import './accommodation.test';
+
 // Request tests
 import './request.test';
 

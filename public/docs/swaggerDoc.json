@@ -42,6 +42,10 @@
     {
       "name": "Comment",
       "description": "Comments on trip request"
+    },
+    {
+      "name": "Accommodation",
+      "description": "Accommodations for Barefoot Nomad"
     }
   ],
   "schemes": ["http", "https"],
@@ -385,13 +389,6 @@
         }
       }
     },
-    "securityDefinitions": {
-      "api_key": {
-        "type": "apiKey",
-        "name": "token",
-        "in": "header"
-      }
-    },
     "/api/v1/trips": {
       "post": {
         "tags": ["Trip"],
@@ -464,14 +461,7 @@
         }
       }
     },
-    "securityDefinitions": {
-      "api_key": {
-        "type": "apiKey",
-        "name": "token",
-        "in": "header"
-      }
-    },
-    "/api/v1/trips": {
+    "/api/v1/comment/trips": {
       "post": {
         "tags": ["Comment"],
         "summary": "Allow users to comment on a trip request",
@@ -631,94 +621,209 @@
           }
         }
       }
-    }
-  },
-  "definitions": {
-    "Landing": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "created_on": {
-          "type": "string",
-          "format": "date-time"
+    },
+    "/api/v1/accommodation": {
+      "post": {
+        "tags": ["Accommodation"],
+        "summary": "Allow Suppliers to create accommodation",
+        "description": "",
+        "operationId": "CreateAnAccommodation",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "body",
+            "description": "details of the accommodation",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/CreateAnAccommodation"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "Accomodation that was created",
+            "status": "success",
+            "type": "object"
+          }
         }
       },
-      "xml": {
-        "name": "Order"
+      "get": {
+        "tags": ["Accommodation"],
+        "summary": "get All Accommodations",
+        "description": "",
+        "operationId": "ReturnsAlAccommodations",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Comment deleted successful",
+            "name": "type"
+          }
+        }
       }
     },
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "first_name": {
-          "type": "string",
-          "example": "John"
-        },
-        "last_name": {
-          "type": "string",
-          "example": "Doe"
-        },
-        "email": {
-          "type": "string",
-          "example": "johndoe@company.com"
-        },
-        "password": {
-          "type": "string"
-        },
-        "token": {
-          "type": "integer",
-          "format": "int64"
+    "/api/v1/accommodation/:accommodationUuid": {
+      "get": {
+        "tags": ["Accommodation"],
+        "summary": "get A Particular Accommodations",
+        "description": "",
+        "operationId": "ReturnsAParticularAccommodations",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "accommodationUuid",
+            "in": "path",
+            "description": "get details of the accommodation plus the rooms",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "status": "success",
+            "type": "object"
+          }
         }
-      },
-      "xml": {
-        "name": "User"
       }
     },
-    "CreateReturnTripRequest": {
-      "type": "object",
-      "required": [
-        "request_type",
-        "trip_plan",
-        "leaving_from",
-        "return_date",
-        "travel_date",
-        "destination"
-      ],
-      "properties": {
-        "request_type": {
-          "type": "string",
-          "example": "returnTrip"
+    "definitions": {
+      "Landing": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_on": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "trip_plan": {
-          "type": "string",
-          "example": "singleCity"
-        },
-        "leaving_from": {
-          "type": "uuid",
-          "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
-        },
-        "return_date": {
-          "type": "date",
-          "example": "08-22-2018"
-        },
-        "travel_date": {
-          "type": "date",
-          "example": "09-22-2019"
-        },
-        "destination": {
-          "type": "uuid",
-          "example": "95ccd25d-2524-4b95-a441-8e2643c4c071"
+        "xml": {
+          "name": "Order"
         }
       },
-      "xml": {
-        "name": "CreateTripRequest"
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "johndoe@company.com"
+          },
+          "password": {
+            "type": "string"
+          },
+          "token": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "xml": {
+          "name": "User"
+        }
+      },
+      "CreateReturnTripRequest": {
+        "type": "object",
+        "required": [
+          "request_type",
+          "trip_plan",
+          "leaving_from",
+          "return_date",
+          "travel_date",
+          "destination"
+        ],
+        "properties": {
+          "request_type": {
+            "type": "string",
+            "example": "returnTrip"
+          },
+          "trip_plan": {
+            "type": "string",
+            "example": "singleCity"
+          },
+          "leaving_from": {
+            "type": "uuid",
+            "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+          },
+          "return_date": {
+            "type": "date",
+            "example": "08-22-2018"
+          },
+          "travel_date": {
+            "type": "date",
+            "example": "09-22-2019"
+          },
+          "destination": {
+            "type": "uuid",
+            "example": "95ccd25d-2524-4b95-a441-8e2643c4c071"
+          }
+        },
+        "xml": {
+          "name": "CreateTripRequest"
+        }
+      },
+      "CreateAnAccommodation": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "services",
+          "image_url",
+          "amenities"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Shegson House"
+          },
+          "description": {
+            "type": "string",
+            "example": "I want to create this accommodation"
+          },
+          "services": {
+            "type": "array",
+            "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+          },
+          "amenities": {
+            "type": "array",
+            "example": "08-22-2018"
+          },
+          "image_url": {
+            "type": "date",
+            "example": "https://res.cloudinary/Blessing.png"
+          }
+        },
+        "xml": {
+          "name": "CreateAnAccommodation"
+        }
       }
     }
   }
