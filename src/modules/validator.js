@@ -80,7 +80,7 @@ export const inValidPassword = password => {
    * @returns {string} string is the type of data the function returns
    */
 
-export const inValidDate = (date) => {
+export const inValidDate = date => {
   if (!date) return undefined;
   const decision = moment(date, 'MM/DD/YYYY', true).isValid();
   if (!decision) return 'date should be of the form MM/DD/YYYY';
@@ -105,13 +105,26 @@ export const inValidReturnType = (condition, payload) => {
   return false;
 };
 
-export const inValidLocationId = (locationId) => {
+export const inValidLocationId = locationId => {
   if (!locationId) return undefined;
   if (!/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(locationId)) {
     return 'Your departure/destination should contain the uuid of the office location';
   }
   return false;
 };
+
+export const inValidImageType = imageUrl => {
+  if (!imageUrl) return undefined;
+  if (!/(\.jpg|\.png|\.jpeg)$/.test(imageUrl)) return 'only jpeg, jpg, and png image formats are accepted';
+  return false;
+};
+
+export const inValidCostType = cost => {
+  if (!cost) return undefined;
+  if (!/^\d{1,11}(\.\d{1,2})?$/.test(cost)) return 'cost should be in the form 565648, 3676372.89,';
+  return false;
+};
+
 
 export const validate = obj => {
   const result = {};

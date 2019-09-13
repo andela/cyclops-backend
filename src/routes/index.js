@@ -6,6 +6,8 @@ import swaggerDoc from '../../public/docs/swaggerDoc.json';
 import user from './user';
 import trip from './trip';
 import office from './office';
+import accommodation from './accommodation';
+import room from './room';
 import notifications from './notifications';
 import comment from './comment';
 
@@ -15,7 +17,7 @@ export default (app) => {
     data: 'Welcome to the Cyclops Barefoot Nomad backend API'
   }));
 
-  app.use('/api/v1', [user, trip, office, comment]);
+  app.use('/api/v1', [user, trip, office, comment, accommodation, room]);
 
   // Add notification endpoints to application
   app.use('/api/v1/notifications', notifications);
