@@ -24,7 +24,7 @@ export default {
         is_verified: true,
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')
-      }, 
+      },
       {
         uuid: uuid(),
         name: 'Makaraba Blessing',
@@ -41,6 +41,7 @@ export default {
         password: hashPassword('Password123', 10),
         name: 'Albert Faith',
         is_verified: true,
+        role: 'Requester',
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')
       },
@@ -49,6 +50,7 @@ export default {
         email: 'mymail@naija.com',
         password: hashPassword('Password123', 10),
         name: 'Robert Dick',
+        role: 'Requester',
         is_verified: true,
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')

@@ -1,8 +1,8 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { createToken } from '../src/modules/tokenProcessor';
-import app from '../src';
+import { createToken } from '../../../src/modules/tokenProcessor';
+import app from '../../../src';
 
 chai.use(chaiHttp);
 

@@ -3,9 +3,9 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import chaiHttp from 'chai-http';
-import authController from '../src/controllers/AuthController';
-import userRepo from '../src/repositories/UserRepository';
-import { req, res, signUpReq } from './mock.data';
+import authController from '../../../src/controllers/AuthController';
+import userRepo from '../../../src/repositories/UserRepository';
+import { req, res, signUpReq } from '../../mock.data';
 
 chai.use(sinonChai);
 

@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import userInfo from '../src/utils/createAccessToken';
+import userInfo from '../../src/utils/createAccessToken';
 
 describe('User Info Getter Test', () => {
   const user = {

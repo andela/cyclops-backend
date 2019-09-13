@@ -1,8 +1,8 @@
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { createToken } from '../src/modules/tokenProcessor';
-import app from '../src';
+import { createToken } from '../../../src/modules/tokenProcessor';
+import app from '../../../src';
 
 chai.use(chaiHttp);
 
@@ -12,7 +12,7 @@ const seededUser = {
   email: 'suspieabobo@yahoo.com',
   role: 'Supplier',
 };
- 
+
 const token = createToken(seededUser);
 
 let accommodationUuid;
@@ -59,8 +59,8 @@ describe('ACCOMMODATION TESTS', () => {
         expect(res.status).eql(201);
         expect(res.body.status).to.eql('success');
         expect(res.body.data).to.have.all.keys(
-          'uuid', 'user_uuid', 'name', 'description', 
-          'location', 'services', 'amenities', 
+          'uuid', 'user_uuid', 'name', 'description',
+          'location', 'services', 'amenities',
           'image_url', 'room', 'createdAt', 'updatedAt'
         );
         done();
@@ -87,8 +87,8 @@ describe('ACCOMMODATION TESTS', () => {
         expect(res.status).eql(422);
         expect(res.body.status).to.eql('error');
         expect(res.body.error).to.have.all.keys(
-          'name', 'description', 'services', 
-          'amenities', 'location', 'image_url', 
+          'name', 'description', 'services',
+          'amenities', 'location', 'image_url',
           'room_name', 'cost'
         );
         done();
@@ -142,7 +142,7 @@ describe('ACCOMMODATION TESTS', () => {
         done();
       });
   });
-  
+
   it('Should return all accommodations', (done) => {
     chai.request(app)
       .get('/api/v1/accommodation')

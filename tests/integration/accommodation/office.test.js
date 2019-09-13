@@ -3,9 +3,9 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { createToken } from '../src/modules/tokenProcessor';
-import app from '../src';
-import userRepo from '../src/repositories/UserRepository';
+import { createToken } from '../../../src/modules/tokenProcessor';
+import app from '../../../src';
+import userRepo from '../../../src/repositories/UserRepository';
 
 chai.use(sinonChai);
 chai.use(chaiHttp);
