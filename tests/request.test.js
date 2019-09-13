@@ -398,5 +398,6 @@ describe('Test Create Trip Request', () => {
       expect(next.called).to.true;
       sinon.restore();
     });
+    
   });
 });

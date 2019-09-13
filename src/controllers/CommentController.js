@@ -1,6 +1,7 @@
 import UserRepository from '../repositories/UserRepository';
 import CommentRepository from '../repositories/CommentRepository';
 import TripRequestRepository from '../repositories/TripRequestRepository';
+import NotificationRepository from '../repositories/NotificationRepository';
 
 import { sendSuccessResponse, sendErrorResponse } from '../utils/sendResponse';
 
@@ -35,17 +36,29 @@ class CommentController {
       const tripRequestDetails = await TripRequestRepository.findById({ uuid: tripRequestUuid });
       if (!tripRequestDetails) return sendErrorResponse(res, 404, 'This trip request does not exist');
       const { user_uuid: tripRequestOwner } = tripRequestDetails;
-
+      
+      // ensuring ownership
       const isAllowed = await checkrequestOwner(tripRequestOwner, userUuid, userRole);
       if (!isAllowed && userRole === 'Manager') return sendErrorResponse(res, 403, 'You are not the manager of the user that created this trip request');
       if (!isAllowed && userRole !== 'Manager') return sendErrorResponse(res, 403, 'You can\'t comment on a trip request you did not create');
-    
+      
+      // creating comment
       const commentDetails = {
         user_uuid: userUuid,
         trip_request_uuid: tripRequestUuid,
         message
       };
+
+      // create notification 
+      const notificationDetails = {
+        user_uuid: userUuid,
+        message,
+        status: 'unread',
+        notification_type: 'comment'
+      };
+
       const createdComment = await CommentRepository.create(commentDetails);
+      await NotificationRepository.create(notificationDetails);
       return sendSuccessResponse(res, 201, createdComment);
     } catch (err) {
       return next(err);
