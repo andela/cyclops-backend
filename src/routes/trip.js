@@ -5,7 +5,7 @@ import TripRequestController from '../controllers/TripRequestController';
 
 const router = Router();
 
-router.post('/trips', authenticateUser, requestValidation.returnTrip, TripRequestController.createTripRequest);
+router.post('/trips', authenticateUser, requestValidation.createTrip, TripRequestController.createTripRequest);
 router.get('/trips', authenticateUser, TripRequestController.tripsByUser);
 
 export default router;

@@ -62,6 +62,31 @@ class RequestRepository {
  */
   async create(requestDetails) {
     try {
+      const { 
+        uuid,
+        user_uuid,
+        request_type,
+        trip_plan,
+        leaving_from,
+        travel_date,
+        travel_reasons,
+        status,
+        show_profile
+      } = requestDetails;
+      if (request_type === 'oneWayTrip') {
+        const { dataValues } = await this.db.create({ 
+          uuid,
+          user_uuid,
+          request_type,
+          trip_plan,
+          leaving_from,
+          travel_date,
+          travel_reasons,
+          status,
+          show_profile
+        });
+        return dataValues;
+      }
       const { dataValues } = await this.db.create(requestDetails);
       return dataValues;
     } catch (err) {

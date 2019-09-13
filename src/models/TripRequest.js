@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => {
       defaultValue: 'Business Assignment',
     },
     return_date: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.DATE
     },
     status: {
