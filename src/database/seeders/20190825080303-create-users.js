@@ -27,6 +27,16 @@ export default {
       },
       {
         uuid: uuid(),
+        name: 'Wokoro Samuel Douye',
+        email: 'wokorosamuel@yahoo.com',
+        role: 'Requester',
+        is_verified: true,
+        password: hashPassword('Samsizzy777'),
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
+      },
+      {
+        uuid: uuid(),
         name: 'Makaraba Blessing',
         email: 'blessingpeople@gmail.com',
         role: 'Manager',

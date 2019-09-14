@@ -22,6 +22,9 @@ import './office.test';
 // Password reset
 import './passwordReset.test';
 
+// Comment notification
+import './comment.notification.test';
+
 // UTILITIES
 
 // Getting user info test

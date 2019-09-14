@@ -1,18 +1,11 @@
 import { Router } from 'express';
 
-import userNotificationController from '../controllers/ExampleUserNotificationController';
+import authenticateUser from '../middlewares/authenticateUser'
+import commentNotificationController from '../controllers/CommentNotificationController';
 
 const notificationRoutes = Router();
 
 // Live notification endpoint for user creation.
-notificationRoutes.get('/user', userNotificationController.create);
-
-// Example Live notification endpoint for request.
-
-//  notificationRoutes.get(
-//    '/request',
-//    authenticateUser,
-//    notificationController.requestNotifications
-//   );
+notificationRoutes.get('/comment', authenticateUser, commentNotificationController.create);
 
 export default notificationRoutes;
