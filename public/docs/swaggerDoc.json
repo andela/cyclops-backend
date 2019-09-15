@@ -34,6 +34,14 @@
     {
       "name": "Trip",
       "description": "Users travel request, information and history"
+    },
+    {
+      "name": "Office",
+      "description": "Company Office Locations"
+    },
+    {
+      "name": "Comment",
+      "description": "Comments on trip request"
     }
   ],
   "schemes": ["http", "https"],
@@ -51,15 +59,15 @@
               "$ref": "#/definitions/Landing"
             }
           },
-	  "400": {
-                   "description": "Invalid"
+          "400": {
+            "description": "Invalid"
           },
           "security": [
-              {
-                  "api_key": []
-              }
+            {
+              "api_key": []
+            }
           ]
-      }
+        }
       }
     },
     "/api/v1/auth/signin": {
@@ -91,22 +99,11 @@
         "responses": {
           "200": {
             "description": "Success",
-            "schema":{
+            "schema": {
               "title": "Success",
               "example": {
                 "status": "success",
-                "data": {
-                  "booking_id": 9,
-                  "user_id": 1,
-                  "trip_id": 4,
-                  "bus_id": 5,
-                  "trip_date": "2019-02-13T08:00:00.000Z",
-                  "seat_number": 4,
-                  "first_name": "Douye",
-                  "last_name": "Wokoro",
-                  "email": "wokorosamuel@yahoo.com",
-                  "phone_number": "09066027359"
-                }
+                "data": {}
               }
             }
           },
@@ -236,17 +233,11 @@
       "get": {
         "description": "Endpoint to enable users view profile details",
         "summary": "View profile details",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "operationId": "UsersGet",
         "deprecated": false,
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -259,22 +250,11 @@
         "responses": {
           "200": {
             "description": "Success",
-            "schema":{
+            "schema": {
               "title": "Success",
               "example": {
                 "status": "success",
-                "data": {
-                  "booking_id": 9,
-                  "user_id": 1,
-                  "trip_id": 4,
-                  "bus_id": 5,
-                  "trip_date": "2019-02-13T08:00:00.000Z",
-                  "seat_number": 4,
-                  "first_name": "Douye",
-                  "last_name": "Wokoro",
-                  "email": "wokorosamuel@yahoo.com",
-                  "phone_number": "09066027359"
-                }
+                "data": {}
               }
             }
           },
@@ -301,231 +281,115 @@
             }
           }
         }
-      },
-      "put": {
-        "description": "Enables users edit profile information",
-        "summary": "Users profile edit",
-        "tags": [
-          "User"
-        ],
-        "operationId": "UsersPut",
-        "deprecated": false,
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "default": "Bearer {token}",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "in": "formData",
-            "required": false,
-            "default": "E.g. Wokoro Douye Samuel",
-            "type": "string"
-          },
-          {
-            "name": "email",
-            "in": "formData",
-            "required": false,
-            "default": "E.g. douyesamuel@yahoo.com",
-            "type": "string"
-          },
-          {
-            "name": "gender",
-            "in": "formData",
-            "required": false,
-            "default": "male",
-            "type": "string"
-          },
-          {
-            "name": "date_of_birth",
-            "in": "formData",
-            "required": false,
-            "default": "E.g. 23/4/1998",
-            "type": "string"
-          },
-          {
-            "name": "preferred_currency",
-            "in": "formData",
-            "required": false,
-            "default": "NG",
-            "type": "string"
-          },
-          {
-            "name": "preferred_language",
-            "in": "formData",
-            "required": false,
-            "default": "English",
-            "type": "string"
-          },
-          {
-            "name": "image_url",
-            "in": "formData",
-            "required": false,
-            "default": "https:",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema" :{
-              "example": {
-                "status": "success",
-                "data": {
-                  "uuid": "f474d708-1baa-47a9-ab47-f9a31832d768",
-                  "email": "wokorossamuel@yahoo.com",
-                  "name": "Wokoro Douye Samuel",
-                  "role": "manager",
-                  "is_verified": false,
-                  "facebook_id": "",
-                  "google_id": "",
-                  "gender": "male",
-                  "image_url": "",
-                  "date_of_birth": null,
-                  "department": null,
-                  "preferred_currency": null,
-                  "preferred_language": null,
-                  "residential_address": null,
-                  "createdAt": "2019-09-09T16:24:53.014Z",
-                  "updatedAt": "2019-09-09T16:24:53.014Z",
-                  "manager_uuid": null
-                }
-              }
-            },
-            "description": "Success",
-            "headers": {}
-          },
-          "400": {
-            "description": "",
-            "schema":{
-              "example": {
-                "application/json; charset=utf-8": {
-                  "status": "error",
-                  "error": "Invalid token"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "",
-            "schema": {
-              "example": {
-                "application/json; charset=utf-8": {
-                  "status": "error",
-                  "error": "Authorization Failed"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "",
-            "schema": {
-              "example": {
-                "application/json; charset=utf-8": {
-                  "status": "error",
-                  "error": "User {user_email} already exists"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/api/v1/auth/forgotPassword": {
       "post": {
-          "tags": [
-             "User"
-          ],
-          "summary": "Sends a reset link to the user",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-              {
-                  "name": "email",
-                  "in": "path",
-                  "description": "for password reset link",
-                  "required": true,
-                  "type": "string"
-              }
-          ],
-          "responses": {
-              "400": {
-              "description": "Invalid email supplied"
-              },
-              "404": {
-              "description": "User not found"
-              }
+        "tags": ["User"],
+        "summary": "Sends a reset link to the user",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "for password reset link",
+            "required": true,
+            "type": "string"
           }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid email supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
       }
     },
     "/api/v1/auth/resetPassword/:uuid/:token": {
       "put": {
-        "tags": [
-            "Authentication"
-        ],
+        "tags": ["User"],
         "summary": "Send new password",
-        "produces": [
-            "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
-            {
-              "name": "password",
-              "in": "path",
-              "description": "that need to be updated",
-              "required": true,
-              "type": "string"
-            }
+          {
+            "name": "password",
+            "in": "path",
+            "description": "that need to be updated",
+            "required": true,
+            "type": "string"
+          }
         ],
         "responses": {
-            "400": {
-              "description": "Invalid password supplied"
-            },
-            "500": {
-              "description": "Server Error"
-            }
+          "400": {
+            "description": "Invalid password supplied"
+          },
+          "500": {
+            "description": "Server Error"
+          }
         }
       }
     },
-    "/api/v1/trip_request": {
-      "post": {
-        "tags": ["tripRequest"],
-        "summary": "Allow users to create a return trip",
+    "/api/v1/office": {
+      "get": {
+        "tags": ["Office"],
+        "summary": "Get company's office locations",
         "description": "",
-        "operationId": "CreateAReturnTrip",
         "security": [
           {
             "bearerAuth": []
           }
         ],
-        "parameters": [
-          {
-            "name": "type",
-            "in": "body",
-            "description": "details of trip request to create",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "$ref": "#/definitions/CreateReturnTripRequest"
-            }
-          }
-        ],
         "produces": ["application/json"],
         "responses": {
-          "201": {
-            "description": "Trip Request Created Successfully",
-            "type": "string",
-            "example": "Your trip request has been created successfully"
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "9 shagamnu"
+                },
+                "state": {
+                  "type": "string",
+                  "example": "Vinci"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "bangkok"
+                },
+                "country": {
+                  "type": "string",
+                  "example": "spain"
+                },
+                "created_at": {
+                  "type": "date",
+                  "example": ""
+                },
+                "updated_at": {
+                  "type": "date",
+                  "example": ""
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
+      }
+    },
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "token",
+        "in": "header"
       }
     },
     "/api/v1/trips": {
@@ -533,30 +397,51 @@
         "tags": ["Trip"],
         "summary": "Allow users to create a return trip",
         "description": "",
-        "operationId": "CreateAReturnTrip",
         "security": [
           {
             "bearerAuth": []
           }
         ],
-        "parameters": [
-          {
-            "name": "type",
-            "in": "body",
-            "description": "details of trip request to create",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "$ref": "#/definitions/CreateReturnTripRequest"
-            }
-          }
-        ],
         "produces": ["application/json"],
         "responses": {
-          "201": {
-            "description": "Trip Request Created Successfully",
-            "type": "string",
-            "example": "Your trip request has been created successfully"
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "address": {
+                  "type": "string",
+                  "example": "9 shagamnu"
+                },
+                "state": {
+                  "type": "string",
+                  "example": "Vinci"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "bangkok"
+                },
+                "country": {
+                  "type": "string",
+                  "example": "spain"
+                },
+                "created_at": {
+                  "type": "date",
+                  "example": ""
+                },
+                "updated_at": {
+                  "type": "date",
+                  "example": ""
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
@@ -579,6 +464,175 @@
         }
       }
     },
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "token",
+        "in": "header"
+      }
+    },
+    "/api/v1/trips": {
+      "post": {
+        "tags": ["Comment"],
+        "summary": "Allow users to comment on a trip request",
+        "description": "",
+        "operationId": "CommentOnTripRequest",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "body",
+            "description": "comment details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "trip_request_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please approve my trip request"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "Comment Created Successfully",
+            "name": "type",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "user_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "trip_request_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please approve my trip request"
+                },
+                "createdAt": {
+                  "type": "date"
+                },
+                "updatedAt": {
+                  "type": "date"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "trip request details not found"
+          },
+          "403": {
+            "description": "A user is forbidden to comment on a trip request"
+          }
+        }
+      }
+    },
+    "api/v1/comment/trips/:commentUuid": {
+      "put": {
+        "tags": ["Comment"],
+        "summary": "Update the comment on a trip request",
+        "description": "",
+        "consumes": "application/json",
+        "operationId": "UpdatePropertyPrice",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "commentUuid",
+            "in": "path",
+            "description": "uuid of comment to update",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "comment that has been updated",
+            "name": "type",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "user_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "trip_request_uuid": {
+                  "type": "string",
+                  "example": "95ccd25d-2524-4b95-a441-8e2643c4c075"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Please approve my trip request"
+                },
+                "createdAt": {
+                  "type": "date"
+                },
+                "updatedAt": {
+                  "type": "date"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/v1/comment/trips/:uuid": {
+      "delete": {
+        "tags": ["Comment"],
+        "summary": "Delete a user's comment",
+        "description": "Deletes a user's comment",
+        "consumes": "application/json",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "uuid of comment to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Comment deleted successful",
+            "name": "type"
+          }
+        }
+      }
+    }
+  },
   "definitions": {
     "Landing": {
       "type": "object",
@@ -667,6 +721,5 @@
         "name": "CreateTripRequest"
       }
     }
-  }
   }
 }

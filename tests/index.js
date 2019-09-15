@@ -1,5 +1,9 @@
 // FEATURES
 
+
+// Comment tests
+import './comment.test';
+
 // User tests
 import './user.signup.test';
 import './user.signin.test';

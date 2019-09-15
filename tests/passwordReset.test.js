@@ -45,7 +45,8 @@ describe('Password reset Tests', () => {
         done();
       });
   });
-  it('"/api/v1/auth/forgot_password" Should fail if email is not provided', (done) => {
+  
+  it('"/api/v1/auth/forgotPassword" Should fail if email is not provided', (done) => {
     chai.request(app)
       .post('/api/v1/auth/forgot_password')
       .send()
@@ -56,6 +57,7 @@ describe('Password reset Tests', () => {
         done();
       });
   });
+  
   it('"/api/v1/auth/forgot_password" Should fail if email is invalid', (done) => {
     chai.request(app)
       .post('/api/v1/auth/forgot_password')

@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { describe, it } from 'mocha';
 import chai, { expect } from 'chai';

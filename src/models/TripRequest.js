@@ -31,8 +31,8 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DATE
     },
     status: {
-      type: DataTypes.ENUM('pending', 'accepted', 'rejected', 'open'),
-      defaultValue: 'pending'
+      type: DataTypes.ENUM('accepted', 'rejected', 'open'),
+      defaultValue: 'open'
     },
     show_profile: {
       type: DataTypes.BOOLEAN,
@@ -61,6 +61,11 @@ export default (sequelize, DataTypes) => {
     TripRequest.belongsTo(models.OfficeLocation, {
       foreignKey: 'leaving_from',
       as: 'departure'
+    });
+    TripRequest.hasMany(models.Comment, {
+      as: 'comments',
+      foreignKey: 'trip_request_uuid',
+      onDelete: 'CASCADE'
     });
   };
   return TripRequest;

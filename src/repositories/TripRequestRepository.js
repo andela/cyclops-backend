@@ -46,7 +46,7 @@ class RequestRepository {
         },
         include: [{
           model: TripDestination, as: 'destinations', attributes: ['uuid'], include: ['office']
-        }, 'departure']
+        }, 'departure', 'comments']
       });
     } catch (e) {
       throw new Error(e);
@@ -64,6 +64,22 @@ class RequestRepository {
     try {
       const { dataValues } = await this.db.create(requestDetails);
       return dataValues;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  /**
+ * @description RequestRepository handles method that query our database
+ *
+ * @param {object} condition refers to the details of your search
+ *
+ * @returns {object} the details of the request that was created
+ */
+  async findById(condition) {
+    try {
+      const tripRequestDetails = await this.db.findOne({ where: condition });
+      return tripRequestDetails;
     } catch (err) {
       throw new Error(err);
     }

@@ -25,7 +25,7 @@ describe('User', () => {
       .send({
         email: 'wokoro@yahoo.com',
         name: 'Douye Samuel Wokoro',
-        password: 'Djkladjkaldfj129',
+        password: 'Djkladjkaldfj129'
       })
       .end((err, res) => {
         expect(res.status).eql(201);

@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Notifications', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
     uuid: {
       allowNull: false,
       primaryKey: true,
@@ -15,18 +15,22 @@ export default {
         key: 'uuid'
       }
     },
+    trip_request_uuid: {
+      allowNull: false,
+      type: Sequelize.UUID,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'TripRequests',
+        key: 'uuid'
+      },
+    },
     message: {
-      type: Sequelize.STRING,
+      allowNull: false,
+      type: Sequelize.STRING
     },
-    status: {
-      type: Sequelize.ENUM,
-      values: ['unread', 'read'],
-      defaultValue: 'unread'
-    },
-    notification_type: {
-      type: Sequelize.ENUM,
-      values: ['comment', 'tripRequest'],
-      defaultValue: 'tripRequest'
+    deletedAt: {
+      type: Sequelize.DATE,
+      field: 'deleted_at'
     },
     createdAt: {
       allowNull: false,
@@ -40,5 +44,5 @@ export default {
     }
   }),
   // eslint-disable-next-line arrow-parens
-  down: queryInterface => queryInterface.dropTable('Notifications')
+  down: queryInterface => queryInterface.dropTable('Comments')
 };

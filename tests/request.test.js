@@ -36,14 +36,17 @@ describe('Test Create Trip Request', () => {
   const seededUser = {
     uuid: '95ccd25d-2524-4b95-a441-8e2643c4c077',
     email: 'Jessica_Bins@hotmail.com',
-    name: 'Name Hettinger'
+    name: 'Name Hettinger',
+    role: 'Requester'
   };
 
   const seededUserI = {
     uuid: '95ccd25d-2524-4b95-a441-8e2643c4c079',
     email: 'efejustin3@gmail.com',
-    name: 'Efe Justin'
+    name: 'Efe Justin',
+    role: 'Requester'
   };
+  
 
   before(async () => {
     await User.create(testUser);
