@@ -8,6 +8,7 @@ import './user.profile.edit.test';
 import './user.profile.view.test';
 import './social.login.test';
 import './userRole.test';
+import './approve.trip.notifiation.test';
 
 // Request tests
 import './request.test';

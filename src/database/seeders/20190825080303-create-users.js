@@ -91,6 +91,23 @@ export default {
         image_url: 'http://images.com/myimagefile',
         created_at: new Date(),
         updated_at: new Date()
+      },
+      {
+        uuid: '0ee072c5-0b45-4991-b703-57a64af32da0',
+        email: 'nomail@yahoo.com',
+        role: 'Manager',
+        is_verified: true,
+        password: hashPassword('Bloated36'),
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
+      }, {
+        uuid: '50895de7-9ddd-4589-83e9-c4bb1cc93da7',
+        email: 'ca_Bins@hotmail.com',
+        role: 'Requester',
+        is_verified: true,
+        password: hashPassword('Bloated36'),
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
       }
     ];
     return queryInterface.bulkInsert('Users', UsersData, {});

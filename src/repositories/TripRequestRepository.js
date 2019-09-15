@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 /* eslint-disable camelcase */
 /**
  * @fileoverview Contains the User Auth Repository class, an interface for querying User table
@@ -9,7 +10,7 @@
 
 import Models from '../models';
 
-const { TripRequest, TripDestination } = Models;
+const { TripRequest, TripDestination, Manager } = Models;
 
 /**
  * @description RequestRepository handles TripRequest model
@@ -66,6 +67,51 @@ class RequestRepository {
       return dataValues;
     } catch (err) {
       throw new Error(err);
+    }
+  }
+
+  /* @description findOne is a function that search for an office Location
+ *
+ * @param {object} condition limits the search of the office location
+ *
+ * @returns {object} the details of the office location that has been searched for
+ */
+  // eslint-disable-next-line require-jsdoc
+  async findById(condition) {
+    try {
+      const tripRequest = await this.db.findByPk(condition);
+      return tripRequest;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  // eslint-disable-next-line class-methods-use-this
+  async findManagerById(condition) {
+    try {
+      const tripRequest = await Manager.findByPk(condition);
+      return tripRequest;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  // eslint-disable-next-line valid-jsdoc
+  /**
+ * @description RequestRepository handles method that query our database
+ *
+ * @param {object} changes refers to the details of the user's request
+ *
+ * @returns {object} the details of the request that was created
+ */
+  async update(changes, tripUuid) {
+    try {
+      // eslint-disable-next-line max-len
+      const { dataValues } = await this.db.update(changes, { returning: true, where: { uuid: tripUuid } });
+      return dataValues;
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }

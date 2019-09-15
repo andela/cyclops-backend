@@ -30,6 +30,19 @@ export default {
         return_date: '11-11-2019',
         created_at: Sequelize.literal('NOW()'),
         updated_at: Sequelize.literal('NOW()')
+      }, {
+        uuid: '16187eee-9ccd-4178-b848-4c2d468f690c',
+        travel_reasons: 'Business Assignment',
+        status: 'pending',
+        show_profile: false,
+        request_type: 'returnTrip',
+        trip_plan: 'multiCity',
+        leaving_from: 'dbf285c6-8d7c-4f71-8058-a82e22e27f6b',
+        return_date: '2019-10-09T23:00:00.000Z',
+        travel_date: '2019-10-09T23:00:00.000Z',
+        user_uuid: '50895de7-9ddd-4589-83e9-c4bb1cc93da7',
+        created_at: Sequelize.literal('NOW()'),
+        updated_at: Sequelize.literal('NOW()')
       }
     ];
     return queryInterface.bulkInsert('TripRequests', TripRequests, {});

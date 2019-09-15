@@ -1,6 +1,8 @@
 // eslint-disable-next-line arrow-parens
 import models from '../models';
 import UserRepository from '../repositories/UserRepository';
+import NotificationRepository from '../repositories/NotificationRepository';
+import TripRequestRepository from '../repositories/TripRequestRepository';
 
 export const getMIlliSeconds = date => (date ? new Date(date).getTime() : new Date().getTime());
 
@@ -32,7 +34,18 @@ const blackListThisToken = async (token) => {
     token,
   });
 };
-
+const createMessage = async (message, status, notificationType, userUuid) => {
+  const data = {
+    message,
+    status,
+    notification_type: notificationType,
+    user_uuid: userUuid,
+  };
+  NotificationRepository.create(data);
+};
+const updateMessage = async (changes, tripUuid) => {
+  TripRequestRepository.update(changes, tripUuid); 
+};
 export {
-  blackListThisToken, isBlackListed
+  blackListThisToken, isBlackListed, createMessage, updateMessage
 };

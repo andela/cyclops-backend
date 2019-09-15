@@ -3,6 +3,7 @@ import OfficeLocationRepository from '../repositories/OfficeLocationRepository';
 import TripRequestRepository from '../repositories/TripRequestRepository';
 import TripDestinationRespository from '../repositories/TripDestinationRepository';
 import NotificationRepository from '../repositories/NotificationRepository';
+import { createMessage, updateMessage } from '../utils/index';
 
 import { sendErrorResponse, sendSuccessResponse } from '../utils/sendResponse';
 
@@ -112,6 +113,43 @@ class TripRequestController {
       return sendSuccessResponse(res, 200, 'oneWayTrip still in progress');
     } catch (err) {
       // return sendErrorResponse(res, 500, 'Internal Server Error');
+    }
+  }
+  /**
+   * 
+   * @param {object} req  request body
+   * @param {object} res response body
+   */ 
+
+  // eslint-disable-next-line require-jsdoc
+  static async approveRequest(req, res) {
+    const { tripRequestUuid } = req.params;
+    // console.log(tripRequestUuid, 'dfdff');
+    
+    try {
+      const userRole = req.userData.role;
+      if (userRole !== 'Manager') return sendErrorResponse(res, 403, 'Managers only are allowed to approve request');
+      const ManagersUuid = req.userData.uuid;
+      const foundTripRequest = await TripRequestRepository.findById(tripRequestUuid);
+      if (!foundTripRequest) return sendErrorResponse(res, 404, 'Trip request not found');
+      const {
+        // eslint-disable-next-line max-len
+        user_uuid: userUuid, status, request_type: requestType, travel_reasons: travelReasons, trip_plan: tripPlan 
+      } = foundTripRequest.dataValues;
+      const foundUser = await UserRepository.findById(userUuid);
+      const managerUuid = foundUser.dataValues.manager_uuid;
+      const managerTable = await TripRequestRepository.findManagerById(managerUuid);
+      const managerUserUuid = managerTable.dataValues.user_uuid;
+      if (managerUserUuid !== ManagersUuid) return sendErrorResponse(res, 401, 'User\'s managers only can approve a request');
+      if (status !== ('pending' || 'open')) return sendErrorResponse(res, 400, 'Can only approve an open or pending request');
+      const message = `Your ${tripPlan} ${requestType} for ${travelReasons} has been approved`;
+      const currentStatus = 'unread';
+      const notificationType = 'tripRequest';
+      await updateMessage({ status: 'accepted' }, tripRequestUuid);
+      await createMessage(message, currentStatus, notificationType, userUuid);
+      return sendSuccessResponse(res, 200, message);
+    // eslint-disable-next-line no-empty
+    } catch (error) {
     }
   }
 }

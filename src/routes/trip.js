@@ -7,5 +7,6 @@ const router = Router();
 
 router.post('/trips', authenticateUser, requestValidation.returnTrip, TripRequestController.createTripRequest);
 router.get('/trips', authenticateUser, TripRequestController.tripsByUser);
+router.patch('/trips/approve/:tripRequestUuid', authenticateUser, TripRequestController.approveRequest);
 
 export default router;
