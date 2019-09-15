@@ -27,6 +27,27 @@ class VerifyRoles {
   }
 
   /**
+   * @description verify and authorize Travel Admin roles
+   * 
+   * @param {*} req
+   * 
+   * @param {*} res
+   * 
+   * @param {*} next
+   * 
+   * @returns {*} pass control to the next middleware
+   */
+  async verifyTravelAdmin(req, res, next) {
+    const token = req.headers.authorization.split(' ')[1] || req.headers.authorization;
+    const userDetail = await verifyToken(token);
+    req.userData = userDetail;
+    if (req.userData.role !== 'Travel Administrator') {
+      return sendErrorResponse(res, 401, 'Unauthorized access');
+    }
+    next();
+  }
+
+  /**
    * @description verify and authorize Requester roles
    * 
    * @param {*} req
@@ -42,6 +63,24 @@ class VerifyRoles {
     const userDetail = await verifyToken(token);
     req.userData = userDetail;
     if (req.userData.role !== 'Requester') {
+      return sendErrorResponse(res, 401, 'Unauthorized access');
+    }
+    next();
+  }
+
+  /**
+   * @description verify and authorize Requester roles
+   * 
+   * @param {*} req
+   * 
+   * @param {*} res
+   * 
+   * @param {*} next
+   * 
+   * @returns {*} pass control to the next middleware
+   */
+  async verifySupplier(req, res, next) {
+    if (req.userData.role !== 'Supplier') {
       return sendErrorResponse(res, 401, 'Unauthorized access');
     }
     next();

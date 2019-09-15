@@ -4,7 +4,7 @@ import {
 import { sendErrorResponse } from '../utils/sendResponse';
 
 /**
- * @description userAuth is clas that handles user data validation
+ * @description requestValidator is clas that handles user data validation
  */
 export default class requestValidator {
   /**
