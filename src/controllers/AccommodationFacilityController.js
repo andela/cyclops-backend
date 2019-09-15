@@ -75,6 +75,24 @@ class AccommodationFacilityController {
   }
 
   /**
+   * @param {Object} req - HTTP request object
+   *
+   * @param {Object} res - HTTP response object
+   *
+   * @param {Function} next - Function to trigger next middleware
+   *
+   * @return {Object} Object resoponse with current user created status
+   */
+  static async getAllApprovedAccommodation(req, res, next) {
+    try {
+      const accommodations = await AccommodationFacilityRepository.getAllApproved();
+      return sendSuccessResponse(res, 200, accommodations);
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
    *  @description getOneAccommodation method gets all created accommodations
    * 
      * @param {Object} req - HTTP request object
@@ -124,6 +142,25 @@ class AccommodationFacilityController {
       return sendSuccessResponse(res, 201, createdRoom);
     } catch (err) {
       return next(err);
+    }
+  }
+  
+  /**
+   * 
+   * @param {*} req
+   *  
+   * @param {*} res 
+   * 
+   * @param {*} next 
+   * 
+   * @returns {*} returns success or error
+   */
+  static async approveAcommodation(req, res, next) {
+    try {
+      await AccommodationFacilityRepository.approveAccommodation(req.body.accommodation_uuid);
+      return sendSuccessResponse(res, 200, { message: 'Accommodation approved successfully' });
+    } catch (error) {
+      return next(error);
     }
   }
 }

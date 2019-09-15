@@ -34,6 +34,9 @@ export default (sequelize, DataTypes) => {
     location: {
       type: DataTypes.STRING
     },
+    is_approved: {
+      type: DataTypes.BOOLEAN
+    }
   }, {});
   AccommodationFacility.associate = (models) => {
     AccommodationFacility.belongsTo(models.User, {

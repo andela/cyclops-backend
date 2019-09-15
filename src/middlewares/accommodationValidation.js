@@ -74,4 +74,25 @@ export default class AccommodationFacilityValidator {
     if (error) return sendErrorResponse(res, 422, error);
     return next();
   }
+
+  /**
+   * 
+   * @param {*} body
+   * 
+   * @param {*} res 
+   * 
+   * @param {*} next 
+   * 
+   * @return {*} returns a response or next
+   */
+  static approveAccommodation({ body }, res, next) {
+    const { accommodation_uuid } = body;
+
+    const schema = {
+      accommodation_uuid: isRequired(accommodation_uuid)
+    };
+    const error = validate(schema);
+    if (error) return sendErrorResponse(res, 422, error);
+    return next();
+  }
 }

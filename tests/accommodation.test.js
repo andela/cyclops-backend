@@ -6,14 +6,22 @@ import app from '../src';
 
 chai.use(chaiHttp);
 
-const seededUser = {
+const supplier = {
   uuid: 'fd847314-71c5-4385-95ee-966c975a3ddd',
   name: 'Suspie Abobo',
   email: 'suspieabobo@yahoo.com',
   role: 'Supplier',
 };
+const travelAdmin = {
+  uuid: '9625221a-0a60-4179-b46e-39220809afd2',
+  name: 'Awa Dieudonne',
+  email: 'dieudonneawa7@gmail.com',
+  role: 'Travel Administrator'
+};
+let accommodation_uuid;
  
-const token = createToken(seededUser);
+const supplierToken = createToken(supplier);
+const travelAdminToken = createToken(travelAdmin);
 
 let accommodationUuid;
 const fakeAccommodationUuid = 'fd847314-71c5-4385-95ee-966c975a3ddd';
@@ -22,7 +30,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/accommodation')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         name: 'Eko Lodge',
         description: 'We provide you all',
@@ -32,9 +40,55 @@ describe('ACCOMMODATION TESTS', () => {
         location: '9, Omoru Street'
       })
       .end((err, res) => {
+        accommodation_uuid = res.body.data.uuid;
         expect(res.status).eql(201);
         expect(res.body.status).to.eql('success');
-        expect(res.body.data).to.have.all.keys('uuid', 'user_uuid', 'name', 'description', 'location', 'services', 'amenities', 'image_url', 'createdAt', 'updatedAt');
+        expect(res.body.data).to.have.all.keys('uuid', 'user_uuid', 'name', 'description', 'location', 'is_approved', 'services', 'amenities', 'image_url', 'createdAt', 'updatedAt');
+        done();
+      });
+  });
+
+  it('Should approve accommodation if user is travel admin', (done) => {
+    chai.request(app)
+      .put('/api/v1/admin/approve_accommodation')
+      .set('Content-Type', 'Application/json')
+      .set('authorization', `Bearer ${travelAdminToken}`)
+      .send({
+        accommodation_uuid
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.status).to.eql('success');
+        expect(res.body.data).to.have.property('message').eql('Accommodation approved successfully');
+        done();
+      });
+  });
+
+  it('Should fail to approve accommodation if nothing is provided', (done) => {
+    chai.request(app)
+      .put('/api/v1/admin/approve_accommodation')
+      .set('Content-Type', 'Application/json')
+      .set('authorization', `Bearer ${travelAdminToken}`)
+      .send()
+      .end((err, res) => {
+        expect(res).to.have.status(422);
+        expect(res.body.status).to.eql('error');
+        expect(res.body.error).to.have.property('accommodation_uuid').eql('accommodation_uuid is required');
+        done();
+      });
+  });
+
+  it('Should return all unapproved accommodations', (done) => {
+    chai.request(app)
+      .get('/api/v1/admin/accommodation')
+      .set('Content-Type', 'Application/json')
+      .set('authorization', `Bearer ${travelAdminToken}`)
+      .end((err, res) => {
+        expect(res.status).eql(200);
+        expect(res.body.status).to.eql('success');
+        expect(res.body.data).to.be.an('array');
+        const [accommodationDetails] = res.body.data;
+        accommodationUuid = accommodationDetails.uuid;
         done();
       });
   });
@@ -43,7 +97,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/accommodation')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         name: 'Eko Lodge',
         description: 'We provide you all',
@@ -60,7 +114,7 @@ describe('ACCOMMODATION TESTS', () => {
         expect(res.body.status).to.eql('success');
         expect(res.body.data).to.have.all.keys(
           'uuid', 'user_uuid', 'name', 'description', 
-          'location', 'services', 'amenities', 
+          'location', 'services', 'amenities', 'is_approved', 
           'image_url', 'room', 'createdAt', 'updatedAt'
         );
         done();
@@ -71,7 +125,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/accommodation')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         name: '',
         description: '',
@@ -99,7 +153,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/accommodation')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         name: 'Eko Lodge',
         description: 'We provide you all',
@@ -123,7 +177,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/accommodation')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         name: 'Eko Lodge',
         description: 'We provide you all',
@@ -147,7 +201,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .get('/api/v1/accommodation')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .end((err, res) => {
         expect(res.status).eql(200);
         expect(res.body.status).to.eql('success');
@@ -162,7 +216,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .get(`/api/v1/accommodation/${accommodationUuid}`)
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .end((err, res) => {
         expect(res.status).eql(200);
         expect(res.body.status).to.eql('success');
@@ -175,7 +229,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .get(`/api/v1/accommodation/${fakeAccommodationUuid}`)
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .end((err, res) => {
         expect(res.status).eql(404);
         expect(res.body.status).to.eql('error');
@@ -188,7 +242,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/room')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         accommodation_uuid: accommodationUuid,
         name: '',
@@ -198,7 +252,7 @@ describe('ACCOMMODATION TESTS', () => {
       .end((err, res) => {
         expect(res.status).eql(422);
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.be.have.key({ name: 'name is required' });
+        expect(res.body.error).to.be.have.property('name').eql('name is required');
         done();
       });
   });
@@ -207,7 +261,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/room')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         accommodation_uuid: accommodationUuid,
         name: 'Better 3',
@@ -217,7 +271,7 @@ describe('ACCOMMODATION TESTS', () => {
       .end((err, res) => {
         expect(res.status).eql(422);
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.be.have.key({ type: 'name is required' });
+        expect(res.body.error).to.be.have.property('type').eql('type is required');
         done();
       });
   });
@@ -226,7 +280,7 @@ describe('ACCOMMODATION TESTS', () => {
     chai.request(app)
       .post('/api/v1/room')
       .set('Content-Type', 'Application/json')
-      .set('authorization', `Bearer ${token}`)
+      .set('authorization', `Bearer ${supplierToken}`)
       .send({
         accommodation_uuid: accommodationUuid,
         name: 'Better 4',
@@ -236,7 +290,7 @@ describe('ACCOMMODATION TESTS', () => {
       .end((err, res) => {
         expect(res.status).eql(422);
         expect(res.body.status).to.eql('error');
-        expect(res.body.error).to.be.have.key({ cost: 'cost is required' });
+        expect(res.body.error).to.be.have.property('cost').eql('cost is required');
         done();
       });
   });

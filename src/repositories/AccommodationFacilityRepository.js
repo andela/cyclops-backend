@@ -71,10 +71,25 @@ class AccommodationFacilityRepository {
    */
   async getAll() {
     try {
-      const accommodations = this.db.findAll();
+      const accommodations = this.db.findAll({ where: { is_approved: false } });
       return accommodations;
     } catch (err) {
       throw new Error(err);
+    }
+  }
+  
+  /**
+   * @description Returns user's trip request information based on the provided parameters
+   *
+   * @param {Object} condition checks trip request required parameter for a user
+   *
+   * @return {Object} returns trip request details
+   */
+  async getAllApproved() {
+    try {
+      return await this.db.findAll({ where: { is_approved: true } });
+    } catch (error) {
+      throw new Error(error);
     }
   }
 
@@ -89,7 +104,28 @@ class AccommodationFacilityRepository {
    */
   async getOne(condition = {}, include = '') {
     try {
-      return await this.db.findOne({ where: condition, include });
+      const data = await this.db.findOne({ where: condition, include });
+      if (data.is_approved !== true) return {};
+      return data;
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * @description approveAccommodation method approves accommodation facility
+   *
+   * @param {Object} uuid 
+   *
+   * @return {Object} returns accommodation details with all rooms details
+   */
+  async approveAccommodation(uuid) {
+    try {
+      const update = await this.db.update(
+        { is_approved: true },
+        { where: { uuid }, returning: true, plain: true }
+      );
+      return update;
     } catch (e) {
       throw new Error(e);
     }

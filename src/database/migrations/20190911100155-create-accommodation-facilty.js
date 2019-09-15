@@ -33,6 +33,10 @@ export default {
     location: {
       type: Sequelize.STRING
     },
+    is_approved: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
