@@ -19,6 +19,26 @@ Make company global travel and accommodation easy and convenient for the strong 
 - [Swagger:](https://swagger.io/)
 - [PassportJS](http://www.passportjs.org)
 
+##### Testing Framework
+
+- Mocha
+- Chai
+- Chai-HTTP
+
+##### Project Management
+
+- [Pivotal Tracker](https://pivotaltracker.com)
+
+##### Continuous Integration
+
+- [Travis CI](https://travis-ci.org)
+- [Circle CI](https://circleci.com)
+- [Coveralls](https://coveralls.io)
+
+#### API Docs
+
+- [API Documentation](https://barefoot-nomad-cyclops-staging.herokuapp.com/api-docs)
+
 ---
 
 ### Installation

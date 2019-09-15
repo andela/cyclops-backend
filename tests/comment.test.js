@@ -21,8 +21,8 @@ const seededUserI = {
 };
 
 const seededUserII = {
-  uuid: '95ccd25d-2524-4b95-a441-8e2643c4c072',
-  name: 'Efe Just',
+  uuid: '95ccd25d-2524-4b95-a441-8e2643c4c073',
+  name: 'Efe Justins',
   email: 'efejustin@gmail.com',
   role: 'Requester',
 };

@@ -31,7 +31,13 @@ export default {
       name: 'Requester',
       createdAt: Sequelize.literal('NOW()'),
       updatedAt: Sequelize.literal('NOW()')
-    }
+    },
+    {
+      uuid: uuid.v4(),
+      name: 'Supplier',
+      createdAt: Sequelize.literal('NOW()'),
+      updatedAt: Sequelize.literal('NOW()')
+    },
   ], {}),
 
   down: queryInterface => queryInterface.bulkDelete('Roles', null, {})

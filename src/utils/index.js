@@ -9,6 +9,9 @@ export const getDay = (date) => {
   return Math.floor(dateInMillisec / 86400000);
 };
 
+
+export const convertToArray = arrayItems => arrayItems.replace(/\s/g, '').split(',');
+
 const { BlackListedToken } = models;
 
 /**

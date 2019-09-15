@@ -46,6 +46,24 @@ class VerifyRoles {
     }
     next();
   }
+
+  /**
+   * @description verify and authorize Requester roles
+   * 
+   * @param {*} req
+   * 
+   * @param {*} res
+   * 
+   * @param {*} next
+   * 
+   * @returns {*} pass control to the next middleware
+   */
+  async verifySupplier(req, res, next) {
+    if (req.userData.role !== 'Supplier') {
+      return sendErrorResponse(res, 401, 'Unauthorized access');
+    }
+    next();
+  }
 }
 
 export default new VerifyRoles();
