@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@sendgrid/mail": "^6.4.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "body-parser": "^1.19.0",
     "dotenv": "^6.2.0",
